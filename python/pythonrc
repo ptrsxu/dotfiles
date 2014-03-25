@@ -1,0 +1,11 @@
+# -*- coding: utf-8 -*-
+# Please set the env: PYTHONSTARTUP to currenet file
+
+try:
+    import readline
+except ImportError:
+    pass
+else:
+    import rlcompleter
+    readline.parse_and_bind('tab:complete')
+    readline.parse_and_bind('set editing-mode vi')

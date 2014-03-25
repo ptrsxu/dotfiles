@@ -1,0 +1,17 @@
+*.pyc
+*.egg
+*.egg-info
+dist
+build
+eggs
+parts
+develop-eggs
+__pycache__
+pip-log.txt
+*.mo
+.mr.developer.cfg
+.project
+.pydevproject
+.DS_Store
+._.DS_Store
+*~

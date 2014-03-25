@@ -1,0 +1,160 @@
+# begin: general settings
+# {{{
+set realname = "Peter Xu"
+set editor = "vim"
+# treat all unread message as new
+set mark_old = no
+#don't collapse threads w/ unread messages
+set collapse_unread=no
+set move=no
+set include 
+set imap_check_subscribed 
+# if you read for some key after some ext command
+set wait_key = yes
+# how many lines will be left for displaying mail list when reading an email in pager
+set pager_index_lines = 4
+# if you can modify the header in EDITOR
+set edit_headers = no
+# will not hint when move a email to a exist email box
+set noconfirmappend
+# will not change to next email after rolling to the end of email
+set pager_stop
+# no need inputing address and subj when using "r" ro reply
+set fast_reply
+# if move to next email after "t" "D"
+set resolve=no
+
+set mail_check = 120 
+set timeout = 300 
+set imap_keepalive = 900 
+
+ignore "Authentication-Results:" 
+ignore "DomainKey-Signature:" 
+ignore "DKIM-Signature:" 
+hdr_order Date From To Cc 
+alternative_order text/plain text/html * 
+
+# how to sort mails
+set sort = 'threads' 
+set sort_aux = 'reverse-last-date-received' 
+set auto_tag = yes 
+# }}}
+# end: general settings
+
+
+# begin: about charset/encoding
+# {{{
+# terminal charset
+set charset="UTF-8"
+# charset for mails sent
+set send_charset="UTF-8"
+# chinese for date display 
+set locale="zh_CN.UTF-8"
+# 解决没有设置字符编码的信件显示为乱码的问题
+charset-hook ^us-ascii$ GB18030
+# 解决主题为utf-8的信件标题显示为乱码的问题
+charset-hook !UTF-8 GB18030
+# 解决未经过MIME编码的信件显示为乱码的问题
+# set strict_mime=no
+set assumed_charset="GB18030"
+# 解决中文附件名为乱码的问题
+set rfc2047_parameters=yes
+# }}}
+# end: about charset/encoding
+
+# begin: file paths of configure
+# {{{
+set header_cache=~/.mutt/cache/headers 
+set message_cachedir=~/.mutt/cache/bodies 
+set certificate_file=~/.mutt/certificates 
+# }}}
+# end: file paths of configure
+
+# begin: config the mail looks like sent from some address
+# {{{
+set use_from=yes
+set envelope_from=yes
+set from = "Peter <p@cooliktas.com>" 
+# }}}
+# end: config the mail looks like sent from some address
+
+# begin: accounts
+# imap account settings
+# {{{
+set imap_user="gmail_username@gmail.com"
+set imap_pass=我的密码
+set smtp_url="smtps://gmail_username\@gmail.com:我的密码@smtp.gmail.com/"
+# }}}
+# end: accounts
+
+# begin: folder settings
+# Basic config, you can leave this as is 
+# {{{
+set folder = "imaps://imap.gmail.com:993" 
+set spoolfile = "+INBOX" 
+set record="+sent-mail-`date +%Y`"
+set postponed="+Drafts"
+# }}}
+# end: folder settings
+#set sendmail="/usr/bin/msmtp"
+
+# begin: address book sync with gmail contacts
+# you need to :
+# $ sudo yum install goobook
+# $ goobook config-template >~/.goobookrc
+# change the user/pass in ~/.goobookrc
+# use gpg can enhance the secure
+# {{{
+set query_command="goobook query \'%s\'"
+bind editor <Tab> complete-query
+macro index,pager a "<pipe-message>goobook add<return>" "add the sender address to Google contacts"
+# }}}
+# end: address book sync with gmail contacts
+
+# begin: attachment view, office suite need xlhtml tool support, details refer to ~/.mailcap
+# {{{
+auto_view text/html application/msword application/excel application/powerpoint application/pdf
+# }}}
+# end: attachment view, office suite need xlhtml tool support, details refer to ~/.mailcap
+
+# begin: base key bindings
+# {{{
+bind index \t next-unread
+bind editor <Tab> complete-query 
+bind editor ^T complete 
+bind editor <space> noop
+bind index,pager,attach ft forward-message
+bind index,pager,attach r reply
+bind index,pager,attach R group-reply
+bind index,pager fm imap-fetch-mail
+# }}}
+# begin: base key bindings
+
+# begin: Gmail-style keyboard shortcuts 
+# {{{
+macro index,pager y "<enter-command>unset trash\n <delete-message>" "Gmail archive message" 
+macro index,pager d "<enter-command>set trash=\"imaps://imap.googlemail.com/[GMail]/Bin\"\n <delete-message>" "Gmail delete message" 
+macro index,pager gi "<change-folder>=INBOX<enter>" "Go to inbox" 
+macro index,pager ga "<change-folder>=[Gmail]/All Mail<enter>" "Go to all mail" 
+macro index,pager gs "<change-folder>=[Gmail]/Starred<enter>" "Go to starred messages" 
+macro index,pager gd "<change-folder>=[Gmail]/Drafts<enter>" "Go to drafts"
+# }}}
+# end: Gmail-style keyboard shortcuts 
+
+# begin: vim-style scrolling
+# {{{
+bind index zt current-top
+bind index zz current-middle
+bind index zb current-bottom
+bind index gg first-entry
+bind index G  last-entry
+bind pager gg top
+bind pager G bottom
+bind index,pager \Cu half-up
+bind index,pager \Cd half-down
+bind index,pager \Ce next-line
+bind index,pager \Cy previous-line
+bind index,pager \Cf next-page
+bind index,pager \Cn next-page
+# }}}
+# end: vim-style scrolling

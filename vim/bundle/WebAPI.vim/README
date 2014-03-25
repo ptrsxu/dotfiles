@@ -1,0 +1,13 @@
+This is a mirror of http://www.vim.org/scripts/script.php?script_id=4019
+
+Interface to Web APIs
+
+webapi-vim include:
+
+* XML parser Library.
+* HTML parser Library.
+* JSON parser Library.
+* HTTP client.
+
+and some utility functions.
+

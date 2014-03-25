@@ -1,0 +1,699 @@
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" by peter xu 
+" vim version should be larger than 600
+" Created:      2011-12-19 09:20:05 Mon
+" Modified:     2013-02-03 11:48:50 Sun
+"               add mac os x 10.6.8  support
+" Modified:     2013-03-17 11:27:50 Sun
+"               using vundle to manage the plugins
+"               notice that vundle things should put at
+"               the beginning of this config file
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" peter: Setting up Vundle (basic settings from official doc)
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" be iMproved
+set nocompatible
+
+" required!
+filetype off
+
+set rtp+=~/.vim/bundle/vundle/
+call vundle#rc()
+
+" let Vundle manage Vundle, it's required! 
+Bundle 'gmarik/vundle'
+
+"
+" Brief help
+" :BundleList          - list configured bundles
+" :BundleInstall(!)    - install(update) bundles
+" :BundleSearch(!) foo - search(or refresh cache first) for foo
+" :BundleClean(!)      - confirm(or auto-approve) removal of unused bundles
+"
+" NOTE: 
+"   comments after Bundle command are not allowed..
+"   see :h vundle for more details or wiki for FAQ
+"
+" Bundles Samples Here:
+"   http://vim-scripts.org/vim/scripts.html
+"   https://github.com/vim-scripts
+"
+" Bundles Howto:
+"   original repos on github that belong to vim-scipts repos:
+"       use Bundle 'reponame'
+"   original repos on github but not belong to vim-scipts repos
+"       use Bundle 'owner/reponame'
+"   non github repos:
+"       use Bunele 'git://git.wincent.com/command-t.git'
+"
+" A Git wrapper so awesome
+Bundle 'tpope/vim-fugitive'
+Bundle 'Lokaltog/vim-easymotion'
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" peter: [BUNDLE] searching related
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" FuzzyFinder needs L9(vim script library) support
+Bundle 'L9'
+Bundle 'FuzzyFinder'
+
+" The Command-T plug-in provides an extremely fast, intuitive mechanism for
+" opening files and buffers with a minimal number of keystrokes
+" The plug-in requires Vim compiled with Ruby support, Ruby in 
+" system, and c compiler in system:
+"
+"   cd ~/.vim/command-t/ruby/command-t
+"   ruby extconf.rb
+"   make
+Bundle 'git://git.wincent.com/command-t.git'
+
+" Full path fuzzy file, buffer, mru, tag, ... finder for Vim.
+" *THIS IS PRETTY COOL FEATURE*
+Bundle 'kien/ctrlp.vim'
+let g:ctrlp_map = '<c-p>'
+let g:ctrlp_cmd = 'CtrlP'
+
+if has("win32")
+    set wildignore+=*\\tmp\\*,*.swp,*.zip,*.exe  " Windows
+else
+    set wildignore+=*/tmp/*,*.so,*.swp,*.zip     " MacOSX/Linux
+endif
+
+let g:ctrlp_custom_ignore = {
+  \ 'dir':  '\v[\/]\.(git|hg|svn)$',
+  \ 'file': '\v\.(exe|so|dll)$',
+  \ 'link': 'some_bad_symbolic_links',
+  \ }
+
+if has("win32")
+    let g:ctrlp_user_command = 'dir %s /-n /b /s /a-d'  " Windows
+else
+    let g:ctrlp_user_command = 'find %s -type f'        " MacOSX/Linux
+endif
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" peter: [BUNDLE] showing
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" indent line(vertical)
+Bundle 'indentLine.vim'
+" for text filtering and alignment
+Bundle 'Tabular'
+let g:tabular_loaded = 1
+" Automatic syntax checking
+Bundle 'Syntastic'
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" peter: [BUNDLE] using powerline for status bar
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Bundle 'Lokaltog/powerline'
+" if using Mac, see the
+" https://powerline.readthedocs.org/en/latest/installation/linux.html#font-installation
+" for install the fonts on MacOSX
+Bundle 'Lokaltog/powerline-fonts'
+set rtp+=~/.vim/bundle/powerline/powerline/bindings/vim
+set laststatus=2 " Always display the statusline in all windows
+set noshowmode " Hide the default mode text (e.g. -- INSERT -- below the statusline)
+set t_Co=256
+let g:Powerline_symbols='fancy'
+set encoding=utf-8
+let g:syntastic_python_flake8_args = '--ignore=W191,E501,E121,E122,E123,E128'
+" When you’re pressing Escape to leave insert mode in the terminal, it will by default 
+" take a second or another keystroke to leave insert mode completely and update the 
+" statusline. below solves this.
+if ! has('gui_running')
+    set ttimeoutlen=10
+    augroup FastEscape
+        autocmd!
+        au InsertEnter * set timeoutlen=0
+        au InsertLeave * set timeoutlen=1000
+    augroup END
+endif
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" peter: using NERD tree instead of winmanager to show the dir
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Bundle 'winmanager'
+" let g:winManagerWindowLayout='FileExplorer'
+" let g:winManagerWidth = 20
+" let g:bufExplorerSortBy = "name"
+" nmap <leader>wm :WMToggle<cr>
+
+Bundle 'The-NERD-tree'
+Bundle 'nerdtree-ack'
+Bundle 'scrooloose/nerdcommenter'
+nmap <F2> :NERDTreeToggle<CR>
+let NERDTreeWinSize=22
+let NERDTreeIgnore=['\.pyc', '\.swp']
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" peter: about plugin taglist, using Tagbar instead of taglist
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Bundle 'taglist.vim'
+" let Tlist_Show_One_File = 1
+" let Tlist_Exit_OnlyWindow = 1
+" let Tlist_Use_Right_Window = 1
+" let Tlist_WinWidth = 25
+" nmap <leader>tt :TlistToggle<cr>
+" nmap <leader>tu :TlistUpdate<cr>
+
+Bundle 'Tagbar'
+nmap <F3> :TagbarToggle<cr>
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" peter: about plugin taglist, using Tagbar instead of taglist
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Bundle 'Gundo'
+nnoremap <F5> :GundoToggle<CR>
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" peter: author info
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" it depends on NERD Commenter
+Bundle 'AuthorInfo'
+let g:vimrc_author='Peter Xu'
+let g:vimrc_email='p@cooliktas.com'
+let g:vimrc_homepage='http://peter.cooliktas.com'
+
+nmap <F4> :AuthorInfoDetect<cr>
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" peter: [BUNDLE] handle surround things
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Delete/change/add parentheses/quotes/XML-tags/much more with ease
+Bundle 'surround.vim'
+" Use the repeat command (.) with supported plugins
+Bundle 'repeat.vim'
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" peter: treat a arg/indent as an obj, so operations like
+" diw/daw may work (using dia, daa)
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Bundle 'argtextobj.vim'
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" peter: [BUNDLE] using jedi-vim for python autocompletion
+" and neocomplcache for auto popup and preview window.
+" *THIS IS PRETTY COOL FEATURE*
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Bundle 'davidhalter/jedi-vim'
+Bundle 'neocomplcache'
+Bundle 'neocomplcache-snippets_complete'
+Bundle 'neco-look'
+" will never select the first one of the pop-up selection choices
+let g:jedi#popup_select_first = 0
+let g:neocomplcache_enable_at_startup = 1
+let g:neocomplcache_enable_auto_select = 0
+let g:neocomplcache_enable_quick_match = 1
+let g:neocomplcache_enable_wildcard = 1
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" peter: [BUNDLE] code snippet
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Bundle 'UltiSnips'
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" peter: [BUNDLE] colors
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Bundle 'colorv.vim'
+Bundle 'WebAPI.vim'
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" peter: [BUNDLE] shell script
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Bundle 'bash-support.vim'
+let g:BASH_AuthorName   = 'Peter Xu'
+let g:BASH_Email        = 'p@cooliktas.com'
+let g:BASH_Company      = 'semimes'
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" peter: [BUNDLE] html/css
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" vim plugins for HTML and CSS hi-speed coding.
+" see http://github.com/mattn/zencoding-vim/raw/master/TUTORIAL
+Bundle 'ZenCoding.vim'
+" inspired by Zen Coding, see https://github.com/rstacruz/sparkup
+Bundle 'rstacruz/sparkup', {'rtp': 'vim/'}
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" peter: [BUNDLE] .rst related
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Bundle 'riv.vim'
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" peter: [BUNDLE] other bundles
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Bundle 'minibufexpl.vim'
+Bundle 'bufexplorer.zip'
+Bundle 'ervandew/supertab'
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" peter: general settings
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+set history=400
+set so=1                    " scroll the screen only if one line left
+set wildmenu
+set ruler                   " always show current pos
+set nu
+" set hid                   you can change buffer when u didnot save them
+set backspace=eol,start,indent
+
+set hlsearch
+set ignorecase              " ignore case when searching
+set smartcase
+set incsearch
+set showmatch               " show matching bracet
+
+set noerrorbells            " no sound if error
+set novisualbell
+
+set autoread                " auto read file if it's changed outside
+set mouse=a                 " always enable mouse
+
+set expandtab
+set shiftwidth=4
+set softtabstop=4
+set tabstop=4
+set backspace=2
+set smarttab
+set lbr
+"set tw=500
+set ai                      " auto indent
+set si                      " smart indent
+set cindent                 " c style indent
+set wrap
+set whichwrap+=<,>,h,l
+
+set nobackup                " turn off backup
+set nowb
+set noswapfile
+
+
+" about mapleader
+let mapleader = ","
+let g:mapleader = ","
+
+" about saving
+nmap <leader>w :w!<cr>
+nmap <leader><leader> :redraw!<cr>:redraws!<cr>
+
+" for digraph
+set digraph
+" easily move between windows
+nmap <C-j> <C-W>j
+nmap <C-k> <C-W>k
+nmap <C-h> <C-W>h
+nmap <C-l> <C-W>l
+
+" use 0 to jump to the beginning
+map 0 ^
+
+" restore cursor to file position in previous editing session
+set viminfo='10,"100,:20,%,n~/.viminfo
+
+" remove the windows ^M 
+noremap <Leader>m mmHmt:%s/<C-V><cr>//ge<cr>'tzt'm
+
+" Highlight the words of any line that column number > 80.
+match ErrorMsg '\%>80v.\+'
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" peter: basic functions 
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" function to get system type
+function! MySystem()
+    if has("win32")
+        return "win32"
+    elseif has("unix")
+        return "unix"
+    else
+        return "mac"
+    endif
+endfunction
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" peter: file type and encoding
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+syntax enable
+syntax on
+" enable filetype plugin, filetype off is required by vundle it's been set
+" at the beginning of this file
+" filetype off
+filetype plugin on
+filetype indent on
+filetype plugin indent on
+set completeopt=longest,menu,preview
+
+" file encoding, file fmt, and change between fmt
+set fileencodings=utf-8,cp936,gbk,gb18030,big5,latin1
+set ffs=unix,dos,mac
+nmap <leader>fd :se ff=dos<cr>
+nmap <leader>fu :se ff=unix<cr>
+nmap <leader>fm :se ff=mac<cr>
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" peter: use tab 
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+nmap <leader>to :tabnew %<cr>
+nmap <leader>tc :tabclose<cr>
+nmap <leader>tn :tabnext<cr>
+nmap <leader>tp :tabprevious<cr>
+nmap <leader>tm :tabmove
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" peter: use folding
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" za 打开/关闭当前折叠
+" zA 循环地打开/关闭当前折叠
+" zo/zc 打开/关闭当前折叠
+" zR/zM 打开/关闭所有折叠
+" enable and set the foldmethod  never fold when starting the vim 
+set foldenable
+set foldmethod=syntax
+set foldlevel=100
+nnoremap <space> @=((foldclosed(line('.')) < 0) ? 'zc' : 'zo')<CR>
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" peter: spell check 
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" set if want need spell check
+map <leader>ss :setlocal spell!<cr>
+map <leader>sn ]
+map <leader>sp [
+map <leader>sa zg
+map <leader>s? z=
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" peter: about bracket expanding 
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+vnoremap $1 <esc>`>a)<esc>`<i(<esc>
+vnoremap $2 <esc>`>a]<esc>`<i[<esc>
+vnoremap $3 <esc>`>a}<esc>`<i{<esc>
+vnoremap $$ <esc>`>a"<esc>`<i"<esc>
+vnoremap $q <esc>`>a'<esc>`<i'<esc>
+vnoremap $w <esc>`>a"<esc>`<i"<esc>
+
+" Map auto complete of (, ", ', [
+inoremap $1 ()<esc>i
+inoremap $2 []<esc>i
+inoremap $3 {}<esc>i
+inoremap $4 {<esc>o}<esc>O
+inoremap $q ''<esc>i
+inoremap $e ""<esc>i
+inoremap $t <><esc>i
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" peter: about F1 to F12 
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+" F7 1/1
+" peter: clipboard with xclip, this is absolutely amazing!!!
+if MySystem() == "unix"
+    vmap <F7> :!xclip -f -sel c<CR>
+    map <S-F7> :-1r !xclip -o -sel c<CR>'z
+endif
+
+" F8 1/1
+" peter: you just need to select them; xclip deal with the rest!
+if MySystem() == "unix"
+    map <F8> :-1r !xclip -o -sel p<CR>
+endif
+
+" F11 1/1
+" Buffer - reverse everything ... :)
+map <F11> ggVGg?
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" peter: colors and font 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+if MySystem() == "mac"
+  set gfn=Menlo:h14
+  set shell=/bin/bash
+elseif MySystem() == "windows"
+  set gfn=Bitstream\ Vera\ Sans\ Mono:h10
+elseif MySystem() == "unix"
+  set gfn=Courier\ 11
+  set shell=/bin/bash
+endif
+
+if MySystem() == "mac"
+    if has("gui_running")
+      set fuoptions=maxvert,maxhorz
+      au GUIEnter * set fullscreen
+    endif
+endif
+
+if has("gui_running")
+    set guioptions-=m
+    set guioptions-=T
+    set guioptions-=l
+    set guioptions-=L
+    set guioptions-=r
+    set guioptions-=R
+    " Highlight current line
+    set cursorline
+    if MySystem() == "windows"
+        au GUIEnter * simalt ~x     " automatic maximize the window
+    endif
+    "colorscheme ps_color
+    "colorscheme default
+    "colorscheme evening
+    "colorscheme desert
+    "colorscheme zellner
+    colorscheme desert
+else
+    set background=dark
+    colorscheme elflord
+endif
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" peter: about general abbrev
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" personal information
+ia xdate <c-r>=strftime("%Y-%m-%d %H:%M:%S")<cr>
+iab xname Peter Xu <p@cooliktas.com>
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" peter: useful for command line config 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+func! Cwd()
+    let cwd = getcwd()
+    return "e " . cwd
+endfunc
+
+func! DeleteTillSlash()
+  let g:cmd = getcmdline()
+  if MySystem() == "unix" || MySystem() == "mac"
+    let g:cmd_edited = substitute(g:cmd, "\\(.*\[/\]\\).*", "\\1", "")
+  else
+    let g:cmd_edited = substitute(g:cmd, "\\(.*\[\\\\]\\).*", "\\1", "")
+  endif
+  if g:cmd == g:cmd_edited
+    if MySystem() == "unix" || MySystem() == "mac"
+      let g:cmd_edited = substitute(g:cmd, "\\(.*\[/\]\\).*/", "\\1", "")
+    else
+      let g:cmd_edited = substitute(g:cmd, "\\(.*\[\\\\\]\\).*\[\\\\\]", "\\1", "")
+    endif
+  endif   
+  return g:cmd_edited
+endfunc
+
+func! CurrentFileDir(cmd)
+    return a:cmd . " " . expand("%:p:h") . "/"
+endfunc
+
+cno $h e ~/
+cno $d c <C-\>eCurrentFileDir("e")<cr>
+cno $j e ./
+cno $c e <C-\>eCurrentFileDir("e")<cr>
+
+cno $th tabnew ~/
+cno $td tabnew ./ 
+
+" bash like shortcut
+cnoremap <C-A> <Home>
+cnoremap <C-E> <End>
+cnoremap <C-K> <C-U>
+cnoremap <C-P> <Up>
+cnoremap <C-N> <Down>
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" peter: about the text handling
+" From an idea by Michael Naumann
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+function! CmdLine(str)
+    exe "menu Foo.Bar :" . a:str
+    emenu Foo.Bar
+    unmenu Foo
+endfunction 
+
+function! VisualSelection(direction) range
+    let l:saved_reg = @"
+    execute "normal! vgvy"
+
+    let l:pattern = escape(@", '\\/.*$^~[]')
+    let l:pattern = substitute(l:pattern, "\n$", "", "")
+
+    if a:direction == 'b'
+        execute "normal ?" . l:pattern . "^M"
+    elseif a:direction == 'gv'
+        call CmdLine("vimgrep " . '/'. l:pattern . '/' . ' **/*.')
+    elseif a:direction == 'replace'
+        call CmdLine("%s" . '/'. l:pattern . '/')
+    elseif a:direction == 'f'
+        execute "normal /" . l:pattern . "^M"
+    endif
+
+    let @/ = l:pattern
+    let @" = l:saved_reg
+endfunction
+
+" When you press <leader>r you can search and replace the selected text
+vnoremap <silent> <leader>r :call VisualSelection('replace')<CR>
+
+"  In visual mode when you press * or # to search for the current selection
+vnoremap <silent> * :call VisualSelection('f')<CR>
+vnoremap <silent> # :call VisualSelection('b')<CR>
+
+" When you press gv you vimgrep after the selected text
+vnoremap <silent> gv :call VisualSelection('gv')<CR>
+
+" Some useful keys for vimgrep
+map <leader>g :vimgrep // **/*.<left><left><left><left><left><left><left>
+map <leader><space> :vimgrep // <C-R>%<C-A><right><right><right><right><right><right><right><right><right>
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" peter: about plugin ctags & cscope & global
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+nmap <C-\>b :!ctags -R --fields=+lS && cscope -Rbkq<cr>
+set cscopequickfix=s-,c-,d-,i-,t-,e-
+set cscopetag
+" check cscope for definition of a symbol before checking ctags: set to 1
+" if you want the reverse search order.
+set csto=0
+" add any cscope database in current directory
+
+" if we need cscope for python, then:
+" $ find . -name '*.py' > cscope.files
+" $ cscope -Rbq
+" then we can have the reference files
+if filereadable("cscope.out")
+    cs add cscope.out 
+" else add the database pointed to by environment variable
+elseif $CSCOPE_DB != ""
+    cs add $CSCOPE_DB
+endif
+" show msg when any other cscope db added
+set cscopeverbose 
+
+" we can also use global, global is faster than cscope when updating
+" the reference. global doesnot support python by default.
+" usage: cd project/; find . -name '*.[ch]' > gtags.files; gtags
+" set cscopeprg=gtags-cscope
+" cs add GTAGS
+" update: global -u (pretty fast, we can exec it after :w)
+
+nmap <C-\>s :cs find s <C-R>=expand("<cword>")<CR><CR> 
+nmap <C-\>g :cs find g <C-R>=expand("<cword>")<CR><CR> 
+nmap <C-\>c :cs find c <C-R>=expand("<cword>")<CR><CR> 
+nmap <C-\>t :cs find t <C-R>=expand("<cword>")<CR><CR> 
+nmap <C-\>e :cs find e <C-R>=expand("<cword>")<CR><CR> 
+nmap <C-\>f :cs find f <C-R>=expand("<cfile>")<CR><CR> 
+nmap <C-\>i :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
+nmap <C-\>d :cs find d <C-R>=expand("<cword>")<CR><CR> 
+"set notimeout
+"set timeoutlen=4000
+   
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" peter: about the buffer
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+command! Bclose call <SID>BufcloseCloseIt()
+function! <SID>BufcloseCloseIt()
+   let l:currentBufNum = bufnr("%")
+   let l:alternateBufNum = bufnr("#")
+
+   if buflisted(l:alternateBufNum)
+     buffer #
+   else
+     bnext
+   endif
+
+   if bufnr("%") == l:currentBufNum
+     new
+   endif
+
+   if buflisted(l:currentBufNum)
+     execute("bdelete! ".l:currentBufNum)
+   endif
+endfunction
+
+" close the current buffer
+nmap <leader>bc :Bclose<cr>
+" close all buffers
+nmap <leader>ba :1,300 bd!<cr>
+nmap <right> :bn<cr>
+nmap <leader>bn :bn<cr>
+nmap <left> :bp<cr>
+nmap <leader>bp :bp<cr>
+
+" When pressing <leader>cd switch to the directory of the open buffer
+map <leader>cd :cd %:p:h<cr>
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" peter: about plugin quickfix
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+nmap <F6> :cn<CR>
+nmap <S-F6> :np<CR>
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" peter: about plugin Vim grep
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let Grep_Skip_Dirs = 'RCS CVS SCCS .svn .git generated'
+set grepprg=/usr/bin/grep\ -nH
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" peter: about plugin cope, for handling errors
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Do :help cope if you are unsure what cope is. It's super useful!
+map <leader>co :botright cope<cr>
+map <leader>cc :ccl<cr>
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" peter: about programming: switch syntax
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+map <leader>1 :set syntax=c<cr>
+map <leader>2 :set syntax=cpp<cr>
+map <leader>3 :set syntax=python<cr>
+map <leader>4 :set ft=java<cr>
+map <leader>$ :syntax sync fromstart<cr>
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" peter: about programming: python
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+autocmd FileType python setlocal foldmethod=indent
+func! DeleteTrailingWS()
+  exe "normal mz"
+  %s/\s\+$//ge
+  exe "normal `z"
+endfunc
+autocmd BufWrite *.py :call DeleteTrailingWS()
+set guitablabel=%t

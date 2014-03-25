@@ -1,0 +1,14 @@
+webapi#http#decodeURI()	webapi.txt	/*webapi#http#decodeURI()*
+webapi#http#encodeURI()	webapi.txt	/*webapi#http#encodeURI()*
+webapi#http#encodeURIComponent()	webapi.txt	/*webapi#http#encodeURIComponent()*
+webapi#http#get()	webapi.txt	/*webapi#http#get()*
+webapi#http#post()	webapi.txt	/*webapi#http#post()*
+webapi#json#decode()	webapi.txt	/*webapi#json#decode()*
+webapi#json#encode()	webapi.txt	/*webapi#json#encode()*
+webapi#xml#parse()	webapi.txt	/*webapi#xml#parse()*
+webapi#xml#parseFile()	webapi.txt	/*webapi#xml#parseFile()*
+webapi#xml#parseURI()	webapi.txt	/*webapi#xml#parseURI()*
+webapi-contents	webapi.txt	/*webapi-contents*
+webapi-functions	webapi.txt	/*webapi-functions*
+webapi-introduction	webapi.txt	/*webapi-introduction*
+webapi.txt	webapi.txt	/*webapi.txt*

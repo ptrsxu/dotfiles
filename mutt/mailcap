@@ -1,0 +1,12 @@
+# Text/Html, need package w3m support
+text/html;/usr/bin/w3m -I %{charset} -T text/html -dump %s; copiousoutput
+# Word, need package wvhtml support
+application/msword; wvHtml %s - | w3m -dump -T text/html; copiousoutput; nametemplate=%s.html
+# PDF
+application/pdf; pdftotext %s - | w3m -dump; copiousoutput; nametemplate=%s.txt
+# Excel, need package xlhtml support
+application/excel; xlhtml %s | w3m -dump -T text/html; copiousoutput; nametemplate=%s.html
+application/vnd.ms-excel; xlhtml %s | w3m -dump -T text/html; copiousoutput; nametemplate=%s.html
+# PowerPoint
+application/powerpoint; ppthtml %s | w3m -dump -T text/html; copiousoutput; nametemplate=%s.html
+application/vnd.ms-powerpoint; ppthtml %s | w3m -dump -T text/html; copiousoutput; nametemplate=%s.html

@@ -1,0 +1,19 @@
+[user]
+	name = Peter Xu
+	email = p@cooliktas.com
+# [http]
+#     proxy = http://127.0.0.1:8087
+#     sslVerify = false
+# [https]
+#     proxy = http://127.0.0.1:8087
+#     sslVerify = false
+[color]
+	ui = true
+	diff = true
+[core]
+	editor = vim
+#	autocrlf = true
+[merge]
+	tool = meld
+[alias]
+	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --
