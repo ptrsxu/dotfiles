@@ -9,7 +9,7 @@ apt-get upgrade --yes
 # setup devel environment
 ################################################################################
 apt-get install --yes vim ctags cscope
-apt-get install --yes git
+apt-get install --yes git mercurial subversion
 
 apt-get install --yes traceroute
 apt-get install --yes automake autotools-dev autoconf
@@ -23,6 +23,9 @@ apt-get install --yes powerline
 
 # for some lib
 apt-get install --yes libyaml-dev
+
+# for database
+apt-get install --yes postgresql
 
 # for python2
 apt-get install --yes ipython python-numpy python-scipy python-matplotlib 

@@ -697,3 +697,10 @@ func! DeleteTrailingWS()
 endfunc
 autocmd BufWrite *.py :call DeleteTrailingWS()
 set guitablabel=%t
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" peter: memo
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" SAVE WITH SUDO LATER:
+"     :w !sudo tee %
