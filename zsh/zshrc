@@ -66,3 +66,7 @@ source $ZSH/oh-my-zsh.sh
 # ssh
 # export SSH_KEY_PATH="~/.ssh/dsa_id"
 [ -e /home/ptr/dotfiles/common/userenv.sh ] && source /home/ptr/dotfiles/common/userenv.sh
+
+if [ "$(which pip)" != "" ]; then
+    eval "$(pip completion --zsh)"
+fi
