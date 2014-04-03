@@ -14,8 +14,8 @@ apt-get install --yes git mercurial subversion
 apt-get install --yes traceroute
 apt-get install --yes automake autotools-dev autoconf
 
-# for web server
-apt-get install --yes nginx
+# for web
+apt-get install --yes nginx curl
 
 # for better shell ops
 apt-get install --yes autojump
@@ -23,6 +23,8 @@ apt-get install --yes powerline
 
 # for some lib
 apt-get install --yes libyaml-dev
+# python pillow will need them for png/jpeg/... support
+apt-get install --yes libjpeg-dev libfreetype6 libfreetype6-dev zlib1g-dev
 
 # for database
 apt-get install --yes postgresql
