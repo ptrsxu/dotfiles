@@ -26,8 +26,8 @@ apt-get install --yes libyaml-dev
 # python pillow will need them for png/jpeg/... support
 apt-get install --yes libjpeg-dev libfreetype6 libfreetype6-dev zlib1g-dev
 
-# for database
-apt-get install --yes postgresql
+# for database, a password is required for mysql-server during the installation.
+apt-get install --yes postgresql mysql-client mysql-server memcached redis-server
 
 # for python2
 apt-get install --yes ipython python-numpy python-scipy python-matplotlib 
