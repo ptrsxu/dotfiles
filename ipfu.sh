@@ -14,7 +14,7 @@ apt-get install --yes git gitolite mercurial subversion
 apt-get install --yes automake autotools-dev autoconf
 
 # for web
-apt-get install --yes nginx curl traceroute ifstat
+apt-get install --yes nginx curl traceroute ifstat nethogs
 
 # for better shell ops
 apt-get install --yes autojump
@@ -39,7 +39,7 @@ apt-get install --yes python-flask
 apt-get install --yes vim-python
 
 # for python3
-apt-get install --yes python3-pip
+apt-get install --yes ipython3 python3-pip
 
 # for python-recsys
 #apt-get install csc-pysparse
