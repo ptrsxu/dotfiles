@@ -9,7 +9,7 @@ apt-get upgrade --yes
 # setup devel environment
 ################################################################################
 apt-get install --yes vim ctags cscope
-apt-get install --yes git gitolite mercurial subversion
+apt-get install --yes git tig gitolite mercurial subversion
 
 apt-get install --yes automake autotools-dev autoconf
 

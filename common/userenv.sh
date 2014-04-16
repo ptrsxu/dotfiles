@@ -31,3 +31,6 @@ fi
 if [ -e ~/.pythonrc ]; then
     export PYTHONSTARTUP=~/.pythonrc
 fi
+
+# use vim shortcuts for shells
+# set -o vi
