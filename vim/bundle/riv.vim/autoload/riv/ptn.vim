@@ -138,6 +138,14 @@ fun! riv#ptn#init() "{{{
     " Section: "{{{3
     " Although most puncutation can be used, only use some of them.
     " the '::' and '..' are not considered as section punct
+    " XXX when :: match title , it's not literal_block, 
+    "     when it's not title, it became literal_block
+    "
+    "     As we don't include ':.' in default title puncutation, we set 
+    "     syntax to ignore it.
+    "     ../../after/syntax/rst.vim
+    "     ../../syntax/rst.vim
+    "
     let s:p.section = '\v^%(([=`''"~^_*+#-])\1+|([:.])\2{2,})\s*$'
 
 
@@ -154,6 +162,8 @@ fun! riv#ptn#init() "{{{
     let tbl_sepr  = '%(\|\s.{-})=\+%(-+\+)+%(.{-}\s\|)='
     let tbl_head  = '%(\|\s.{-})=\+%(\=+\+)+%(.{-}\s\|)='
     let tbl_line  = '\|\s.{-}\s\|'
+    " malformed line
+    let tbl_mline  = '\|.{-}\|'
     let tbl_all   = tbl_fence . '|' . tbl_line
 
     let tbl_wrap = '\v^\s*%s\s*$'
@@ -162,6 +172,7 @@ fun! riv#ptn#init() "{{{
     let s:p.table_sepr = printf(tbl_wrap, tbl_sepr)
     let s:p.table_head = printf(tbl_wrap, tbl_head)
     let s:p.table_line  = printf(tbl_wrap, tbl_line)
+    let s:p.table_mline  = printf(tbl_wrap, tbl_mline)
     let s:p.table  =  printf(tbl_wrap, tbl_all)
     let s:p.table_cell = '\v\|@<=[^|]+\|@='
 

@@ -25,7 +25,7 @@ EasyMotion is now completely
 - **Well-behaved**: It's consistent with the default motions of Vim and works
   well in all modes. And it now supports repeating with the dot operator.
 - **Configurable**: You can easily configure its behavior and map it to any key
-- **Sofisticated**: Provide flawless, smooth and fast motions with minimal keystrokes
+- **Sophisticated**: Provide flawless, smooth and fast motions with minimal keystrokes
 
 Even though some default behaviors were modified and many new features were
 added, I carefully considered backward compatibility. So those of you updating
@@ -152,6 +152,10 @@ What sounds complicated should become clear if you look at the following example
 " Gif config
 map  / <Plug>(easymotion-sn)
 omap / <Plug>(easymotion-tn)
+
+" These `n` & `N` mappings are options. You do not have to map `n` & `N` to EasyMotion.
+" Without these mappings, `n` & `N` works fine. (These mappings just provide
+" different highlight method and have some other features )
 map  n <Plug>(easymotion-next)
 map  N <Plug>(easymotion-prev)
 ```
@@ -280,7 +284,7 @@ Minimal Configuration Tutorial
 ------------------------------
 **I recommend to configure and map keys by yourself if you are true Vimmer.**
 
-**Please do not be satisfied with just installing vim-easymotion, configuring it yourself boost your productibity more and more!**
+**Please do not be satisfied with just installing vim-easymotion, configuring it yourself boost your productivity more and more!**
 
 Default `<Leader><Leader>` prefix isn't easy to press, and I leave them just for backwards compatibility.
 You should at least change prefix key like this `map <Leader> <Plug>(easymotion-prefix)`

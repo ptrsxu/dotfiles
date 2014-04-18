@@ -3,10 +3,10 @@ ColorV: A Powerful color tool
 #############################
 
 :Author: Rykka G.F
-:Update: 2012-12-30
-:Version: 3.0.2
+:Update: 2013-04-21
+:Version: 3.0.5
 :Github: https://github.com/Rykka/colorv.vim
-:Vim.org: http://www.vim.com/scripts/script.php?script_id=3597
+:Vim.org: http://www.vim.org/scripts/script.php?script_id=3597
 
 
 Intro
@@ -18,21 +18,21 @@ It makes handling colors much easier.
 
 With it, you can:
 
-View colors Easier
+View colors
     ``:ColorV`` (<leader>cv): show ColorV window
 
     ``:ColorVView`` (<leader>cw): show ColorV window with color text under cursor.
 
     ``:ColorVPreview`` (<leader>cpp): Preview colors in current buffer
 
-Edit colors Easier
+Edit colors
     ``:ColorVEdit`` (<leader>ce): Edit color text under cursor
 
     ``:ColorVEditAll`` (<leader>cE): Edit color text under cursor and change all in current buffer.
 
     ``:ColorVInsert`` (<leader>cii): Insert color with ColorV window.
 
-Design Colors Easier
+Design Colors
     ``:ColorVName`` (<leader>cn): show color name list window.
 
     ``:ColorVList Hue`` (<leader>cgh) generate Hue list with color text under cursor.
@@ -41,7 +41,7 @@ Design Colors Easier
 
     ``:ColorVPicker`` (<leader>cd): show a GUI color picker.
 
-Design Schemes Easier
+Design Schemes
     ``:ColorVScheme`` (<leader>css) Fetch scheme from Kuler or ColourLover
 
     ``:ColorVSchemeFav`` (<leader>csf) Show Faved schemes
@@ -55,7 +55,7 @@ Get latest and Post issues at https://github.com/Rykka/colorv.vim
 
 ScreenShot:
 
-.. image:: http://i5.minus.com/i9DpLvJkrztHq.png
+.. image:: http://i.minus.com/iF5Cd8D74Rfls.png
 
 Install
 -------
@@ -90,8 +90,8 @@ Tutors
   - ``ColorVEditTo {fmt}`` (<leader>c2r...) fmt see  formats_
   - ``ColorVEditAll`` (<leader>cE)
   - ``ColorVInsert {fmt}`` (<leader>cii...)
-  - ``:ColorVList {gen}`` (<leader>cg2...) gen see generates_
-  - ``:ColorVTurn2 {hex1} {hex2}`` (<leader>cgg)
+  - ``ColorVList {gen}`` (<leader>cg2...) gen see generates_
+  - ``ColorVTurn2 {hex1} {hex2}`` (<leader>cgg)
   - ``ColorVPreview`` (<leader>cpp)
   - ``ColorVPreviewLine`` (<leader>cpl)
   - ``ColorVClear`` (<leader>cpc)
@@ -112,6 +112,7 @@ Tutors
     5. Tips: show tips or trigger relevant actions.
     6. Stats: change relevant setting.
 
+  - ``<Tab>/<S-tab>`` will jump to next/prev input
   - ``+=/-_/scroll up/scroll down`` to change RGB/HSV attributes under cursor
   - ``yy/cc/p/yr/...`` to copy/paste colors
   - ``gg/g2/...`` to generate a list
@@ -197,15 +198,22 @@ TODO
  
   - add upload, maybe a site to uplad to is needed.
   - ColorVTurn2 should use cursor color text if hex1 omitted.
+  - DONE 2013-04-21 Add '<Tab>/<S-Tab>' for input jumping
+  - DONE 2013-04-21 Add 0 value support for pallette and input
 
 Done
 ~~~~
 
+* bug fix:
+
+  - fix #16 and #17: nnor for maps inside colorv.
+  - fix #18: #888888 term code should be 102
+
 * 3.0.2:
 
   - add back_buf for all win. 
-  - add current fetch info. 
-  - fix nav arrow pos. 
+  - add scheme fetch info. 
+  - fix scheme nav arrow pos. 
 
 * 3.0.1:
 

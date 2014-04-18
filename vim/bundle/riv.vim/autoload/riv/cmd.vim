@@ -3,7 +3,7 @@
 "    File: cmd.vim
 " Summary: Commands
 "  Author: Rykka G.F
-"  Update: 2012-10-14
+"  Update: 2013-04-12
 "=============================================
 let s:cpo_save = &cpo
 set cpo-=C
@@ -362,6 +362,11 @@ let g:riv_default.cmds = [
     \'menu': 'Convert.S5',
     \'type': 'buf', 'mode': 'm', 'maps': ['2ss'], 'keys': [],
 \},
+\{'name': 'Riv2Pdf' , 'act': 'call riv#publish#file2("pdf",1)',
+    \'note': 'Convert to PDF',
+    \'menu': 'Convert.Pdf',
+    \'type': 'buf', 'mode': 'm', 'maps': ['2pp'], 'keys': [],
+\},
 \{'name': 'Riv2Xml' , 'act': 'call riv#publish#file2("xml",1)',
     \'note': 'Convert to Xml',
     \'menu': 'Convert.Xml',
@@ -452,17 +457,17 @@ let g:riv_default.cmds = [
     \'note': 'Run doctest for Vim Script',
     \'menu': 'Helper.VimTest',
 \},
-\{'name': 'RivIntro' , 'act': 'call riv#action#open("intro")',
+\{'name': 'RivIntro' , 'act': 'call riv#action#tutor("riv_intro","[Riv_Intro]")',
     \'note': 'Show Riv Intro',
     \'menu': 'About.Riv\ Intro',
     \'type': 'menu'
 \},
-\{'name': 'RivInstruction' , 'act': 'call riv#action#open("instruction")',
+\{'name': 'RivInstruction' , 'act': 'call riv#action#tutor("riv_instruction", "[Riv_Instruction]")',
     \'note': 'Show Riv Instrucion',
     \'menu': 'About.Riv\ Intruction',
     \'type': 'menu'
 \},
-\{'name': 'RivQuickStart' , 'act': 'call riv#action#tutor("riv_quickstart")',
+\{'name': 'RivQuickStart' , 'act': 'call riv#action#tutor("riv_quickstart", "[Riv_QuickStart]")',
     \'note': 'Show Riv QuickStart',
     \'menu': 'About.Riv\ QuickStart',
     \'type': 'menu'
@@ -480,6 +485,11 @@ let g:riv_default.cmds = [
 \{'name': 'RivSpecification' , 'act': 'call riv#action#open("specification")',
     \'note': 'Show RST Specification',
     \'menu': 'About.RST\ Specification',
+    \'type': 'menu'
+\},
+\{'name': 'RivDirectives' , 'act': 'call riv#action#open("directives")',
+    \'note': 'Show RST Directives',
+    \'menu': 'About.RST\ Directives',
     \'type': 'menu'
 \},
 \{'name': 'RivGetLatest',
@@ -542,7 +552,8 @@ fun! riv#cmd#init_maps() "{{{
             endif
             if cmd.mode =~ 'v'
               " for the range function. only :call can be used.
-              exe "vma <silent><buffer>" key ":".cmd.act."<CR>" 
+              " NOTE: #29: use noremap to execute cmd.act
+              exe "vno <silent><buffer>" key ":".cmd.act."<CR>" 
             endif
           endfor
         else
@@ -559,7 +570,7 @@ fun! riv#cmd#init_maps() "{{{
             endif
             if cmd.mode =~ 'v'
               " for the range function. only :call can be used.
-              exe "vma <silent><buffer>" key ":".cmd.act."<CR>" 
+              exe "vno <silent><buffer>" key ":".cmd.act."<CR>" 
             endif
           endfor
           for key in cmd.keys
@@ -570,11 +581,11 @@ fun! riv#cmd#init_maps() "{{{
               exe "nma <silent><buffer>" key "<Plug>(".cmd.name .")"
             endif
             if cmd.keymode =~ 'i'
-              exe "ima <silent><buffer>" key "<C-O>:".cmd.act."<CR>"
+              exe "ino <silent><buffer>" key "<C-O>:".cmd.act."<CR>"
             endif
             if cmd.keymode =~ 'v'
               " for the range function. only :call can be used.
-              exe "vma <silent><buffer>" key ":".cmd.act."<CR>" 
+              exe "vno <silent><buffer>" key ":".cmd.act."<CR>" 
             endif
           endfor
         endif

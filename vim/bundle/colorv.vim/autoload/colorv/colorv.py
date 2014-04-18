@@ -100,7 +100,7 @@ def hex2term(h):
         elif r>= 92 and r<=96:
             t_num = 59
         elif r>= 132 and r<=136:
-            t_num = 106
+            t_num = 102
         elif r>= 172 and r<= 176:
             t_num = 145
         elif r>= 212 and r<=216:
@@ -351,7 +351,7 @@ def draw_palette(H,height,width):
     if name not in lookup: 
         p2=[]
         V_step = 100.0/height
-        S_step = 100.0/width
+        S_step = 100.0/(width-1)
         for row in range(height):
             V = 100 - V_step * row
             if V<=0 : V = 1
