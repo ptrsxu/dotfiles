@@ -102,8 +102,9 @@ Plugin 'Lokaltog/powerline-fonts'
 " using vim-airline instead of powerline
 Plugin 'bling/vim-airline'
 set laststatus=2
-" let g:airline_powerline_fonts = 1
-
+"let g:airline_powerline_fonts = 1
+let g:airline_theme = 'badwolf'
+set t_Co=256
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Peter: using nerdtree instead of winmanager to show the dir
@@ -397,7 +398,7 @@ map <F11> ggVGg?
 if has("mac")
     set gfn=Menlo:h14
     set shell=/bin/bash
-elseif has("windows")
+elseif has("win32")
     set gfn=Bitstream\ Vera\ Sans\ Mono:h10
 elseif has("unix")
     set gfn=Courier\ 11
@@ -418,7 +419,7 @@ if has("gui_running")
     set guioptions-=R
     " Highlight current line
     set cursorline
-    if has("windows")
+    if has("win32")
         au GUIEnter * simalt ~x     " automatic maximize the window
     endif
     colorscheme desert
