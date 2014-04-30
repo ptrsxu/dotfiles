@@ -49,11 +49,7 @@ plugins=(autojump git)
 
 source $ZSH/oh-my-zsh.sh
 
-# User configuration
-
-export MANPATH="/usr/local/man:$MANPATH"
-
-# # Preferred editor for local and remote sessions
+# Preferred editor for local and remote sessions
 if [[ -n $SSH_CONNECTION ]]; then
   export EDITOR='vim'
 else
@@ -69,4 +65,7 @@ if [ "$(which pip)" != "" ]; then
     eval "$(pip completion --zsh)"
 fi
 
-export PATH=/usr/local/bin:$PATH
+# User configuration
+[ -e ../common/userenv.sh ] && source ../common/userenv.sh
+
+export MANPATH="/usr/local/man:$MANPATH"

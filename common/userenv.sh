@@ -12,6 +12,7 @@
 
 #set -o nounset                              # Treat unset variables as an error
 
+PATH=/usr/local/bin:$PATH
 if [ -e ~/.local ]; then
     echo "We have got ~/.local, dealing with related settings..."
     for exe in bin sbin
