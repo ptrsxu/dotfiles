@@ -180,7 +180,7 @@ let g:pymode_syntax_print_as_function = 1
 Plugin 'Valloric/YouCompleteMe'
 highlight YcmErrorLine guibg=#3f0000
 let g:ycm_complete_in_comments = 1
-let g:ycm_autoclose_preview_window_after_insertion = 1
+let g:ycm_autoclose_preview_window_after_completion = 1
 
 " YouCompleteMe obsoleletes following plugins:
 "     clang_complete
