@@ -26,6 +26,7 @@ apt-get install --yes xclip
 # for some lib
 apt-get install --yes libyaml-dev
 apt-get install --yes libargtable2-dev  # for gnu arg parse
+apt-get install --yes libpcap-dev tcpdump libdnet-dev
 
 # python pillow will need them for png/jpeg/... support
 apt-get install --yes libjpeg-dev libfreetype6 libfreetype6-dev zlib1g-dev
