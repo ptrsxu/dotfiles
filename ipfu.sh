@@ -4,6 +4,10 @@
 apt-get update
 apt-get upgrade --yes
 
+################################################################################
+# for system management
+################################################################################
+apt-get install --yes zerofree
 
 ################################################################################
 # setup devel environment
@@ -14,6 +18,7 @@ apt-get install --yes ack-grep
 
 apt-get install --yes automake autotools-dev autoconf libtool build-essential
 apt-get install --yes clang cmake
+apt-get install --yes linux-headers-`uname -r` dkms     # for kernel related.
 
 # for web
 apt-get install --yes nginx curl traceroute ifstat nethogs
