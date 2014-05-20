@@ -32,5 +32,14 @@ if [ -e ~/.pythonrc ]; then
     export PYTHONSTARTUP=~/.pythonrc
 fi
 
+if [ `uname -s` = "Darwin" ]; then
+    # set JAVA_HOME
+    if [ -e /usr/libexec/java_home -a `/usr/libexec/java_home` != "" ]; then
+        JAVA_HOME=`/usr/libexec/java_home`
+    fi
+fi
+
+export JAVA_HOME
+
 # use vim shortcuts for shells
 # set -o vi
