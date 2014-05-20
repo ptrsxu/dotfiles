@@ -30,7 +30,7 @@ ZSH_THEME="dst"
 # DISABLE_CORRECTION="true"
 
 # Uncomment following line if you want red dots to be displayed while waiting for completion
-# COMPLETION_WAITING_DOTS="true"
+COMPLETION_WAITING_DOTS="true"
 
 # Uncomment following line if you want to disable marking untracked files under
 # VCS as dirty. This makes repository status check for large repositories much,
@@ -40,7 +40,7 @@ ZSH_THEME="dst"
 # Uncomment following line if you want to the command execution time stamp shown 
 # in the history command output.
 # The optional three formats: "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
-# HIST_STAMPS="mm/dd/yyyy"
+HIST_STAMPS="yyyy-mm-dd"
 
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
@@ -49,27 +49,23 @@ plugins=(autojump git)
 
 source $ZSH/oh-my-zsh.sh
 
-# User configuration
-
-# export MANPATH="/usr/local/man:$MANPATH"
-
-# # Preferred editor for local and remote sessions
-# if [[ -n $SSH_CONNECTION ]]; then
-#   export EDITOR='vim'
-# else
-#   export EDITOR='mvim'
-# fi
+# Preferred editor for local and remote sessions
+if [[ -n $SSH_CONNECTION ]]; then
+  export EDITOR='vim'
+else
+  export EDITOR='mvim'
+fi
 
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
 
 # ssh
 # export SSH_KEY_PATH="~/.ssh/dsa_id"
-[ -e /home/ptr/dotfiles/common/userenv.sh ] && source /home/ptr/dotfiles/common/userenv.sh
-
 if [ "$(which pip)" != "" ]; then
     eval "$(pip completion --zsh)"
 fi
-[ -e /Users/xper/dotfiles/common/userenv.sh ] && source /Users/xper/dotfiles/common/userenv.sh
 
-export PATH=/usr/local/bin:$PATH
+# User configuration
+[ -e ../common/userenv.sh ] && source ../common/userenv.sh
+
+export MANPATH="/usr/local/man:$MANPATH"

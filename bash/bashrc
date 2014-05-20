@@ -114,5 +114,5 @@ if ! shopt -oq posix; then
 fi
 
 if [ "$(which pip)" != "" ]; then
-    eval "$(pip completion --zsh)"
+    eval "$(pip completion --bash)"
 fi
