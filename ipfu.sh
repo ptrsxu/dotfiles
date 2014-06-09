@@ -8,6 +8,8 @@ apt-get upgrade --yes
 # for system management
 ################################################################################
 apt-get install --yes zerofree
+apt-get install --yes tmux
+
 
 ################################################################################
 # setup devel environment
