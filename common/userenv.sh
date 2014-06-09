@@ -18,13 +18,13 @@ if [ -e ~/.local ]; then
     for exe in bin sbin
     do
         if [ -d ~/.local/$exe ]; then
-            export PATH=$(cd ~/.local/$exe; pwd):$PATH
+            PATH=$(cd ~/.local/$exe; pwd):$PATH
         fi
     done
     for lib in lib lib64
     do
         if [ -d ~/.local/$lib ]; then
-            export LD_LIBRARY_PATH=$(cd ~/.local/$lib; pwd):$LD_LIBRARY_PATH
+            LD_LIBRARY_PATH=$(cd ~/.local/$lib; pwd):$LD_LIBRARY_PATH
         fi
     done
 fi
@@ -34,12 +34,20 @@ if [ -e ~/.pythonrc ]; then
 fi
 
 if [ `uname -s` = "Darwin" ]; then
-    # set JAVA_HOME
+    # set JAVA_HOME for mac
     if [ -e /usr/libexec/java_home -a `/usr/libexec/java_home` != "" ]; then
         JAVA_HOME=`/usr/libexec/java_home`
     fi
+elif [ `uname -s` = "Linux" -a `head -1 /etc/issue | awk '{print $1}'` = "Ubuntu" ]; then
+    # set JAVA_HOME for ubuntu
+    if [ -e /usr/lib/jvm/default-java -a "$JAVA_HOME" = "" ]; then
+        JAVA_HOME=/usr/lib/jvm/default-java
+        PATH=$JAVA_HOME/bin:$PATH
+    fi
 fi
 
+export PATH
+export LD_LIBRARY_PATH
 export JAVA_HOME
 
 # use vim shortcuts for shells

@@ -59,6 +59,9 @@ apt-get install --yes python3-dev ipython3 python3-pip
 # for python editor eric
 # apt-get install --yes eric
 
+# for java
+apt-get install --yes default-jdk
+
 # for database, a password is required for mysql-server during the installation.
 # so we should keep the installation at the end of all.
 apt-get install --yes memcached libmemcached-dev redis-server

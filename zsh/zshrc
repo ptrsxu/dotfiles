@@ -65,7 +65,5 @@ if [ "$(which pip)" != "" ]; then
     eval "$(pip completion --zsh)"
 fi
 
-# User configuration
-[ -e ../common/userenv.sh ] && source ../common/userenv.sh
-
 export MANPATH="/usr/local/man:$MANPATH"
+

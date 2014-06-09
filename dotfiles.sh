@@ -150,6 +150,9 @@ function install_sh()
         ln -s $INSTALL_FROM/zsh/zshrc $INSTALL_TO/.zshrc
         echo "Installed."
     fi
+
+    echo "[ -e $INSTALL_FROM/common/userenv.sh ] && source $INSTALL_FROM/common/userenv.sh"\
+        >> $INSTALL_TO/.zshrc
 }
 
 
