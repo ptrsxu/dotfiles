@@ -52,3 +52,6 @@ export JAVA_HOME
 
 # use vim shortcuts for shells
 # set -o vi
+
+# handle rvm for ruby version manage.
+[ -e /home/ptr/.rvm/scripts/rvm ] && source /home/ptr/.rvm/scripts/rvm
