@@ -12,6 +12,10 @@
 	diff = true
 [core]
 	editor = vim
+	# refuse to commit mixed cr/lf/crlf files
+	safecrlf = true
+	# always turn to LF for commits, do nothing for checkout.
+	autocrlf = input
 #	autocrlf = true
 [merge]
 	tool = meld
