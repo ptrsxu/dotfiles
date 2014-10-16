@@ -12,6 +12,12 @@
 	diff = true
 [core]
 	editor = vim
+	# refuse to commit mixed cr/lf/crlf files
+	safecrlf = true
+	# always turn to LF for commits, do nothing for checkout.
+	# we turn to LF even on mac(CR), becuase commands such as
+	# `cat` works not so good with CR
+	autocrlf = input
 #	autocrlf = true
 [merge]
 	tool = meld
