@@ -55,7 +55,8 @@ pip install bottle
 pip install flask
 pip install django
 pip install django-classy-tags django-cms django-mptt django-sekizai
-pip install flup paste
+pip install flup
+pip install paste pastescript
 pip install twisted twisted-core twisted-names twisted-web
 
 pip install markupsafe pygments jinja2 mako
