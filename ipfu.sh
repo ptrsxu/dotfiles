@@ -43,6 +43,7 @@ apt-get install --yes libjpeg-dev libfreetype6 libfreetype6-dev zlib1g-dev
 apt-get install --yes python-dev ipython python-numpy python-scipy python-matplotlib
 apt-get install --yes python-pip
 apt-get install --yes python-virtualenv
+apt-get install --yes pylint
 apt-get install --yes python-sphinx
 apt-get install --yes python-django
 apt-get install --yes python-flask

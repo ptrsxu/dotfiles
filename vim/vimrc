@@ -112,7 +112,7 @@ set t_Co=256
 Plugin 'scrooloose/nerdcommenter'
 Plugin 'scrooloose/nerdtree'
 nmap <F2> :NERDTreeToggle<CR>
-let NERDTreeWinSize=22
+let NERDTreeWinSize=25
 let NERDTreeIgnore=['\.pyc', '\.swp']
 
 

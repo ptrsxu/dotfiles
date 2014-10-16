@@ -118,6 +118,20 @@ function install_pythonrc()
     fi
 }
 
+function install_pylintrc()
+{
+    echo
+    if [ -e $INSTALL_TO/.pylintrc ]; then
+        echo "Moving $INSTALL_TO/.pylintrc $INSTALL_TO/.pylintrc.$$"
+        mv $INSTALL_TO/.pylintrc $INSTALL_TO/.pylintrc.$$
+    fi
+    if [ -e $INSTALL_FROM/python/pylintrc ]; then
+        echo "Installing python configure files..."
+        ln -s $INSTALL_FROM/python/pylintrc $INSTALL_TO/.pylintrc
+        echo "Installed."
+    fi
+}
+
 function install_sh()
 {
     echo
@@ -163,6 +177,7 @@ check_home
 install_vimscripts
 install_gitconfig
 install_pythonrc
+install_pylintrc
 install_sh
 
 print_end_notes
