@@ -46,6 +46,11 @@ elif [ `uname -s` = "Linux" -a `head -1 /etc/issue | awk '{print $1}'` = "Ubuntu
     fi
 fi
 
+# set up path for anaconda on mac
+if [ -e ~/anaconda/bin/conda ]; then
+    PATH=$(cd ~/anaconda/bin; pwd):$PATH
+fi
+
 export PATH
 export LD_LIBRARY_PATH
 export JAVA_HOME
