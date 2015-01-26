@@ -27,6 +27,7 @@ apt-get install --yes valgrind kcachegrind oprofile linux-tools  # for profiler.
 apt-get install --yes nginx curl traceroute ifstat nethogs
 
 # for better shell ops
+apt-get install --yes zsh zsh-common zsh-dev zsh-doc
 apt-get install --yes autojump
 apt-get install --yes powerline
 apt-get install --yes xclip
