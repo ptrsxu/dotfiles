@@ -58,6 +58,7 @@ pip install django-classy-tags django-cms django-mptt django-sekizai
 pip install flup
 pip install paste pastescript
 pip install twisted twisted-core twisted-names twisted-web
+pip install uwsgi
 
 pip install markupsafe pygments jinja2 mako
 pip install fontforge html5lib
