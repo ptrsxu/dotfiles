@@ -15,7 +15,7 @@
 PATH=/usr/local/bin:$PATH
 if [ -e ~/.local ]; then
     echo "We have got ~/.local, dealing with related settings..."
-    for exe in bin sbin
+    for exe in bin sbin s
     do
         if [ -d ~/.local/$exe ]; then
             PATH=$(cd ~/.local/$exe; pwd):$PATH
