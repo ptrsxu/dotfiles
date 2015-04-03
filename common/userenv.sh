@@ -21,6 +21,14 @@ if [ -e ~/.local ]; then
             PATH=$(cd ~/.local/$exe; pwd):$PATH
         fi
     done
+
+    for exe in scala maven ant spark hadoop hbase jython
+    do
+        if [ -d ~/.local/$exe/bin ]; then
+            PATH=$(cd ~/.local/$exe/bin; pwd):$PATH
+        fi
+    done
+
     for lib in lib lib64
     do
         if [ -d ~/.local/$lib ]; then
