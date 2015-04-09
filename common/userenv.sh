@@ -56,7 +56,7 @@ fi
 
 # set up path for anaconda on mac
 if [ -e ~/anaconda/bin/conda ]; then
-    PATH=$(cd ~/anaconda/bin; pwd):$PATH
+    PATH=$PATH:$(cd ~/anaconda/bin; pwd)
 fi
 
 export PATH

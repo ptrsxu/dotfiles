@@ -181,6 +181,7 @@ Plugin 'Valloric/YouCompleteMe'
 highlight YcmErrorLine guibg=#3f0000
 let g:ycm_complete_in_comments = 1
 let g:ycm_autoclose_preview_window_after_completion = 1
+let g:ycm_server_keep_logfile = 1
 
 " YouCompleteMe obsoleletes following plugins:
 "     clang_complete
@@ -406,8 +407,8 @@ elseif has("unix")
 endif
 
 if has("mac") && has("gui_running")
-    set fuoptions=maxvert,maxhorz
-    au GUIEnter * set fullscreen
+    " set fuoptions=maxvert,maxhorz
+    " au GUIEnter * set fullscreen
 endif
 
 if has("gui_running")
@@ -420,7 +421,7 @@ if has("gui_running")
     " Highlight current line
     set cursorline
     if has("win32")
-        au GUIEnter * simalt ~x     " automatic maximize the window
+    "    au GUIEnter * simalt ~x     " automatic maximize the window
     endif
     colorscheme desert
 else
