@@ -57,10 +57,11 @@ Plugin 'FuzzyFinder'
 " Full path fuzzy file, buffer, mru, tag, ... finder for Vim.
 " *THIS IS PRETTY COOL FEATURE, JUST TRY TO PRESS CTRL + P*
 Plugin 'ctrlpvim/ctrlp.vim'
+set runtimepath^=~/.vim/bundle/ctrlp.vim
 let g:ctrlp_map = '<Leader>ff'
 let g:ctrlp_cmd = 'CtrlP'
 
-if has("win32")
+if has("win32") || has('win64')
     set wildignore+=*\\tmp\\*,*.swp,*.zip,*.exe
 else
     set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.tar.gz,*.tar.bz2
@@ -72,7 +73,7 @@ let g:ctrlp_custom_ignore = {
   \ 'link' : 'some_bad_symbolic_links',
   \ }
 
-if has("win32")
+if has("win32") || has('win64')
     let g:ctrlp_user_command = 'dir %s /-n /b /s /a-d'
 else
     let g:ctrlp_user_command = 'find %s -type f'
@@ -399,7 +400,7 @@ map <F11> ggVGg?
 if has("mac")
     set gfn=Menlo:h14
     set shell=/bin/bash
-elseif has("win32")
+elseif has("win32") || has('win64')
     set gfn=Bitstream\ Vera\ Sans\ Mono:h10
 elseif has("unix")
     set gfn=Courier\ 11
@@ -420,7 +421,7 @@ if has("gui_running")
     set guioptions-=R
     " Highlight current line
     set cursorline
-    if has("win32")
+    if has("win32") || has('win64')
     "    au GUIEnter * simalt ~x     " automatic maximize the window
     endif
     colorscheme desert
