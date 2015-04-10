@@ -56,11 +56,11 @@ Plugin 'FuzzyFinder'
 
 " Full path fuzzy file, buffer, mru, tag, ... finder for Vim.
 " *THIS IS PRETTY COOL FEATURE, JUST TRY TO PRESS CTRL + P*
-Plugin 'kien/ctrlp.vim'
+Plugin 'ctrlpvim/ctrlp.vim'
 let g:ctrlp_map = '<Leader>ff'
 let g:ctrlp_cmd = 'CtrlP'
 
-if has("windows")
+if has("win32")
     set wildignore+=*\\tmp\\*,*.swp,*.zip,*.exe
 else
     set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.tar.gz,*.tar.bz2
@@ -72,7 +72,7 @@ let g:ctrlp_custom_ignore = {
   \ 'link' : 'some_bad_symbolic_links',
   \ }
 
-if has("windows")
+if has("win32")
     let g:ctrlp_user_command = 'dir %s /-n /b /s /a-d'
 else
     let g:ctrlp_user_command = 'find %s -type f'
