@@ -9,6 +9,7 @@ apt-get upgrade --yes
 ################################################################################
 apt-get install --yes zerofree
 apt-get install --yes tmux
+apt-get install --yes sysstat nicstat pstack
 
 
 ################################################################################
