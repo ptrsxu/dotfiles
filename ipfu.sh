@@ -9,6 +9,8 @@ apt-get upgrade --yes
 ################################################################################
 apt-get install --yes zerofree
 apt-get install --yes tmux
+apt-get install --yes curl traceroute
+apt-get install --yes ifstat nethogs htop iptraf
 
 
 ################################################################################
@@ -24,7 +26,7 @@ apt-get install --yes linux-headers-`uname -r` dkms     # for kernel related.
 apt-get install --yes valgrind kcachegrind oprofile linux-tools  # for profiler.
 
 # for web
-apt-get install --yes nginx curl traceroute ifstat nethogs
+apt-get install --yes nginx
 
 # for better shell ops
 apt-get install --yes zsh zsh-common zsh-dev zsh-doc
@@ -70,3 +72,6 @@ apt-get install --yes default-jdk
 # so we should keep the installation at the end of all.
 apt-get install --yes memcached libmemcached-dev redis-server
 apt-get install --yes postgresql mysql-client libmysqlclient-dev mysql-server
+
+# for javascript
+apt-get install --yes nodejs nodejs-dev
