@@ -11,7 +11,7 @@ apt-get install --yes zerofree
 apt-get install --yes tmux
 apt-get install --yes curl traceroute
 apt-get install --yes ifstat nethogs htop iptraf
-
+apt-get install --yes sysstat nicstat pstack
 
 ################################################################################
 # setup devel environment
