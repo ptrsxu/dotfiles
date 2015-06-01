@@ -37,6 +37,9 @@ brew install watch
 brew install htop
 brew install ifstat
 
+# for python, python has to be installed before vim.
+brew install python python3 jython
+
 # for editor
 brew install vim macvim
 brew install emacs
@@ -56,9 +59,6 @@ brew install ctags cscope
 
 # for vcs
 brew install mercurial git tig
-
-# for python
-brew install python python3 jython
 
 # for database
 brew install redis mongodb mysql sqlite
