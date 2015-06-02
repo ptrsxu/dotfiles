@@ -40,8 +40,6 @@ pip install docutils
 pip install sphinx
 pip install pyyaml
 
-pip install xlrd xlwt
-
 # for general develenv
 pip install virtualenv wheel
 pip install pep8 pylint pyflakes coverage clonedigger
@@ -89,3 +87,12 @@ pip install pillow
 # others
 pip install pytz
 pip install pyzmq
+
+
+###############################################################################
+# for pdf/word/excel etc.
+###############################################################################
+pip install pypdf2
+pip install openpyxl
+pip install docx
+pip install xlrd xlwt
