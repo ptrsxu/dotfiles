@@ -65,8 +65,12 @@ apt-get install --yes python3-dev ipython3 python3-pip
 # for python editor eric
 # apt-get install --yes eric
 
-# for java
-apt-get install --yes default-jdk
+# install oracle java 8
+sudo apt-get purge openjdk*   # just in case
+sudo apt-get install software-properties-common
+sudo add-apt-repository ppa:webupd8team/java
+sudo apt-get update
+sudo apt-get install oracle-java8-installer
 
 # for database, a password is required for mysql-server during the installation.
 # so we should keep the installation at the end of all.

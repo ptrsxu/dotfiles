@@ -59,6 +59,11 @@ if [ -e ~/anaconda/bin/conda ]; then
     PATH=$PATH:$(cd ~/anaconda/bin; pwd)
 fi
 
+# set up path for pyenv
+if [ -d ~/.pyenv/shims ]; then
+    PATH=$(cd ~/.pyenv/shims; pwd):$PATH
+fi
+
 export PATH
 export LD_LIBRARY_PATH
 export JAVA_HOME

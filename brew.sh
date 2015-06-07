@@ -39,6 +39,7 @@ brew install ifstat
 
 # for python, python has to be installed before vim.
 brew install python python3 jython
+brew install pyenv
 
 # for editor
 brew install vim macvim
