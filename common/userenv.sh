@@ -60,6 +60,9 @@ if [ -e ~/anaconda/bin/conda ]; then
 fi
 
 # set up path for pyenv
+if [ -d ~/.pyenv/bin ]; then        # for manually installation.
+    PATH=$(cd ~/.pyenv/bin; pwd):$PATH
+fi
 if [ -d ~/.pyenv/shims ]; then
     PATH=$(cd ~/.pyenv/shims; pwd):$PATH
 fi
@@ -73,3 +76,5 @@ export JAVA_HOME
 
 # handle rvm for ruby version manage.
 [ -e /home/ptr/.rvm/scripts/rvm ] && source /home/ptr/.rvm/scripts/rvm
+
+# NEVER put a "exit 0" here!
