@@ -12,6 +12,7 @@ brew install autoconf autojump automake cmake gdbm gettext glib gmp gnutls
 
 # for some libs
 brew install libevent libffi libgpg-error libksba libtasn1 libtool libyaml pkg-config readline
+brew install libxml2 libxslt
 
 ################################################################################
 # for system

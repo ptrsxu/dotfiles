@@ -17,6 +17,7 @@ apt-get install --yes sysstat nicstat pstack
 # for bisic libs
 ################################################################################
 apt-get install --yes libreadline-dev libbz2-dev
+apt-get install --yes libxml2-dev libxslt-dev
 
 ################################################################################
 # setup devel environment
