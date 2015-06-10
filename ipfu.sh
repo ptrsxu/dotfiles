@@ -75,6 +75,7 @@ sudo apt-get install oracle-java8-installer
 # for database, a password is required for mysql-server during the installation.
 # so we should keep the installation at the end of all.
 apt-get install --yes memcached libmemcached-dev redis-server
+apt-get install --yes sqlite3 libsqlite3-dev
 apt-get install --yes postgresql mysql-client libmysqlclient-dev mysql-server
 
 # for javascript
