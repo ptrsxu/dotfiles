@@ -14,6 +14,11 @@ apt-get install --yes ifstat nethogs htop iptraf
 apt-get install --yes sysstat nicstat pstack
 
 ################################################################################
+# for bisic libs
+################################################################################
+apt-get install --yes libreadline-dev libbz2-dev
+
+################################################################################
 # setup devel environment
 ################################################################################
 apt-get install --yes vim-gnome ctags cscope global ack-grep
