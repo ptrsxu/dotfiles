@@ -226,6 +226,12 @@ let g:UltiSnipsSnippetDirectories=["~/.vim/bundle/UltiSnips"]
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Peter: [BUNDLE] As IDE for scala
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Plugin 'derekwyatt/vim-scala'
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Peter: [BUNDLE] html/css IDE
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " vim plugins for HTML and CSS hi-speed coding.
