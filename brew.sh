@@ -46,6 +46,9 @@ brew install pyenv
 brew install vim macvim
 brew install emacs
 
+brew tap neovim/neovim
+brew install --HEAD neovim
+
 # for brew cast
 brew install brew-cask
 
