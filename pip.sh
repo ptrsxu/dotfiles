@@ -38,6 +38,7 @@ pip install pyinstaller
 # for documents
 pip install docutils
 pip install sphinx
+pip install sphinx_bootstrap_theme
 pip install pyyaml
 
 # for general develenv
