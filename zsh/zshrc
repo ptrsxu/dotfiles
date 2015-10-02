@@ -61,9 +61,8 @@ fi
 
 # ssh
 # export SSH_KEY_PATH="~/.ssh/dsa_id"
-if [ "$(which pip)" != "" ]; then
-    eval "$(pip completion --zsh)"
-fi
+# if [ "$(which pip)" != "" ]; then
+#     eval "$(pip completion --zsh)"
+# fi
 
 export MANPATH="/usr/local/man:$MANPATH"
-

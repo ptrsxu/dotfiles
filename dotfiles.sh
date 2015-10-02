@@ -148,11 +148,9 @@ function install_sh()
         fi
     fi
 
-    echo "[ -e $INSTALL_FROM/common/userenv.sh ] && source $INSTALL_FROM/common/userenv.sh"\
-        >> $INSTALL_TO/.bashrc
-
     if [ ! -e $INSTALL_TO/.oh-my-zsh ]; then
-        wget --no-check-certificate http://install.ohmyz.sh -O - | sh
+        # wget --no-check-certificate http://install.ohmyz.sh -O - | sh
+        sh -c "$(wget https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)"
     fi
 
     if [ -e $INSTALL_TO/.zshrc ]; then
@@ -165,8 +163,18 @@ function install_sh()
         echo "Installed."
     fi
 
+    echo "[[ -s $(brew --prefix)/etc/profile.d/autojump.sh ]] && . $(brew --prefix)/etc/profile.d/autojump.sh" \
+        >> $INSTALL_TO/.bashrc
+
+    echo "[[ -s $(brew --prefix)/etc/profile.d/autojump.sh ]] && . $(brew --prefix)/etc/profile.d/autojump.sh" \
+        >> $INSTALL_TO/.zshrc
+
+    echo "[ -e $INSTALL_FROM/common/userenv.sh ] && source $INSTALL_FROM/common/userenv.sh"\
+        >> $INSTALL_TO/.bashrc
+
     echo "[ -e $INSTALL_FROM/common/userenv.sh ] && source $INSTALL_FROM/common/userenv.sh"\
         >> $INSTALL_TO/.zshrc
+
 }
 
 
