@@ -163,11 +163,12 @@ function install_sh()
         echo "Installed."
     fi
 
-    echo "[[ -s $(brew --prefix)/etc/profile.d/autojump.sh ]] && . $(brew --prefix)/etc/profile.d/autojump.sh" \
-        >> $INSTALL_TO/.bashrc
-
-    echo "[[ -s $(brew --prefix)/etc/profile.d/autojump.sh ]] && . $(brew --prefix)/etc/profile.d/autojump.sh" \
-        >> $INSTALL_TO/.zshrc
+    if [ $OS = "Darwin" ]; then
+        echo "[[ -s $(brew --prefix)/etc/profile.d/autojump.sh ]] && . $(brew --prefix)/etc/profile.d/autojump.sh" \
+            >> $INSTALL_TO/.bashrc
+        echo "[[ -s $(brew --prefix)/etc/profile.d/autojump.sh ]] && . $(brew --prefix)/etc/profile.d/autojump.sh" \
+            >> $INSTALL_TO/.zshrc
+    fi
 
     echo "[ -e $INSTALL_FROM/common/userenv.sh ] && source $INSTALL_FROM/common/userenv.sh"\
         >> $INSTALL_TO/.bashrc
