@@ -14,6 +14,8 @@ brew install autoconf autojump automake cmake gdbm gettext glib gmp gnutls
 brew install libevent libffi libgpg-error libksba libtasn1 libtool libyaml pkg-config readline
 brew install libxml2 libxslt
 
+brew install libuv
+
 ################################################################################
 # for system
 ################################################################################
@@ -35,7 +37,7 @@ brew install tmux
 
 # for system monitor
 brew install watch
-brew install htop
+brew install htop-osx
 brew install ifstat
 
 # for python, python has to be installed before vim.
@@ -55,8 +57,11 @@ brew install brew-cask
 # for multimedia
 brew install jpeg jpegoptim
 
+# for notice
+brew install terminal-notifier
+
 ################################################################################
-# for devel 
+# for devel
 ################################################################################
 
 # general devel tools
@@ -67,6 +72,8 @@ brew install mercurial git tig
 
 # for database
 brew install redis mongodb mysql sqlite
+brew install mycli
+# brew install pgcli
 
 # for java (install jdk from Oracle is suggested.)
 brew install maven
@@ -77,6 +84,9 @@ brew install sbt
 
 # for nodejs
 brew install nodejs nvm
+
+# for editer
+brew cask install macdown
 
 ################################################################################
 # for bigdata
