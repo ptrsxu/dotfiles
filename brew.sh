@@ -34,6 +34,7 @@ brew install p7zip
 # for terminal
 brew install zsh
 brew install tmux
+brew install mosh
 
 # for system monitor
 brew install watch
