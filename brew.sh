@@ -83,7 +83,10 @@ brew install gradle
 brew install sbt
 
 # for nodejs
-brew install nodejs nvm
+brew install nvm
+brew install nodejs
+brew install watchman
+brew install flow
 
 # for editer
 brew cask install macdown

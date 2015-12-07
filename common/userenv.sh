@@ -22,7 +22,7 @@ if [ -e ~/.local ]; then
         fi
     done
 
-    for exe in scala maven ant spark hadoop hbase jython
+    for exe in scala maven ant spark hadoop hbase jython hbase anaconda
     do
         if [ -d ~/.local/$exe/bin ]; then
             PATH=$(cd ~/.local/$exe/bin; pwd):$PATH
@@ -54,17 +54,17 @@ elif [ `uname -s` = "Linux" -a `head -1 /etc/issue | awk '{print $1}'` = "Ubuntu
     fi
 fi
 
-# set up path for anaconda on mac
-if [ -e ~/anaconda/bin/conda ]; then
-    PATH=$PATH:$(cd ~/anaconda/bin; pwd)
-fi
-
 # set up path for pyenv
 if [ -d ~/.pyenv/bin ]; then        # for manually installation.
     PATH=$(cd ~/.pyenv/bin; pwd):$PATH
 fi
 if [ -d ~/.pyenv/shims ]; then
     PATH=$(cd ~/.pyenv/shims; pwd):$PATH
+fi
+
+# set up for haskell cabal
+if [ -d ~/.cabal/bin ]; then
+    PATH=$(cd ~/.cabal/bin; pwd):$PATH
 fi
 
 export PATH
