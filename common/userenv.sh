@@ -22,7 +22,7 @@ if [ -e ~/.local ]; then
         fi
     done
 
-    for exe in scala maven ant spark hadoop hbase jython hbase anaconda
+    for exe in scala maven ant spark hadoop hbase jython hbase
     do
         if [ -d ~/.local/$exe/bin ]; then
             PATH=$(cd ~/.local/$exe/bin; pwd):$PATH
@@ -70,6 +70,9 @@ fi
 export PATH
 export LD_LIBRARY_PATH
 export JAVA_HOME
+
+alias an35='~/.local/anaconda/bin/ipython'
+alias an27=' ~/.local/anaconda/envs/2.7/bin/ipython'
 
 # use vim shortcuts for shells
 # set -o vi
