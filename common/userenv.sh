@@ -22,7 +22,7 @@ if [ -e ~/.local ]; then
         fi
     done
 
-    for exe in scala maven ant spark hadoop hbase jython hbase
+    for exe in scala sbt maven ant spark hadoop hbase jython hbase hive pio elasticsearch
     do
         if [ -d ~/.local/$exe/bin ]; then
             PATH=$(cd ~/.local/$exe/bin; pwd):$PATH
@@ -67,12 +67,21 @@ if [ -d ~/.cabal/bin ]; then
     PATH=$(cd ~/.cabal/bin; pwd):$PATH
 fi
 
+PATH=/Developer/NVIDIA/CUDA-7.5/bin/:$PATH
+
 export PATH
 export LD_LIBRARY_PATH
 export JAVA_HOME
+export HOMEBREW_GITHUB_API_TOKEN='aec095b373d378888ec38f6e46003e873f0fab2b'
 
-alias an35='~/.local/anaconda/bin/ipython'
-alias an27=' ~/.local/anaconda/envs/2.7/bin/ipython'
+if [ -d ~/.local/anaconda/ ]; then
+    alias an35='~/.local/anaconda/bin/ipython'
+    alias apy3='~/.local/anaconda/bin/python'
+    alias api3='~/.local/anaconda/bin/pip'
+    alias an27=' ~/.local/anaconda/envs/2.7/bin/ipython'
+    alias apy2=' ~/.local/anaconda/envs/2.7/bin/python'
+    alias api2=' ~/.local/anaconda/envs/2.7/bin/pip'
+fi
 
 # use vim shortcuts for shells
 # set -o vi

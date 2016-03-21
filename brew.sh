@@ -3,6 +3,13 @@
 ################################################################################
 brew update
 
+# for science tap
+brew tap homebrew/science
+
+# for brew cast
+brew install brew-cask
+
+
 ################################################################################
 # for dev tool chain and some basic libs.
 ################################################################################
@@ -15,6 +22,11 @@ brew install libevent libffi libgpg-error libksba libtasn1 libtool libyaml pkg-c
 brew install libxml2 libxslt
 
 brew install libuv
+
+# for multimedia
+brew install icoutils
+brew install jpeg jpegoptim
+brew install libpng libsvg librsvg
 
 ################################################################################
 # for system
@@ -51,12 +63,6 @@ brew install emacs
 
 brew tap neovim/neovim
 brew install --HEAD neovim
-
-# for brew cast
-brew install brew-cask
-
-# for multimedia
-brew install jpeg jpegoptim
 
 # for notice
 brew install terminal-notifier
@@ -95,10 +101,14 @@ brew cask install macdown
 ################################################################################
 # for bigdata
 ################################################################################
+brew install boost --with-python
+
 brew install hadoop
 brew install zookeeper
 brew install akka
 brew install kafka
+brew install vowpal-wabbit
+
 
 ################################################################################
 # for virtual machine
@@ -111,3 +121,10 @@ brew cask install veewee
 
 # for qemu
 brew install qemu
+
+################################################################################
+# for science
+################################################################################
+brew install openblas
+brew install opencv
+brew install octave --with-gui --HEAD

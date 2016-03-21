@@ -223,6 +223,9 @@ let g:UltiSnipsExpandTrigger="<Leader><Tab>"
 let g:UltiSnipsListSnippets="<Leader><s-Tab>"
 let g:UltiSnipsEditSplit="vertical"
 let g:UltiSnipsSnippetDirectories=["~/.vim/bundle/UltiSnips"]
+let g:snips_author="Peter Xu"
+let g:snips_email="p@cooliktas.com"
+let g:snips_github="ptrsxu"
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
