@@ -207,6 +207,10 @@ Plugin 'bufexplorer.zip'
 
 Plugin 'tpope/vim-rails.git'
 
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Peter: [BUNDLE] As IDE for rust
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Plugin 'rust-lang/rust.vim'
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Peter: [BUNDLE] code snippet

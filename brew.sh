@@ -128,3 +128,9 @@ brew install qemu
 brew install openblas
 brew install opencv
 brew install octave --with-gui --HEAD
+
+################################################################################
+# for dealing with documents
+################################################################################
+brew install pandoc
+brew install graphviz
