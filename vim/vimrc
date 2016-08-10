@@ -176,6 +176,8 @@ let g:pymode_syntax_print_as_function = 1
 " TODO:
 "     cd ~/.vim/bundle/YouCompleteMe
 "     ./install.sh --clang-completer
+"     or
+"     ./install.sh --system-libclang --clang-completer --racer-completer
 " For windows ``:help youcompleteme``
 " visit official page for more configurations.
 Plugin 'Valloric/YouCompleteMe'
@@ -211,6 +213,11 @@ Plugin 'tpope/vim-rails.git'
 " Peter: [BUNDLE] As IDE for rust
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Plugin 'rust-lang/rust.vim'
+Plugin 'racer-rust/vim-racer'
+
+set hidden
+let g:racer_cmd=$HOME."/.cargo/bin/racer"
+let $RUST_SRC_PATH=$HOME."/.cargo/src/rust/src"
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Peter: [BUNDLE] code snippet
