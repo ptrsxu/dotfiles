@@ -26,7 +26,7 @@ apt-get install --yes vim-gnome ctags cscope global ack-grep
 apt-get install --yes git tig gitolite mercurial subversion
 
 apt-get install --yes automake autotools-dev autoconf libtool build-essential
-apt-get install --yes clang cmake
+apt-get install --yes clang libclang-dev cmake cmake-data cmake-doc
 apt-get install --yes linux-headers-`uname -r` dkms     # for kernel related.
 
 apt-get install --yes valgrind kcachegrind oprofile linux-tools  # for profiler.
