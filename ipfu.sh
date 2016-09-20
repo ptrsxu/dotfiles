@@ -80,6 +80,7 @@ apt-get install --yes software-properties-common
 add-apt-repository ppa:webupd8team/java
 apt-get update
 apt-get install --yes oracle-java8-installer
+apt-get install --yes maven
 
 # for neovim
 # add-apt-repository ppa:neovim-ppa/unstable
