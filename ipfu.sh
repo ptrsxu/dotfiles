@@ -74,6 +74,12 @@ apt-get install --yes libatlas-dev
 # for python editor eric
 # apt-get install --yes eric
 
+# for sbt
+echo "deb https://dl.bintray.com/sbt/debian /" | sudo tee -a /etc/apt/sources.list.d/sbt.list
+sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 642AC823
+sudo apt-get update
+sudo apt-get install --yes sbt
+
 # install oracle java 8, which would need confirmation.
 apt-get purge openjdk*   # just in case
 apt-get install --yes software-properties-common
