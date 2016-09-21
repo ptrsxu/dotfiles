@@ -71,7 +71,4 @@ export MANPATH="/usr/local/man:$MANPATH"
 [[ -s /usr/local/etc/profile.d/autojump.sh ]] && . /usr/local/etc/profile.d/autojump.sh
 
 # for ubuntu
-[[ -s /usr/share/autojump/autojump.zsh ]] && . [[ -s /usr/local/etc/profile.d/autojump.sh ]] && . /usr/local/etc/profile.d/autojump.sh
-
-# for all
-[ -e /home/pxu/dotfiles/common/userenv.sh ] && source /home/pxu/dotfiles/common/userenv.sh
+[[ -s /usr/share/autojump/autojump.zsh ]] && . /usr/share/autojump/autojump.zsh
