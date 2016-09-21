@@ -1,4 +1,4 @@
-﻿// 
+// 
 // ExpressionIsNeverOfProvidedTypeIssue.cs
 // 
 // Author:

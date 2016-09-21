@@ -1,4 +1,4 @@
-﻿// 
+// 
 // RedundantArgumentNameIssue.cs
 //  
 // Author:

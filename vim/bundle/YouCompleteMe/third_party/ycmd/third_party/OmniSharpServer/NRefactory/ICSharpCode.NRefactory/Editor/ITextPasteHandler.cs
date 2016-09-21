@@ -1,4 +1,4 @@
-﻿// ITextPasteHandler.cs
+// ITextPasteHandler.cs
 //
 // Author:
 //   Mike Krüger <mkrueger@novell.com>

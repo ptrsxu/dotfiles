@@ -1,4 +1,4 @@
-﻿using OmniSharp.Solution;
+using OmniSharp.Solution;
 
 namespace OmniSharp.ProjectManipulation.AddReference
 {

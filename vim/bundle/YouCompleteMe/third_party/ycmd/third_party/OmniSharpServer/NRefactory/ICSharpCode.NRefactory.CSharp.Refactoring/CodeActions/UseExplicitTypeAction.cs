@@ -1,4 +1,4 @@
-﻿// 
+// 
 // UseExplicitType.cs
 //  
 // Author:

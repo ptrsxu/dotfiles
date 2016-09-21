@@ -1,4 +1,4 @@
-﻿// 
+// 
 // AccessToModifiedClosureTests.cs
 //  
 // Author:

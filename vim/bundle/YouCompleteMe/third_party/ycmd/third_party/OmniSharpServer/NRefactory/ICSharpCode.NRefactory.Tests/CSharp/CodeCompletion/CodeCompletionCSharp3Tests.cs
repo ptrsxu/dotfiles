@@ -1,4 +1,4 @@
-﻿//
+//
 // CodeCompletionCSharp3Tests.cs
 //
 // Author:

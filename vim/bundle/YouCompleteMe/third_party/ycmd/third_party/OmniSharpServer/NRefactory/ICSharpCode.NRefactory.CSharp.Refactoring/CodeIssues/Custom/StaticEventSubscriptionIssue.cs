@@ -1,4 +1,4 @@
-﻿//
+//
 // StaticEventSubscriptionIssue.cs
 //
 // Author:

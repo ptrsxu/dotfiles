@@ -1,4 +1,4 @@
-﻿// 
+// 
 // ConvertIfStatementToNullCoalescingExpressionActionTests.cs
 //  
 // Author:

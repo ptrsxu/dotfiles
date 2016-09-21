@@ -1,4 +1,4 @@
-﻿// 
+// 
 // RedundantAttributeParenthesesIssue.cs
 // 
 // Author:

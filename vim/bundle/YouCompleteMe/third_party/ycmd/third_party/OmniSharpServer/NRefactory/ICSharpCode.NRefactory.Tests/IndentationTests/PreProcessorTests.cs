@@ -1,4 +1,4 @@
-﻿//
+//
 // PreProcessorTests.cs
 //
 // Author:

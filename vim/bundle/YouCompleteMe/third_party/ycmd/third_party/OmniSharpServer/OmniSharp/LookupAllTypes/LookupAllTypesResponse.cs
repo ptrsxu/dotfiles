@@ -1,8 +1,8 @@
-﻿namespace OmniSharp.LookupAllTypes
+namespace OmniSharp.LookupAllTypes
 {
     public class LookupAllTypesResponse
     {
-        public string Types;
-        public string Interfaces;
+        public string Types { get; set; }
+        public string Interfaces { get; set; }
     }
 }

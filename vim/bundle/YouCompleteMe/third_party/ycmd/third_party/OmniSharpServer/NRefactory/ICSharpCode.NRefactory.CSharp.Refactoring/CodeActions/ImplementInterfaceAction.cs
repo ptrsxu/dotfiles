@@ -1,4 +1,4 @@
-﻿// 
+// 
 // ImplementInterfaceAction.cs
 //  
 // Author:

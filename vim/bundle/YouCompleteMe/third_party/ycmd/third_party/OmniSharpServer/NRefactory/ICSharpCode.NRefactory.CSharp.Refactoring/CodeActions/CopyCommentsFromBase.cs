@@ -1,4 +1,4 @@
-﻿// 
+// 
 // CopyCommentsFromBase.cs
 //  
 // Author:

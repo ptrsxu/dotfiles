@@ -1,4 +1,4 @@
-﻿// 
+// 
 // RedundantNullCoalescingExpressionTests.cs
 // 
 // Author:

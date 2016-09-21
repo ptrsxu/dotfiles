@@ -1,4 +1,4 @@
-﻿// 
+// 
 // RedundantNamespaceUsageInspector.cs
 //
 // Author:

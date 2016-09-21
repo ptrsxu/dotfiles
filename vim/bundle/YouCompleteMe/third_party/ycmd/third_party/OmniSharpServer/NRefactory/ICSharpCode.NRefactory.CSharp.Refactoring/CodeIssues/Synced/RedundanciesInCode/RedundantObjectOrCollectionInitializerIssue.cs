@@ -1,4 +1,4 @@
-﻿// 
+// 
 // RedundantObjectOrCollectionInitializerIssue.cs
 // 
 // Author:

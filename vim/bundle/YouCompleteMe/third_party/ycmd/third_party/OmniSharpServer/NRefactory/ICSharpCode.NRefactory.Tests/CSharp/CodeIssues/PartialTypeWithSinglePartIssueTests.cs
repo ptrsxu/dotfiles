@@ -1,4 +1,4 @@
-﻿// 
+// 
 // RedundantPartialTypeTests.cs
 // 
 // Author:

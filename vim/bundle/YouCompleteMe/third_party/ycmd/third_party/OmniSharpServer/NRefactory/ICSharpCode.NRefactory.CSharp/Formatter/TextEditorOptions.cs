@@ -1,4 +1,4 @@
-﻿// 
+// 
 // TextEditorOptions.cs
 //  
 // Author:

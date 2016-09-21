@@ -1,4 +1,4 @@
-﻿// 
+// 
 // InvertLogicalExpressionTests.cs
 // 
 // Author:

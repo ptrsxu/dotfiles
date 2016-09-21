@@ -1,4 +1,4 @@
-﻿// 
+// 
 // InlineLocalVariableAction.cs
 //  
 // Author:

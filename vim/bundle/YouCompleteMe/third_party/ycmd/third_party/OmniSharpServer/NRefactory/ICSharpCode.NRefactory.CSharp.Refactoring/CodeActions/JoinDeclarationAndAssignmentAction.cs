@@ -1,4 +1,4 @@
-﻿// 
+// 
 // JoinDeclarationAndAssignmentAction.cs
 // 
 // Author:

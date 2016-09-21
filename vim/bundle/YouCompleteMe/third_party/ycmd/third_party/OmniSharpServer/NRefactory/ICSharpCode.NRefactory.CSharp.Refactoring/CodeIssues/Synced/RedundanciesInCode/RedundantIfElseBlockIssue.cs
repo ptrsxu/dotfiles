@@ -1,4 +1,4 @@
-﻿// 
+// 
 // RedundantIfElseBlockIssue.cs
 // 
 // Author:

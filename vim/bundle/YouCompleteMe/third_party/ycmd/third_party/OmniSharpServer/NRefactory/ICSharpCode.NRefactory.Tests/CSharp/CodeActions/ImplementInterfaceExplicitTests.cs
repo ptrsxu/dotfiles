@@ -1,4 +1,4 @@
-﻿// 
+// 
 // ImplementInterfaceExplicitTests.cs
 //  
 // Author:

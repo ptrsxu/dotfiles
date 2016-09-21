@@ -1,4 +1,4 @@
-﻿using OmniSharp.Solution;
+using OmniSharp.Solution;
 
 namespace OmniSharp.Common
 {
@@ -13,7 +13,7 @@ namespace OmniSharp.Common
             get { return _fileName; }
             set
             {
-                _fileName = value.ApplyPathReplacementsForServer().LowerCaseDriveLetter();
+                _fileName = value.ApplyPathReplacementsForServer();
             }
         }
     }

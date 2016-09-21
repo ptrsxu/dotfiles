@@ -1,4 +1,4 @@
-﻿// 
+// 
 // RedundantNameQualifierIssueTests.cs
 //
 // Author:

@@ -1,4 +1,4 @@
-﻿namespace OmniSharp.ProjectManipulation.AddReference
+namespace OmniSharp.ProjectManipulation.AddReference
 {
     public class AddReferenceResponse
     {

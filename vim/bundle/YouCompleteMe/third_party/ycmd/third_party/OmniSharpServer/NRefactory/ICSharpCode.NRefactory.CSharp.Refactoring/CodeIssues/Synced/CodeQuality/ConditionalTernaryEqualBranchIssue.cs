@@ -1,4 +1,4 @@
-﻿// 
+// 
 // ConditionalTernaryEqualBranchIssue.cs
 // 
 // Author:

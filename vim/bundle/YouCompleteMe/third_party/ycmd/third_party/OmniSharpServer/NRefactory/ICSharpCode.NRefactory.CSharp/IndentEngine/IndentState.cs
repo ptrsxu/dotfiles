@@ -1,4 +1,4 @@
-﻿//
+//
 // IndentState.cs
 //
 // Author:

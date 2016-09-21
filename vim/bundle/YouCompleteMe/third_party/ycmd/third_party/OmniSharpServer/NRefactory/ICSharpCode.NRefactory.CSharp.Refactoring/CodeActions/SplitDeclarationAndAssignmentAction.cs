@@ -1,4 +1,4 @@
-﻿//
+//
 // SplitDeclarationAndAssignmentAction.cs
 // 
 // SplitDeclarationAndAssignment.cs

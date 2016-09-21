@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Collections.Concurrent;
 using ICSharpCode.NRefactory.Documentation;
 using ICSharpCode.NRefactory.TypeSystem;

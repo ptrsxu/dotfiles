@@ -1,4 +1,4 @@
-﻿namespace OmniSharp.CodeFormat
+namespace OmniSharp.CodeFormat
 {
     public class CodeFormatResponse     
     {

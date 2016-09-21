@@ -1,4 +1,4 @@
-﻿// 
+// 
 // ForControlVariableIsNeverModifiedIssueTests.cs
 // 
 // Author:

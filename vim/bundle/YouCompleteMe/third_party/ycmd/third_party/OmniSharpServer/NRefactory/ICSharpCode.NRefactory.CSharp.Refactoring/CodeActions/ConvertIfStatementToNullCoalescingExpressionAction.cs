@@ -1,4 +1,4 @@
-﻿// 
+// 
 // ConvertIfToNullCoalescingAction.cs
 //  
 // Author:

@@ -1,4 +1,4 @@
-﻿// 
+// 
 // MethodNeverReturnsIssueTests.cs
 // 
 // Author:

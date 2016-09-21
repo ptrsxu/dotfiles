@@ -1,4 +1,4 @@
-﻿// 
+// 
 // ComputeConstantValueTests.cs
 // 
 // Author:

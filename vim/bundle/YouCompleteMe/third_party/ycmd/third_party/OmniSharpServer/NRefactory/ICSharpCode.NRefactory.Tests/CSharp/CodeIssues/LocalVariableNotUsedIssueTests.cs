@@ -1,4 +1,4 @@
-﻿// 
+// 
 // LocalVariableNotUsedIssueTests.cs
 // 
 // Author:

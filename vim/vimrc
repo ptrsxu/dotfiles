@@ -178,6 +178,12 @@ let g:pymode_syntax_print_as_function = 1
 "     ./install.sh --clang-completer
 "     or
 "     ./install.sh --system-libclang --clang-completer --racer-completer
+" Install manually:
+"     git clone https://github.com/Valloric/YouCompleteMe
+"     cd YouCompleteMe
+"     git submodule update --init --recursive
+"     ./install.sh --system-libclang --clang-completer --racer-completer
+" Install manually:
 " For windows ``:help youcompleteme``
 " visit official page for more configurations.
 Plugin 'Valloric/YouCompleteMe'

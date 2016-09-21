@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using OmniSharp.Parser;
 using OmniSharp.TestContextInformation;
 

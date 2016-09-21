@@ -1,4 +1,4 @@
-﻿// 
+// 
 // CreateCustomEventImplementationTests.cs
 // 
 // Author:

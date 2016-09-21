@@ -1,4 +1,4 @@
-﻿//
+//
 // argument.cs: Argument expressions
 //
 // Author:

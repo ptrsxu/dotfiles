@@ -1,4 +1,4 @@
-﻿// 
+// 
 // ConvertImplicitToExplicittImplementationTests.cs
 // 
 // Author:

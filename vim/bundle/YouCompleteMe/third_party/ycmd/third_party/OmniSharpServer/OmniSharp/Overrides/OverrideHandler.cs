@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using ICSharpCode.NRefactory.CSharp;
 using ICSharpCode.NRefactory.CSharp.Refactoring;
@@ -99,6 +99,8 @@ namespace OmniSharp.Overrides {
             memberDeclaration.Modifiers |= Modifiers.Override;
             // Remove virtual flag
             memberDeclaration.Modifiers &= ~ Modifiers.Virtual;
+            // Remove abstract flag
+            memberDeclaration.Modifiers &= ~ Modifiers.Abstract;
 
             // The current type declaration, e.g. class, struct..
             var typeDeclaration = parsedContent.SyntaxTree.GetNodeAt

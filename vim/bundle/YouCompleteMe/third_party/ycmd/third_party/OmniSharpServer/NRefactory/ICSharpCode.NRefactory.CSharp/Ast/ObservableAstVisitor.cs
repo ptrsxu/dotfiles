@@ -1,4 +1,4 @@
-﻿// 
+// 
 // ObservableAstVisitor.cs
 //
 // Author:

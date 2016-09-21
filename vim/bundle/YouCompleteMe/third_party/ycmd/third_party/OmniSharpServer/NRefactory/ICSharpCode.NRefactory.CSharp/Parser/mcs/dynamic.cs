@@ -1,4 +1,4 @@
-﻿//
+//
 // dynamic.cs: support for dynamic expressions
 //
 // Authors: Marek Safar (marek.safar@gmail.com)

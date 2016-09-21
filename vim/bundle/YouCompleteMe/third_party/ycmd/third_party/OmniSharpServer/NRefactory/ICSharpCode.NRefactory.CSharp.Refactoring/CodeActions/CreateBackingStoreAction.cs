@@ -1,4 +1,4 @@
-﻿// 
+// 
 // CreateBackingStore.cs
 //
 // Author:

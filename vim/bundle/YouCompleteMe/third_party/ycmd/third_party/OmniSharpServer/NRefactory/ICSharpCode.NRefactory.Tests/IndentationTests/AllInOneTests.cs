@@ -1,4 +1,4 @@
-﻿//
+//
 // AllInOneTests.cs
 //
 // Author:

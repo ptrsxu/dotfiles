@@ -1,4 +1,4 @@
-﻿// 
+// 
 // ConvertCastToAsTest.cs
 //  
 // Author:

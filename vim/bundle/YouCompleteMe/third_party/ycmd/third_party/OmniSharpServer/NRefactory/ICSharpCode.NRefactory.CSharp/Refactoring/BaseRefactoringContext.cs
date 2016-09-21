@@ -1,4 +1,4 @@
-﻿// 
+// 
 // BaseRefactoringContext.cs
 //  
 // Author:

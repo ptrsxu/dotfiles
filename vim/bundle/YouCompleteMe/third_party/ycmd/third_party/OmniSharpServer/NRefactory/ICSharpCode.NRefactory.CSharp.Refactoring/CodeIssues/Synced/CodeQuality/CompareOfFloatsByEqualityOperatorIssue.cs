@@ -1,4 +1,4 @@
-﻿// 
+// 
 // CompareFloatWithEqualityOperatorIssue.cs
 // 
 // Author:

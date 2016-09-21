@@ -1,4 +1,4 @@
-﻿// 
+// 
 // ExpressionIsAlwaysOfProvidedTypeIssueTests.cs
 // 
 // Author:

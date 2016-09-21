@@ -1,4 +1,4 @@
-﻿// 
+// 
 // RedundantDefaultFieldInitializerIssue.cs
 // 
 // Author:

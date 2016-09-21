@@ -1,4 +1,4 @@
-﻿//
+//
 // typespec.cs: Type specification
 //
 // Authors: Marek Safar (marek.safar@gmail.com)

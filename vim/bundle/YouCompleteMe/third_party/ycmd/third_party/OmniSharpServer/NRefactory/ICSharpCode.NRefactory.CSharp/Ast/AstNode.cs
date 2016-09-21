@@ -1,4 +1,4 @@
-﻿// 
+// 
 // AstNode.cs
 //
 // Author:

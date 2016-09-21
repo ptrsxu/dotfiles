@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using ICSharpCode.NRefactory.CSharp.Refactoring;
 using OmniSharp.Common;

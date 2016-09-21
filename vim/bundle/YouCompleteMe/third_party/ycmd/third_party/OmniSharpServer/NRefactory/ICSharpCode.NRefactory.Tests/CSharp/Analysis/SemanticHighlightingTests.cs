@@ -1,4 +1,4 @@
-﻿//
+//
 // SemanticHighlightingTests.cs
 //
 // Author:

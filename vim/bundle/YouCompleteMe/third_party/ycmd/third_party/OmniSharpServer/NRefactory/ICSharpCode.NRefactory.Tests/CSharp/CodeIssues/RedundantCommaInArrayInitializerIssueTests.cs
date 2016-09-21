@@ -1,4 +1,4 @@
-﻿// 
+// 
 // RedundantCommaInArrayInitializerIssueTests.cs
 // 
 // Author:

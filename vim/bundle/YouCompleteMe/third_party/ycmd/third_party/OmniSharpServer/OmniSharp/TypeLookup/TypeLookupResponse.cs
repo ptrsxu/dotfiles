@@ -1,4 +1,4 @@
-﻿namespace OmniSharp.TypeLookup
+namespace OmniSharp.TypeLookup
 {
     public class TypeLookupResponse
     {

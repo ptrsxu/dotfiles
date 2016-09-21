@@ -1,4 +1,4 @@
-﻿// 
+// 
 // JoinStringAction.cs
 // 
 // Author:

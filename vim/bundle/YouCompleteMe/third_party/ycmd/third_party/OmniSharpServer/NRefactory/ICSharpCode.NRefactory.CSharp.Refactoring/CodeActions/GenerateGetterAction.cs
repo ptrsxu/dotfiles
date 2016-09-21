@@ -1,4 +1,4 @@
-﻿// 
+// 
 // GenerateGetter.cs
 //  
 // Author:

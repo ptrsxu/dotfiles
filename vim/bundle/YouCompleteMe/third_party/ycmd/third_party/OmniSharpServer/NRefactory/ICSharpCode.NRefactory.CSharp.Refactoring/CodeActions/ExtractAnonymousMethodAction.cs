@@ -1,4 +1,4 @@
-﻿// 
+// 
 // ExtractAnonymousMethodAction.cs
 // 
 // Author:

@@ -1,19 +1,19 @@
-// Copyright (C) 2011, 2012  Google Inc.
+// Copyright (C) 2011, 2012 Google Inc.
 //
-// This file is part of YouCompleteMe.
+// This file is part of ycmd.
 //
-// YouCompleteMe is free software: you can redistribute it and/or modify
+// ycmd is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// YouCompleteMe is distributed in the hope that it will be useful,
+// ycmd is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with YouCompleteMe.  If not, see <http://www.gnu.org/licenses/>.
+// along with ycmd.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "CompletionData.h"
 #include "ClangUtils.h"
@@ -148,13 +148,15 @@ std::string OptionalChunkToString( CXCompletionString completion_string,
 }
 
 
-// NOTE: this function accepts the text param by value on purpose; it internally
-// needs a copy before processing the text so the copy might as well be made on
-// the parameter BUT if this code is compiled in C++11 mode a move constructor
-// can be called on the passed-in value. This is not possible if we accept the
-// param by const ref.
-std::string RemoveTwoConsecutiveUnderscores( std::string text ) {
-  boost::erase_all( text, "__" );
+// foo( -> foo
+// foo() -> foo
+std::string RemoveTrailingParens( std::string text ) {
+  if ( boost::ends_with( text, "(" ) ) {
+    boost::erase_tail( text, 1 );
+  } else if ( boost::ends_with( text, "()" ) ) {
+    boost::erase_tail( text, 2 );
+  }
+
   return text;
 }
 
@@ -180,21 +182,8 @@ CompletionData::CompletionData( const CXCompletionResult &completion_result ) {
                           saw_placeholder );
   }
 
-  if ( boost::ends_with( original_string_, "(" ) ) {
-    boost::erase_tail( original_string_, 1 );
-  }
-
+  original_string_ = RemoveTrailingParens( boost::move( original_string_ ) );
   kind_ = CursorKindToCompletionKind( completion_result.CursorKind );
-
-  // We remove any two consecutive underscores from the function definition
-  // since identifiers with them are ugly, compiler-reserved names. Functions
-  // from the standard library use parameter names like "__pos" and we want to
-  // show them as just "pos". This will never interfere with client code since
-  // ANY C++ identifier with two consecutive underscores in it is
-  // compiler-reserved.
-  everything_except_return_type_ =
-    RemoveTwoConsecutiveUnderscores(
-      boost::move( everything_except_return_type_ ) );
 
   detailed_info_.append( return_type_ )
   .append( " " )
@@ -228,8 +217,6 @@ void CompletionData::ExtractDataFromChunk( CXCompletionString completion_string,
     }
 
     else if ( saw_function_params && kind == CXCompletionChunk_RightParen ) {
-      saw_left_paren = false;
-      saw_function_params = false; // fix objc have more than one ()
       everything_except_return_type_.append( " " );
     }
 
@@ -248,11 +235,14 @@ void CompletionData::ExtractDataFromChunk( CXCompletionString completion_string,
     case CXCompletionChunk_ResultType:
       return_type_ = ChunkToString( completion_string, chunk_num );
       break;
+
     case CXCompletionChunk_Placeholder:
       saw_placeholder = true;
       break;
+
     case CXCompletionChunk_TypedText:
     case CXCompletionChunk_Text:
+
       // need to add paren to insert string
       // when implementing inherited methods or declared methods in objc.
     case CXCompletionChunk_LeftParen:
@@ -261,7 +251,9 @@ void CompletionData::ExtractDataFromChunk( CXCompletionString completion_string,
       if ( !saw_placeholder ) {
         original_string_ += ChunkToString( completion_string, chunk_num );
       }
+
       break;
+
     default:
       break;
   }

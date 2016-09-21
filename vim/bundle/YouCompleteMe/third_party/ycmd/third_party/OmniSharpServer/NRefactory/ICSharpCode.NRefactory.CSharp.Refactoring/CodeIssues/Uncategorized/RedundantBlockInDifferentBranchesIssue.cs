@@ -1,4 +1,4 @@
-﻿// RedundantBlockInDifferentBranchesIssue.cs
+// RedundantBlockInDifferentBranchesIssue.cs
 //
 // Author:
 //      Ji Kun <jikun.nus@gmail.com>

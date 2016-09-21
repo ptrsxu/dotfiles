@@ -1,4 +1,4 @@
-﻿// 
+// 
 // AddArgumentNameAction.cs
 //  
 // Author:

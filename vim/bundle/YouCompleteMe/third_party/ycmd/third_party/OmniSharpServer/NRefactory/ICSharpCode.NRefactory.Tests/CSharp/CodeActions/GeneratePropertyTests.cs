@@ -1,4 +1,4 @@
-﻿// 
+// 
 // GeneratePropertyTests.cs
 //  
 // Author:

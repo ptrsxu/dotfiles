@@ -1,4 +1,4 @@
-﻿//
+//
 // TextPasteIndentEngineTests.cs
 //
 // Author:

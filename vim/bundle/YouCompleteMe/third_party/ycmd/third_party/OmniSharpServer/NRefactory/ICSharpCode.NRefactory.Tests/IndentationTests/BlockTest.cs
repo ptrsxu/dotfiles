@@ -1,4 +1,4 @@
-﻿//
+//
 // BlockTest.cs
 //
 // Author:

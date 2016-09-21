@@ -1,4 +1,4 @@
-﻿//
+//
 // CS0618UsageOfObsoleteMemberIssue.cs
 //
 // Author:

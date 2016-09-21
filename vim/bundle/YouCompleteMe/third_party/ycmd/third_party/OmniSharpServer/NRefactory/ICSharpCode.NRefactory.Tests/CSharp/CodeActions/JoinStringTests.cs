@@ -1,4 +1,4 @@
-﻿// 
+// 
 // JoinStringTests.cs
 // 
 // Author:

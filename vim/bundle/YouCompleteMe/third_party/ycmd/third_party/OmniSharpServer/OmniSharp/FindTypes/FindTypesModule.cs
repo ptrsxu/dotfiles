@@ -1,4 +1,4 @@
-﻿using Nancy;
+using Nancy;
 
 namespace OmniSharp.FindTypes
 {
@@ -6,7 +6,7 @@ namespace OmniSharp.FindTypes
     {
         public FindTypesModule(FindTypesHandler handler)
         {
-            Post["/findtypes"] = x =>
+            Post["FindTypes", "/findtypes"] = x =>
                 {
                     var res = handler.FindAllTypes();
                     return Response.AsJson(res);

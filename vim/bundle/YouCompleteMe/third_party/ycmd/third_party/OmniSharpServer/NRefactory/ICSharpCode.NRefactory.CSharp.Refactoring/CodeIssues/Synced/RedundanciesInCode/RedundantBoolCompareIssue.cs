@@ -1,4 +1,4 @@
-﻿// 
+// 
 // CompareBooleanWithTrueOrFalseIssue.cs
 // 
 // Author:

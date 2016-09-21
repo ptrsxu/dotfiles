@@ -1,4 +1,4 @@
-﻿using ICSharpCode.NRefactory.CSharp.TypeSystem;
+using ICSharpCode.NRefactory.CSharp.TypeSystem;
 using ICSharpCode.NRefactory.TypeSystem;
 using OmniSharp.Solution;
 

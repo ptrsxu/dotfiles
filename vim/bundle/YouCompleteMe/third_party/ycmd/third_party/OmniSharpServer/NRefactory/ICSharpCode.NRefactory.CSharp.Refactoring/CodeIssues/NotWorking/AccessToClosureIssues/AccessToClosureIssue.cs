@@ -1,4 +1,4 @@
-﻿// 
+// 
 // AccessToClosureIssue.cs
 // 
 // Author:

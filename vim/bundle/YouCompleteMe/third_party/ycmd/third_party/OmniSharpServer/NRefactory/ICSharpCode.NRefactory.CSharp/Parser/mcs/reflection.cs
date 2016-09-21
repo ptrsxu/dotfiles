@@ -1,4 +1,4 @@
-﻿//
+//
 // reflection.cs: System.Reflection and System.Reflection.Emit specific implementations
 //
 // Author: Marek Safar (marek.safar@gmail.com)

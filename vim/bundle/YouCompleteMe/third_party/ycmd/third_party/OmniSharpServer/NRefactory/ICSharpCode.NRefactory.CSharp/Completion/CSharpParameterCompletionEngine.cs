@@ -1,4 +1,4 @@
-﻿// 
+// 
 // CSharpParameterCompletionEngine.cs
 //  
 // Author:

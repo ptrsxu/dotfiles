@@ -1,4 +1,4 @@
-﻿// 
+// 
 // ParserBugTests.cs
 //  
 // Author:

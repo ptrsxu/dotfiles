@@ -1,4 +1,4 @@
-﻿// 
+// 
 // CheckIfParameterIsNull.cs
 //  
 // Author:

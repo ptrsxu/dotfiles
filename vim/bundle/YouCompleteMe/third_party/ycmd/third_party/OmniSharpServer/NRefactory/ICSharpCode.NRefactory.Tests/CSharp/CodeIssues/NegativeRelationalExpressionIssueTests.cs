@@ -1,4 +1,4 @@
-﻿// 
+// 
 // NegativeRelationalExpressionIssueTests.cs
 // 
 // Author:

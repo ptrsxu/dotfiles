@@ -1,4 +1,4 @@
-﻿// 
+// 
 // InspectionActionTestBase.cs
 //  
 // Author:

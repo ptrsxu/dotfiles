@@ -1,4 +1,4 @@
-﻿// 
+// 
 // AddAnotherAccessorTests.cs
 //  
 // Author:

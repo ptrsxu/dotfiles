@@ -1,4 +1,4 @@
-﻿// 
+// 
 // ReferenceEqualsCalledWithValueTypeIssue.cs
 // 
 // Author:

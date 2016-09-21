@@ -1,4 +1,4 @@
-﻿using OmniSharp.Solution;
+using OmniSharp.Solution;
 
 namespace OmniSharp.ProjectManipulation.AddReference
 {
@@ -16,11 +16,8 @@ namespace OmniSharp.ProjectManipulation.AddReference
         public AddReferenceResponse AddReference(AddReferenceRequest request)
         {
             var project = _solution.ProjectContainingFile(request.FileName);
-           
             var processor = _addReferenceProcessorFactory.CreateProcessorFor(request);
-
             return processor.AddReference(project, request.Reference);
-           
         }
     }
 }

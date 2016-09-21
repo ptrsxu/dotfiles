@@ -1,4 +1,4 @@
-﻿// 
+// 
 // DoubleNegationOperatorIssueTests.cs
 // 
 // Author:

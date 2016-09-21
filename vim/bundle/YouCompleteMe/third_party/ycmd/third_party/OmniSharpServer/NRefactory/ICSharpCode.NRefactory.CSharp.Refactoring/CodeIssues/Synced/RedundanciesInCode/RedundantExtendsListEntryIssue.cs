@@ -1,4 +1,4 @@
-﻿// 
+// 
 // RedundantBaseTypeIssue.cs
 //  
 // Author:

@@ -1,4 +1,4 @@
-﻿// 
+// 
 // DontUseLinqWhenItsVerboseAndInefficientTests.cs
 // 
 // Author:

@@ -1,4 +1,4 @@
-﻿// 
+// 
 // IMemberProvider.cs
 //  
 // Author:

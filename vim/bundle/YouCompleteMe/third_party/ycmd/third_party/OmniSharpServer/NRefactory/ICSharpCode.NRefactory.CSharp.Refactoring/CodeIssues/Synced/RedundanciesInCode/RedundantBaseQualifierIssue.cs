@@ -1,4 +1,4 @@
-﻿//
+//
 // RedundantBaseQualifierIssue.cs
 //
 // Author:

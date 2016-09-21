@@ -1,4 +1,4 @@
-﻿// 
+// 
 // UnusedTypeParameterIssueTests.cs
 // 
 // Author:

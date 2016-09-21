@@ -1,4 +1,4 @@
-﻿// 
+// 
 // VariableOnlyAssignedIssue.cs
 // 
 // Author:

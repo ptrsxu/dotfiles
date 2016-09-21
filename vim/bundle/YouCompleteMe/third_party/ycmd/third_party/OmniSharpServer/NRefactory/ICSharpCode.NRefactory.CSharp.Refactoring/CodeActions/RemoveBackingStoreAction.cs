@@ -1,4 +1,4 @@
-﻿// 
+// 
 // RemoveBackingStore.cs
 //
 // Author:

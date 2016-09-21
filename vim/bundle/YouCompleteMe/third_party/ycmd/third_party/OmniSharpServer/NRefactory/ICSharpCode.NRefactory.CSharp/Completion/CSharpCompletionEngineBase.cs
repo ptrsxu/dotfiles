@@ -1,4 +1,4 @@
-﻿// 
+// 
 // CSharpCompletionEngineBase.cs
 //  
 // Author:

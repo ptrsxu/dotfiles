@@ -1,4 +1,4 @@
-﻿// 
+// 
 // UseVarKeyword.cs
 //  
 // Author:

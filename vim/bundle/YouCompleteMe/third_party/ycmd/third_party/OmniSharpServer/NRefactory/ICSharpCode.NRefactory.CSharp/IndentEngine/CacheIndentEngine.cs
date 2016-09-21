@@ -1,4 +1,4 @@
-﻿//
+//
 // CacheIndentEngine.cs
 //
 // Author:

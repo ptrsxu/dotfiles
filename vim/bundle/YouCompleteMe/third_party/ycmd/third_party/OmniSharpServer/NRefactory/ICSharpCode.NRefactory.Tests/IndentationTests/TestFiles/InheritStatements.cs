@@ -1,4 +1,4 @@
-﻿namespace InheritStatements
+namespace InheritStatements
 {
 	class A<T> : B where T : B
 	{

@@ -1,4 +1,4 @@
-﻿//
+//
 // CS0169FieldIsNeverUsedIssueTests.cs
 //
 // Author:

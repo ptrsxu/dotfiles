@@ -1,4 +1,4 @@
-﻿// 
+// 
 // AccessToDisposedClosureTests.cs
 // 
 // Author:

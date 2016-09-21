@@ -1,4 +1,4 @@
-﻿// 
+// 
 // CS1717AssignmentMadeToSameVariableIssueTests.cs
 // 
 // Author:

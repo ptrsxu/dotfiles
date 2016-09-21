@@ -1,4 +1,4 @@
-﻿// 
+// 
 // RedundantCheckBeforeAssignmentTests.cs
 //  
 // Author:

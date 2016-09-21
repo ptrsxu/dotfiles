@@ -1,4 +1,4 @@
-﻿namespace OmniSharp.CodeIssues
+namespace OmniSharp.CodeIssues
 {
     public class RunCodeIssuesResponse
     {

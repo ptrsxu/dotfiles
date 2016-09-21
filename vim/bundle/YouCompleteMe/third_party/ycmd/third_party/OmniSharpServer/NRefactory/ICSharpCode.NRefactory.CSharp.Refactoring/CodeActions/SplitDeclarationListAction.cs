@@ -1,4 +1,4 @@
-﻿// 
+// 
 // SplitDeclarationListAction.cs
 // 
 // Author:

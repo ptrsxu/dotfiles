@@ -1,4 +1,4 @@
-﻿// 
+// 
 // RedundantInternalInspector.cs
 //  
 // Author:

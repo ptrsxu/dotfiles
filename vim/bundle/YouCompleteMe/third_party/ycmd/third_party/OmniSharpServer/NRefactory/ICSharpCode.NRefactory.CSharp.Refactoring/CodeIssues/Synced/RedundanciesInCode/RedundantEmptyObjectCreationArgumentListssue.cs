@@ -1,4 +1,4 @@
-﻿// 
+// 
 // RedundantObjectCreationArgumentListIssue.cs
 // 
 // Author:

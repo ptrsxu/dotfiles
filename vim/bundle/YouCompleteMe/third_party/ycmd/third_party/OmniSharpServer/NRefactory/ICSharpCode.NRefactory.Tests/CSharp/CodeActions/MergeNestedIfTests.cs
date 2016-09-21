@@ -1,4 +1,4 @@
-﻿// 
+// 
 // MergeNestedIfTests.cs
 //  
 // Author:

@@ -1,4 +1,4 @@
-﻿// 
+// 
 // OptionalParameterValueMismatchTests.cs
 // 
 // Author:

@@ -1,4 +1,4 @@
-﻿// 
+// 
 // ReplaceWithStringIsNullOrEmptyIssueTests.cs
 //  
 // Author:

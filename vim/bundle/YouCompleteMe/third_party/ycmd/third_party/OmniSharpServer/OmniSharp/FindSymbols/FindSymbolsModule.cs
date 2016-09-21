@@ -1,4 +1,4 @@
-﻿using Nancy;
+using Nancy;
 
 namespace OmniSharp.FindSymbols
 {
@@ -6,7 +6,7 @@ namespace OmniSharp.FindSymbols
     {
         public FindSymbolsModule(FindSymbolsHandler handler)
         {
-            Post["/findsymbols"] = x =>
+            Post["FindSymbols", "/findsymbols"] = x =>
                 {
                     var res = handler.FindAllSymbols();
                     return Response.AsJson(res);

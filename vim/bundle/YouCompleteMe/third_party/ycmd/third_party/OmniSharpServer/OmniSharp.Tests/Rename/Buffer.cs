@@ -1,4 +1,4 @@
-﻿namespace OmniSharp.Tests.Rename
+namespace OmniSharp.Tests.Rename
 {
     public class Buffer
     {

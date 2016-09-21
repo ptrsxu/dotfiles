@@ -1,4 +1,4 @@
-﻿// 
+// 
 // ReplaceWithSingleCallToSingleOrDefault.cs
 //
 // Author:

@@ -1,4 +1,4 @@
-﻿// 
+// 
 // GeneratedCodeSettings.cs
 //  
 // Author:

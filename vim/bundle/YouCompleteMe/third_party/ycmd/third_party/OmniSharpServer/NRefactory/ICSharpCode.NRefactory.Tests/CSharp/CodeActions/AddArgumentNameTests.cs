@@ -1,4 +1,4 @@
-﻿// 
+// 
 // AddArgumentNameTests.cs
 // 
 // Author:

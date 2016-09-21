@@ -1,4 +1,4 @@
-﻿//
+//
 // CS1105ExtensionMethodMustBeDeclaredStaticActionTests.cs
 //
 // Author:

@@ -1,4 +1,4 @@
-﻿//
+//
 // IStateMachineIndentEngine.cs
 //
 // Author:

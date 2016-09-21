@@ -1,4 +1,4 @@
-﻿//
+//
 // CS0127ReturnMustNotBeFollowedByAnyExpression.cs
 //
 // Author:

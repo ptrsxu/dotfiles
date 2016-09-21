@@ -1,4 +1,4 @@
-﻿// 
+// 
 // CastExpressionOfIncompatibleTypeIssue.cs
 // 
 // Author:

@@ -1,4 +1,4 @@
-﻿using Nancy;
+using Nancy;
 using Nancy.ModelBinding;
 
 namespace OmniSharp.GotoRegion {
@@ -6,7 +6,7 @@ namespace OmniSharp.GotoRegion {
         public GotoRegionModule
             (GotoRegionHandler handler) {
 
-            Post["/gotoregion"] = x =>
+            Post["GotoRegion", "/gotoregion"] = x =>
             {
                 var req = this.Bind<Common.Request>();
                 var members = handler.GetFileRegions(req);

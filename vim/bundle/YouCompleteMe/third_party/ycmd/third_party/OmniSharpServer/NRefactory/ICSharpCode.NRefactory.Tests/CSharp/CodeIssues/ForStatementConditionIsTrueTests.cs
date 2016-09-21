@@ -1,4 +1,4 @@
-﻿// 
+// 
 // ForStatementConditionIsTrueTests.cs
 //  
 // Author:

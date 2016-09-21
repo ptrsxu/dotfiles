@@ -1,4 +1,4 @@
-﻿using Nancy;
+using Nancy;
 using Nancy.ModelBinding;
 using OmniSharp.Parser;
 
@@ -11,7 +11,7 @@ namespace OmniSharp.UpdateBuffer
     {
 		public UpdateBufferModule(BufferParser bufferParser)
 		{
-			Post["/updatebuffer"] = x =>
+			Post["UpdateBuffer", "/updatebuffer"] = x =>
         	{
 				var req = this.Bind<Common.Request>();
 				bufferParser.ParsedContent(req.Buffer, req.FileName);

@@ -1,4 +1,4 @@
-﻿//
+//
 // CommentTests.cs
 //
 // Author:

@@ -1,4 +1,4 @@
-﻿using NUnit.Framework;
+using NUnit.Framework;
 using Should;
 using System.Linq;
 using OmniSharp.AutoComplete;

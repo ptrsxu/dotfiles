@@ -1,4 +1,4 @@
-﻿// 
+// 
 // ParameterHidesMemberIssueTests.cs
 // 
 // Author:

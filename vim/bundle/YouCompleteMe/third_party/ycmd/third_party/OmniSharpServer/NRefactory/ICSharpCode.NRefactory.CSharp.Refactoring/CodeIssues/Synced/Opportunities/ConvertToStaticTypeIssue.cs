@@ -1,4 +1,4 @@
-﻿// 
+// 
 // ConvertToStaticTypeIssue.cs
 //  
 // Author:

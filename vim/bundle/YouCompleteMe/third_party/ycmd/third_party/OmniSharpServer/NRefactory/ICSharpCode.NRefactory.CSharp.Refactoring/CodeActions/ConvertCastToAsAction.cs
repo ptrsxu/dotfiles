@@ -1,4 +1,4 @@
-﻿// 
+// 
 // ConvertCastToAsAction.cs
 //  
 // Author:

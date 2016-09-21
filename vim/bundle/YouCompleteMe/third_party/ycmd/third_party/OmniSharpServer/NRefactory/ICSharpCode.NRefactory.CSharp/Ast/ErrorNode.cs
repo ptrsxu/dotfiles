@@ -1,4 +1,4 @@
-﻿// 
+// 
 // ErrorNode.cs
 //
 // Author:

@@ -1,4 +1,4 @@
-﻿using NUnit.Framework;
+using NUnit.Framework;
 using OmniSharp.CodeFormat;
 using OmniSharp.Configuration;
 using Should;

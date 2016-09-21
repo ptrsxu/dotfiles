@@ -1,4 +1,4 @@
-﻿// 
+// 
 // ReplaceWithSingleCallToFirstOrDefaultIssueTests.cs
 //
 // Author:

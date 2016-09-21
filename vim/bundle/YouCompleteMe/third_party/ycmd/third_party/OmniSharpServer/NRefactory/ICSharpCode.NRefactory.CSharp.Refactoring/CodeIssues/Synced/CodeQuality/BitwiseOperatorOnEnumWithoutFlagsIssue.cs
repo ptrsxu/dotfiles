@@ -1,4 +1,4 @@
-﻿// 
+// 
 // BitwiseOperationOnNonFlagsEnumIssue.cs
 // 
 // Author:

@@ -1,4 +1,4 @@
-﻿//
+//
 // CodeCompletionBugTests.cs
 //
 // Author:

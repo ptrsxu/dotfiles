@@ -1,4 +1,4 @@
-﻿using Nancy;
+using Nancy;
 using Nancy.ModelBinding;
 
 namespace OmniSharp.FindUsages
@@ -7,7 +7,7 @@ namespace OmniSharp.FindUsages
     {
         public FindUsagesModule(FindUsagesHandler findUsagesHandler)
         {
-            Post["/findusages"] = x =>
+            Post["FindUsages", "/findusages"] = x =>
             {
                 var req = this.Bind<FindUsagesRequest>();
                 var usages = findUsagesHandler.FindUsages(req);

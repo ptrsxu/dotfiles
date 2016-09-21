@@ -1,4 +1,4 @@
-﻿// 
+// 
 // EnumUnderlyingTypeIsIntTests.cs
 // 
 // Author:

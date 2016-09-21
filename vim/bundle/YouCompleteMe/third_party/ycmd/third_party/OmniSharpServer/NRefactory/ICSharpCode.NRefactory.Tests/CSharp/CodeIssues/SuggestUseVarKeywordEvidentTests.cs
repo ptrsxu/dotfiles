@@ -1,4 +1,4 @@
-﻿// 
+// 
 // SuggestUseVarKeywordEvidentTests.cs
 //  
 // Author:

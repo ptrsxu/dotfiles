@@ -1,4 +1,4 @@
-﻿using ICSharpCode.NRefactory.CSharp;
+using ICSharpCode.NRefactory.CSharp;
 using ICSharpCode.NRefactory.CSharp.TypeSystem;
 using ICSharpCode.NRefactory.TypeSystem;
 

@@ -1,4 +1,4 @@
-﻿// 
+// 
 // ConvertConditionalTernaryToNullCoalescingIssueTests.cs
 //  
 // Author:

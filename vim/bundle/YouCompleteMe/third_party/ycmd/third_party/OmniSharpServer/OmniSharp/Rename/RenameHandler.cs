@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using ICSharpCode.NRefactory.CSharp;
 using ICSharpCode.NRefactory.CSharp.Resolver;
@@ -40,7 +40,7 @@ namespace OmniSharp.Rename
             var modfiedFiles = new List<ModifiedFileResponse>();
             response.Changes = modfiedFiles;
 
-            foreach (IGrouping<string, AstNode> groupedNodes in nodes.GroupBy(n => n.GetRegion().FileName.LowerCaseDriveLetter()))
+            foreach (IGrouping<string, AstNode> groupedNodes in nodes.GroupBy(n => n.GetRegion().FileName))
             {
                 string fileName = groupedNodes.Key;
                 OmniSharpRefactoringContext context;

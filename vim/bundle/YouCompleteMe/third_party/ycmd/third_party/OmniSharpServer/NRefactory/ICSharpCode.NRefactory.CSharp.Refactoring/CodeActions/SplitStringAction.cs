@@ -1,4 +1,4 @@
-﻿// 
+// 
 // SplitString.cs
 //  
 // Author:

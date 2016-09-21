@@ -1,4 +1,4 @@
-﻿// ArrayCreationCanBeReplacedWithArrayInitializerIssueTests.cs
+// ArrayCreationCanBeReplacedWithArrayInitializerIssueTests.cs
 //
 // Author:
 //      Ji Kun <jikun.nus@gmail.com>

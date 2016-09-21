@@ -1,4 +1,4 @@
-﻿// 
+// 
 // NegateRelationalExpressionTests.cs
 // 
 // Author:

@@ -1,4 +1,4 @@
-﻿// 
+// 
 // ConvertLambdaBodyExpressionToStatementTests.cs
 // 
 // Author:

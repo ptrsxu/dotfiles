@@ -1,4 +1,4 @@
-﻿// 
+// 
 // ConvertSwitchToIfAction.cs
 //  
 // Author:

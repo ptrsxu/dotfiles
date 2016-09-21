@@ -1,4 +1,4 @@
-﻿namespace OmniSharp.Configuration
+namespace OmniSharp.Configuration
 {
     public class TestCommands
     {

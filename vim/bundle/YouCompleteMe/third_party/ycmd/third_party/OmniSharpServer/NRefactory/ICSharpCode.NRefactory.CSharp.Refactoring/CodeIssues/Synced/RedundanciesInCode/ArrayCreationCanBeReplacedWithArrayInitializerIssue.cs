@@ -1,4 +1,4 @@
-﻿// RedundantArrayCreationExpressionIssue.cs
+// RedundantArrayCreationExpressionIssue.cs
 //
 // Author:
 //      Ji Kun <jikun.nus@gmail.com>

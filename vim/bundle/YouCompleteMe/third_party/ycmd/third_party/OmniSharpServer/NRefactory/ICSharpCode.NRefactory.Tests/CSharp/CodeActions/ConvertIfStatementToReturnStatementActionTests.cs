@@ -1,4 +1,4 @@
-﻿// 
+// 
 // ConvertIfStatementToReturnStatementAction.cs
 //  
 // Author:

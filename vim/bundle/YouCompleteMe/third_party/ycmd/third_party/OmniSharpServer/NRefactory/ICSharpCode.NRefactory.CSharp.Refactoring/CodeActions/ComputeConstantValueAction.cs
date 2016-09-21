@@ -1,4 +1,4 @@
-﻿// 
+// 
 // ComputeConstantValueAction.cs
 //  
 // Author:

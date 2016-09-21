@@ -1,4 +1,4 @@
-﻿using OmniSharp.Common;
+using OmniSharp.Common;
 
 namespace OmniSharp.CodeActions
 {

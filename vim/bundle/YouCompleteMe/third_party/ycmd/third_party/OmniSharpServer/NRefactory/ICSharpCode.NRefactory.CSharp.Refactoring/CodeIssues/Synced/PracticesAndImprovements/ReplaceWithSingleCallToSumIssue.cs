@@ -1,4 +1,4 @@
-﻿// 
+// 
 // ReplaceWithSingleCallToSumIssue.cs
 //
 // Author:

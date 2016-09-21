@@ -1,4 +1,4 @@
-﻿// 
+// 
 // RedundantThisQualifierIssueTests.cs
 //  
 // Author:

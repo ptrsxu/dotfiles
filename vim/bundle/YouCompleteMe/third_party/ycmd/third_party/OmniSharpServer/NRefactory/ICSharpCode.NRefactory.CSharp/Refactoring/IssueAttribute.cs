@@ -1,4 +1,4 @@
-﻿// 
+// 
 // IssueAttribute.cs
 //  
 // Author:

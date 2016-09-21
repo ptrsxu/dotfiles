@@ -1,4 +1,4 @@
-﻿// 
+// 
 // ConvertLambdaBodyExpressionToStatementAction.cs
 // 
 // Author:

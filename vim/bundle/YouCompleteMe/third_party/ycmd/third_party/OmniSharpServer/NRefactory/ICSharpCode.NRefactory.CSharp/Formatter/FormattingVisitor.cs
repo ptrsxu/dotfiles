@@ -1,4 +1,4 @@
-﻿// 
+// 
 // FormattingVisitor.cs
 //
 // Author:

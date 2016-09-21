@@ -1,4 +1,4 @@
-﻿// 
+// 
 // MergeNestedIfAction.cs
 //  
 // Author:

@@ -1,4 +1,4 @@
-﻿
+
 Parser:
 - put newlines into the AST
 - eliminate the global lock

@@ -1,4 +1,4 @@
-﻿//
+//
 // Author:
 //       Ji Kun <jikun.nus@gmail.com>
 //

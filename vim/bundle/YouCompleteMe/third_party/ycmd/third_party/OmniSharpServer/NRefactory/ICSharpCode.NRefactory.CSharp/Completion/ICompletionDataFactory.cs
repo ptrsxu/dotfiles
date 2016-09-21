@@ -1,4 +1,4 @@
-﻿// 
+// 
 // ICompletionDataFactory.cs
 //  
 // Author:

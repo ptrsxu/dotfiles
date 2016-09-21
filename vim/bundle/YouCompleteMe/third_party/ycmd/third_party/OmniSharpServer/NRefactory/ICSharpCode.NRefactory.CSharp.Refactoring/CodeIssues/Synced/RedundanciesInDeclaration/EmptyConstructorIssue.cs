@@ -1,4 +1,4 @@
-﻿// 
+// 
 // EmptyConstructorIssue.cs
 // 
 // Author:

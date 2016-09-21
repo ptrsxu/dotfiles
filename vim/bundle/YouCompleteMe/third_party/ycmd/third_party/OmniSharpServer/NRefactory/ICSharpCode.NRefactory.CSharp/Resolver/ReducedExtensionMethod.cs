@@ -1,4 +1,4 @@
-﻿//
+//
 // ReducedExtensionMethod.cs
 //
 // Author:

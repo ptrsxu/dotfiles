@@ -1,4 +1,4 @@
-﻿// 
+// 
 // InvertIf.cs
 //  
 // Author:

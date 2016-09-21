@@ -1,4 +1,4 @@
-﻿namespace OmniSharp.GotoImplementation
+namespace OmniSharp.GotoImplementation
 {
     public class Location
     {

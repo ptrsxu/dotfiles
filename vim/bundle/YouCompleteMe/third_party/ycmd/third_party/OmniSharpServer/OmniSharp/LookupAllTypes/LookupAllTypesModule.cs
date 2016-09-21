@@ -1,4 +1,4 @@
-﻿using Nancy;
+using Nancy;
 
 namespace OmniSharp.LookupAllTypes
 {
@@ -6,7 +6,7 @@ namespace OmniSharp.LookupAllTypes
     {
         public LookupAllTypesModule(LookupAllTypesHandler handler)
         {
-            Post["/lookupalltypes"] = x =>
+            Post["LookupAllTypes", "/lookupalltypes"] = x =>
                 {
                     var res = handler.GetLookupAllTypesResponse();
                     return Response.AsJson(res);

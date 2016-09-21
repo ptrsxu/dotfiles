@@ -1,4 +1,4 @@
-﻿using ICSharpCode.NRefactory.CSharp;
+using ICSharpCode.NRefactory.CSharp;
 using OmniSharp.Configuration;
 
 namespace OmniSharp.CodeFormat

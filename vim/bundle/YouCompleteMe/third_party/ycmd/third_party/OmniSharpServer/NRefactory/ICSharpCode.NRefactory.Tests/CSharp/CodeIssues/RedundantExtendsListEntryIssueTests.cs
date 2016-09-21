@@ -1,4 +1,4 @@
-﻿// 
+// 
 // RedundantBaseTypeTests.cs
 //  
 // Author:

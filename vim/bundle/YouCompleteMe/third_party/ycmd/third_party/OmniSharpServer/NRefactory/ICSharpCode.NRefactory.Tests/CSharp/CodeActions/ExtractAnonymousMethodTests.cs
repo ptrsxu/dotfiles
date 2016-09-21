@@ -1,4 +1,4 @@
-﻿// 
+// 
 // ExtractAnonymousMethodTests.cs
 // 
 // Author:

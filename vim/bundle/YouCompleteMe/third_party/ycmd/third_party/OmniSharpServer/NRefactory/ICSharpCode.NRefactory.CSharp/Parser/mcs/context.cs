@@ -1,4 +1,4 @@
-﻿//
+//
 // context.cs: Various compiler contexts.
 //
 // Author:

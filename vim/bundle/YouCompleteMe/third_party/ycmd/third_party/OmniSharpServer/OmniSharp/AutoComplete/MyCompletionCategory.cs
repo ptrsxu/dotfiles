@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using ICSharpCode.NRefactory.Completion;
 using ICSharpCode.NRefactory.TypeSystem;
 

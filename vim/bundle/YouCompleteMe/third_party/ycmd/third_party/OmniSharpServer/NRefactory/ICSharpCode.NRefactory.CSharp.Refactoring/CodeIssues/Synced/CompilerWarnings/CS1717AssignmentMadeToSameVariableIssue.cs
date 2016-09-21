@@ -1,4 +1,4 @@
-﻿// 
+// 
 // CS1717AssignmentMadeToSameVariableIssue.cs
 // 
 // Author:

@@ -1,4 +1,4 @@
-﻿// 
+// 
 // ParameterNotUsedIssueTests.cs
 // 
 // Author:

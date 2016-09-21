@@ -1,4 +1,4 @@
-﻿using ICSharpCode.NRefactory;
+using ICSharpCode.NRefactory;
 using ICSharpCode.NRefactory.CSharp.Resolver;
 using ICSharpCode.NRefactory.Semantics;
 using OmniSharp.AutoComplete;
@@ -27,7 +27,7 @@ namespace OmniSharp.GotoDefinition
             if (resolveResult != null)
             {
                 var region = resolveResult.GetDefinitionRegion();
-                response.FileName = region.FileName == null ? null : region.FileName.LowerCaseDriveLetter().ApplyPathReplacementsForClient();
+                response.FileName = region.FileName == null ? null : region.FileName.ApplyPathReplacementsForClient();
                 response.Line = region.BeginLine;
                 response.Column = region.BeginColumn;
             }

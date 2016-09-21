@@ -1,4 +1,4 @@
-﻿namespace OmniSharp.TestContextInformation
+namespace OmniSharp.TestContextInformation
 {
     public class GetTestContextResponse
     {

@@ -1,4 +1,4 @@
-﻿// 
+// 
 // ParameterHidesMemberIssue.cs
 // 
 // Author:

@@ -1,4 +1,4 @@
-﻿/// <summary>
+/// <summary>
 ///     Switch case with CSharpFormattingOptions.IndentBreakStatements = false;
 /// </summary>
 class SwitchCase

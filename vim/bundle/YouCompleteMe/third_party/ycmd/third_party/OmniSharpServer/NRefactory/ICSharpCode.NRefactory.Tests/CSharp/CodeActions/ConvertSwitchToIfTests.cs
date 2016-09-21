@@ -1,4 +1,4 @@
-﻿// 
+// 
 // ConvertSwitchToIfTests.cs
 //  
 // Author:

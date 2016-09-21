@@ -1,4 +1,4 @@
-﻿// 
+// 
 // CreateEventInvocator.cs
 //  
 // Author:

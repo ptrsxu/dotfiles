@@ -1,4 +1,4 @@
-﻿// 
+// 
 // GenerateProperty.cs
 //  
 // Author:

@@ -1,4 +1,4 @@
-﻿// 
+// 
 // AddOptionalParameterToInvocationTests.cs
 // 
 // Author:

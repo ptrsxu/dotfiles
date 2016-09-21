@@ -1,4 +1,4 @@
-﻿// 
+// 
 // RedundantCaseLabelIssue.cs
 // 
 // Author:

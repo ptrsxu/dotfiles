@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using OmniSharp.Configuration;
 
 namespace OmniSharp.AutoComplete

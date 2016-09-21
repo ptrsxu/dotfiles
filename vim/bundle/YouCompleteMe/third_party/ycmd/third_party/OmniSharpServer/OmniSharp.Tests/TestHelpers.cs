@@ -1,4 +1,4 @@
-﻿using ICSharpCode.NRefactory;
+using ICSharpCode.NRefactory;
 using System;
 
 namespace OmniSharp.Tests

@@ -1,4 +1,4 @@
-﻿// 
+// 
 // ReplaceWithSingleCallToMaxIssue.cs
 //
 // Author:

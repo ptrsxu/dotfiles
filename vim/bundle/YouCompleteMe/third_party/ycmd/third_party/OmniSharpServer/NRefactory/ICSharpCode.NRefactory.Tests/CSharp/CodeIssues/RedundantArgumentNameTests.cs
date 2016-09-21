@@ -1,4 +1,4 @@
-﻿// RedundantArgumentNameTests.cs
+// RedundantArgumentNameTests.cs
 //
 // Author:
 //      Ji Kun <jikun.nus@gmail.com>

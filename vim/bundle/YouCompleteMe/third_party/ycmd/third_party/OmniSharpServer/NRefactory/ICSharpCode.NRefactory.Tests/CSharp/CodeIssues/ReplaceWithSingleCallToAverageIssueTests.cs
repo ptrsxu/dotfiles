@@ -1,4 +1,4 @@
-﻿// 
+// 
 // ReplaceWithSingleCallToAverageTests.cs
 //
 // Author:

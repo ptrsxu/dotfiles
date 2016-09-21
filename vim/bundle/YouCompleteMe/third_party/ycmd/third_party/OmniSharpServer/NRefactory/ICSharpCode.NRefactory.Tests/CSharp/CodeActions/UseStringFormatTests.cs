@@ -1,4 +1,4 @@
-﻿// 
+// 
 // UseStringFormatTests.cs
 // 
 // Author:

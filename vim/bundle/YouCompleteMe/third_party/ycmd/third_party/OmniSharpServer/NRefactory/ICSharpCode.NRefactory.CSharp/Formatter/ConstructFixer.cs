@@ -1,4 +1,4 @@
-﻿//
+//
 // ConstructFixer.cs
 //
 // Author:

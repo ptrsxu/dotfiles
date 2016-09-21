@@ -1,4 +1,4 @@
-﻿//
+//
 // IDocumentIndentEngine.cs
 //
 // Author:

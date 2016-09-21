@@ -1,4 +1,4 @@
-﻿// 
+// 
 // RedundantCastIssue.cs
 // 
 // Author:

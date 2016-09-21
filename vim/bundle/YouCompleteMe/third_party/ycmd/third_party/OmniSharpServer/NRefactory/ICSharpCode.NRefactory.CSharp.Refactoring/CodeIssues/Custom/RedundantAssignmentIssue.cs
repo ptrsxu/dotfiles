@@ -1,4 +1,4 @@
-﻿// 
+// 
 // RedundantAssignmentIssue.cs
 // 
 // Author:

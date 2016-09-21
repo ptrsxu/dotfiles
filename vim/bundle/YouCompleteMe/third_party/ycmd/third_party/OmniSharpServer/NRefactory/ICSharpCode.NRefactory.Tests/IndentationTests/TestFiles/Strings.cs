@@ -1,4 +1,4 @@
-﻿namespace Strings
+namespace Strings
 {
 	class Strings
 	{

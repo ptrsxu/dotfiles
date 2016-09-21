@@ -1,4 +1,4 @@
-﻿using OmniSharp.Common;
+using OmniSharp.Common;
 using Nancy;
 using Nancy.ModelBinding;
 
@@ -8,7 +8,7 @@ namespace OmniSharp.Overrides {
         public GetOverrideTargetsModule
             (OverrideHandler overrideHandler) {
 
-            Post["/getoverridetargets"] = x =>
+            Post["GetOverrideTargets", "/getoverridetargets"] = x =>
                 {
                     var req = this.Bind<OmniSharp.Common.Request>();
                     var completions = overrideHandler.GetOverrideTargets(req);

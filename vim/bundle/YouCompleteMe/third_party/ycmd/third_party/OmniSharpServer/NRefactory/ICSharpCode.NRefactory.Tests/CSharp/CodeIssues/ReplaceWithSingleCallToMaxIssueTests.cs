@@ -1,4 +1,4 @@
-﻿// 
+// 
 // ReplaceWithSingleCallToMaxTests.cs
 //
 // Author:

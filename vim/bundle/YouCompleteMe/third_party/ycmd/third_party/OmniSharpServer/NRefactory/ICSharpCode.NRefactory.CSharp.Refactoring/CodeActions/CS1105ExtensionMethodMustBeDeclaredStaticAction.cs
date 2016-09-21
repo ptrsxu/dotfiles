@@ -1,4 +1,4 @@
-﻿//
+//
 // CS1105ExtensionMethodMustBeDeclaredStaticAction.cs
 //
 // Author:

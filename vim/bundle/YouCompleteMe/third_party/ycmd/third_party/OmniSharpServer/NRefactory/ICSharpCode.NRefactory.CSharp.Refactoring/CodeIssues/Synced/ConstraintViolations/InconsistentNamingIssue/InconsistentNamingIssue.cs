@@ -1,4 +1,4 @@
-﻿// 
+// 
 // InconsistentNamingIssue.cs
 //  
 // Author:

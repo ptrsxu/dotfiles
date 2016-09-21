@@ -1,4 +1,4 @@
-﻿// 
+// 
 // CreateCustomEventImplementationAction.cs
 // 
 // Author:
