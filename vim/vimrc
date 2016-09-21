@@ -183,6 +183,10 @@ let g:pymode_syntax_print_as_function = 1
 "     cd YouCompleteMe
 "     git submodule update --init --recursive
 "     ./install.sh --system-libclang --clang-completer --racer-completer
+" (racer support needs:
+"     curl -sSf https://static.rust-lang.org/rustup.sh | sh
+"     cargo isntall racer
+" )
 " Install manually:
 " For windows ``:help youcompleteme``
 " visit official page for more configurations.
