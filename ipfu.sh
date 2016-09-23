@@ -113,4 +113,4 @@ apt-get install --yes nodejs nodejs-dev
 curl -sSf https://static.rust-lang.org/rustup.sh | sh
 cargo install racer
 cargo install rustfmt
-carog install bindgen
+cargo install bindgen
