@@ -114,3 +114,6 @@ curl -sSf https://static.rust-lang.org/rustup.sh | sh
 cargo install racer
 cargo install rustfmt
 cargo install bindgen
+
+# for ruby, a better way pls refer to: https://github.com/rvm/rvm
+apt-get install ruby ruby-dev bundler
