@@ -18,6 +18,7 @@ apt-get install --yes sysstat nicstat pstack
 ################################################################################
 apt-get install --yes libreadline-dev libbz2-dev
 apt-get install --yes libxml2-dev libxslt-dev
+apt-get install --yes icu-devtools libicu-dev zlib1g-dev
 
 ################################################################################
 # setup devel environment
@@ -84,14 +85,14 @@ apt-get install --yes maven
 
 # for sbt
 echo "deb https://dl.bintray.com/sbt/debian /" | sudo tee -a /etc/apt/sources.list.d/sbt.list
-sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 642AC823
-sudo apt-get update
-sudo apt-get install --yes sbt
+apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 642AC823
+apt-get update
+apt-get install --yes sbt
 
 # for scala
 SCALA_VERSION=2.11.8
 wget www.scala-lang.org/files/archive/scala-${SCALA_VERSION}.deb -O /tmp/scala-${SCALA_VERSION}.deb
-sudo dpkg -i /tmp/scala-${SCALA_VERSION}.deb
+dpkg -i /tmp/scala-${SCALA_VERSION}.deb
 rm /tmp/scala-${SCALA_VERSION}.deb
 
 # for neovim
