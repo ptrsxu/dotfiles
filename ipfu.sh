@@ -12,6 +12,7 @@ apt-get install --yes tmux
 apt-get install --yes curl traceroute
 apt-get install --yes ifstat nethogs htop iptraf
 apt-get install --yes sysstat nicstat pstack
+apt-get install --yes p7zip-rar
 
 ################################################################################
 # for bisic libs
@@ -116,4 +117,4 @@ cargo install rustfmt
 cargo install bindgen
 
 # for ruby, a better way pls refer to: https://github.com/rvm/rvm
-apt-get install ruby ruby-dev bundler
+apt-get install --yes ruby ruby-dev bundler
