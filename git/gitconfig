@@ -18,6 +18,7 @@
 	# we turn to LF even on mac(CR), becuase commands such as
 	# `cat` works not so good with CR
 	autocrlf = input
+	quotepath = false
 #	autocrlf = true
 [merge]
 	tool = meld
