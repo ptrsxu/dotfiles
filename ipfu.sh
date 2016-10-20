@@ -22,6 +22,12 @@ apt-get install --yes libxml2-dev libxslt-dev
 apt-get install --yes icu-devtools libicu-dev zlib1g-dev
 
 ################################################################################
+# for numerical 
+################################################################################
+apt-get install --yes libatlas libatlas-dev libatlas-base-dev
+apt-get install --yes libgsl-dev
+
+################################################################################
 # setup devel environment
 ################################################################################
 # ATTENTION: ubuntu 16.04 uses python3, which may cause vim configuration
@@ -68,8 +74,6 @@ apt-get install --yes python3-dev ipython3 python3-pip
 
 # for python-recsys
 # apt-get install --yes csc-pysparse
-apt-get install --yes libatlas libatlas-dev
-apt-get install --yes libatlas-dev
 # apt-get install --yes python-scikits-learn python-scikits.statsmodels
 # apt-get install --yes python-boto
 
