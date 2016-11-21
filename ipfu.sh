@@ -115,8 +115,10 @@ apt-get install --yes sqlite3 libsqlite3-dev
 apt-get install --yes nodejs nodejs-dev
 
 # for rust
-# curl -sSf https://static.rust-lang.org/rustup.sh | sh
-curl https://sh.rustup.rs -sSf | sh
+curl -sSf https://static.rust-lang.org/rustup.sh | sh
+# this may need some interaction with the terminal: 
+#     /usr/local/lib/rustlib/uninstall.sh
+#     curl https://sh.rustup.rs -sSf | sh
 cargo install racer
 cargo install rustfmt
 cargo install bindgen
