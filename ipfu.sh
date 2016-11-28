@@ -20,6 +20,7 @@ apt-get install --yes p7zip-rar
 apt-get install --yes libreadline-dev libbz2-dev
 apt-get install --yes libxml2-dev libxslt-dev
 apt-get install --yes icu-devtools libicu-dev zlib1g-dev
+apt-get install --yes openssl libssl-dev
 
 ################################################################################
 # for numerical 
