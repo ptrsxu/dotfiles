@@ -38,6 +38,7 @@ brew install openssl
 brew install synergy
 brew install dos2uinx
 brew install lrzsz
+brew install coreutils
 
 # for compress
 brew install xz
