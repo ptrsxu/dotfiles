@@ -73,6 +73,7 @@ export PATH
 export LD_LIBRARY_PATH
 export JAVA_HOME
 export HOMEBREW_GITHUB_API_TOKEN='aec095b373d378888ec38f6e46003e873f0fab2b'
+export HISTSIZE=1000000
 
 if [ -d ~/.local/anaconda/ ]; then
     alias an35='~/.local/anaconda/bin/ipython'

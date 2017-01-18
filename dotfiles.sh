@@ -132,6 +132,14 @@ function install_pylintrc()
     fi
 }
 
+function install_tmux()
+{
+    if [ ! -e $INSTALL_TO/.tmux ]; then
+        git clone https://github.com/gpakosz/.tmux $INSTALL_TO/.tmux
+        ln -s $INSTALL_TO/.tmux/.tmux.conf $INSTALL_TO/.tmux.conf
+    fi
+}
+
 function install_sh()
 {
     echo
@@ -187,6 +195,7 @@ install_vimscripts
 install_gitconfig
 install_pythonrc
 install_pylintrc
+install_tmux
 install_sh
 
 print_end_notes
