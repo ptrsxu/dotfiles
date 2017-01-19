@@ -96,7 +96,7 @@ apt-get update
 apt-get install --yes sbt
 
 # for scala
-SCALA_VERSION=2.11.8
+SCALA_VERSION=2.12.1
 wget www.scala-lang.org/files/archive/scala-${SCALA_VERSION}.deb -O /tmp/scala-${SCALA_VERSION}.deb
 dpkg -i /tmp/scala-${SCALA_VERSION}.deb
 rm /tmp/scala-${SCALA_VERSION}.deb
@@ -115,14 +115,14 @@ apt-get install --yes sqlite3 libsqlite3-dev
 # for javascript
 apt-get install --yes nodejs nodejs-dev
 
-# for rust
-curl -sSf https://static.rust-lang.org/rustup.sh | sh
+# # for rust
+# curl -sSf https://static.rust-lang.org/rustup.sh | sh
 # this may need some interaction with the terminal: 
 #     /usr/local/lib/rustlib/uninstall.sh
 #     curl https://sh.rustup.rs -sSf | sh
-cargo install racer
-cargo install rustfmt
-cargo install bindgen
+# cargo install racer
+# cargo install rustfmt
+# cargo install bindgen
 
 # for ruby, a better way pls refer to: https://github.com/rvm/rvm
 apt-get install --yes ruby ruby-dev bundler

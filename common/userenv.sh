@@ -37,6 +37,10 @@ if [ -e ~/.local ]; then
     done
 fi
 
+if [ -e ~/.cargo ]; then
+    PATH=$(cd ~/.cargo/bin; pwd):$PATH
+fi
+
 if [ -e ~/.pythonrc ]; then
     export PYTHONSTARTUP=~/.pythonrc
 fi
