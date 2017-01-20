@@ -18,7 +18,7 @@ apt-get install --yes pkg-config
 ################################################################################
 # for bisic libs
 ################################################################################
-apt-get install --yes libreadline-dev libbz2-dev liblzma-dev libncurses-dev
+apt-get install --yes libreadline-dev libbz2-dev liblzma-dev libncurses-dev libncursesw5-dev
 apt-get install --yes libxml2-dev libxslt-dev
 apt-get install --yes icu-devtools libicu-dev zlib1g-dev
 apt-get install --yes openssl libssl-dev
