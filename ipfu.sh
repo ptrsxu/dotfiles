@@ -13,11 +13,12 @@ apt-get install --yes curl traceroute
 apt-get install --yes ifstat nethogs htop iptraf
 apt-get install --yes sysstat nicstat pstack
 apt-get install --yes p7zip-rar
+apt-get install --yes pkg-config
 
 ################################################################################
 # for bisic libs
 ################################################################################
-apt-get install --yes libreadline-dev libbz2-dev liblzma-dev
+apt-get install --yes libreadline-dev libbz2-dev liblzma-dev libncurses-dev
 apt-get install --yes libxml2-dev libxslt-dev
 apt-get install --yes icu-devtools libicu-dev zlib1g-dev
 apt-get install --yes openssl libssl-dev
@@ -110,7 +111,7 @@ rm /tmp/scala-${SCALA_VERSION}.deb
 # so we should keep the installation at the end of all.
 apt-get install --yes memcached libmemcached-dev redis-server
 apt-get install --yes sqlite3 libsqlite3-dev
-# apt-get install --yes postgresql mysql-client libmysqlclient-dev mysql-server
+# apt-get install --yes postgresql libpq-dev mysql-client libmysqlclient-dev mysql-server
 
 # for javascript
 apt-get install --yes nodejs nodejs-dev
