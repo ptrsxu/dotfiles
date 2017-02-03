@@ -5,6 +5,13 @@ apt-get update
 apt-get upgrade --yes
 
 ################################################################################
+# for basic settings
+################################################################################
+timedatectl set-timezone Asia/Shanghai
+locale-gen
+update-locale LANG=zh_CN.UTF-8 LC_MESSAGES=POSIX
+
+################################################################################
 # for system management
 ################################################################################
 apt-get install --yes zerofree
