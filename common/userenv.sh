@@ -61,10 +61,8 @@ elif [ `uname -s` = "Linux" -a `head -1 /etc/issue | awk '{print $1}'` = "Ubuntu
     fi
 fi
 
-ret=$(tmux -V)
-if [ $? -eq 0 ]; then
-    alias tmux="tmux -u"
-fi
+# a few alias
+alias tmux="tmux -u"
 
 # set up path for pyenv
 if [ -d ~/.pyenv/bin ]; then        # for manually installation.
