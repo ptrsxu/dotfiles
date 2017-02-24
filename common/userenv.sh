@@ -50,12 +50,20 @@ if [ `uname -s` = "Darwin" ]; then
     if [ -e /usr/libexec/java_home -a `/usr/libexec/java_home` != "" ]; then
         JAVA_HOME=`/usr/libexec/java_home`
     fi
+    if [ -d /Developer/NVIDIA/CUDA-7.5/bin ]; then
+        PATH=/Developer/NVIDIA/CUDA-7.5/bin/:$PATH
+    fi
 elif [ `uname -s` = "Linux" -a `head -1 /etc/issue | awk '{print $1}'` = "Ubuntu" ]; then
     # set JAVA_HOME for ubuntu
     if [ -e /usr/lib/jvm/default-java -a "$JAVA_HOME" = "" ]; then
         JAVA_HOME=/usr/lib/jvm/default-java
         PATH=$JAVA_HOME/bin:$PATH
     fi
+fi
+
+ret=$(tmux -V)
+if [ $? -eq 0 ]; then
+    alias tmux="tmux -u"
 fi
 
 # set up path for pyenv
@@ -71,7 +79,6 @@ if [ -d ~/.cabal/bin ]; then
     PATH=$(cd ~/.cabal/bin; pwd):$PATH
 fi
 
-PATH=/Developer/NVIDIA/CUDA-7.5/bin/:$PATH
 
 export PATH
 export LD_LIBRARY_PATH
