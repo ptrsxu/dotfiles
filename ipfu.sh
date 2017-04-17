@@ -19,7 +19,7 @@ apt-get install --yes tmux
 apt-get install --yes curl traceroute
 apt-get install --yes ifstat nethogs htop iptraf nmap
 apt-get install --yes sysstat nicstat pstack
-apt-get install --yes p7zip-rar
+apt-get install --yes p7zip-rar p7zip-full
 apt-get install --yes pkg-config
 
 ################################################################################
