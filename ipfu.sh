@@ -14,6 +14,7 @@ update-locale LANG=zh_CN.UTF-8 LC_MESSAGES=POSIX
 ################################################################################
 # for system management
 ################################################################################
+apt-get install --yes apt-file
 apt-get install --yes zerofree
 apt-get install --yes tmux
 apt-get install --yes expect
