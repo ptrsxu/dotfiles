@@ -19,14 +19,12 @@ from __future__ import unicode_literals
 from __future__ import print_function
 from __future__ import division
 from __future__ import absolute_import
-from future import standard_library
-standard_library.install_aliases()
+# Not installing aliases from python-future; it's unreliable and slow.
 from builtins import *  # noqa
 
 import vim
 from ycm import vimsupport
 from ycmd import utils
-from ycmd.responses import ServerError
 from ycmd.completers.completer import Completer
 from ycm.client.base_request import BaseRequest, HandleServerException
 
@@ -115,9 +113,7 @@ class OmniCompleter( Completer ):
       'query': query
     }
 
-    try:
+    with HandleServerException():
       return BaseRequest.PostDataToHandler( request_data,
                                             'filter_and_sort_candidates' )
-    except ServerError as e:
-      HandleServerException( e )
-      return candidates
+    return candidates

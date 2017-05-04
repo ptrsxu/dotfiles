@@ -1,6 +1,7 @@
 # coding: utf-8
 #
-# Copyright (C) 2013  Google Inc.
+# Copyright (C) 2013 Google Inc.
+#               2016 YouCompleteMe contributors
 #
 # This file is part of YouCompleteMe.
 #
@@ -21,15 +22,14 @@ from __future__ import unicode_literals
 from __future__ import print_function
 from __future__ import division
 from __future__ import absolute_import
-from future import standard_library
-standard_library.install_aliases()
+# Not installing aliases from python-future; it's unreliable and slow.
 from builtins import *  # noqa
 
 import contextlib
 from nose.tools import eq_, ok_
 from mock import patch
 
-from ycm.test_utils import MockVimModule
+from ycm.tests.test_utils import MockVimModule
 vim_mock = MockVimModule()
 from ycm import base
 

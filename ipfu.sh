@@ -17,6 +17,7 @@ update-locale LANG=zh_CN.UTF-8 LC_MESSAGES=POSIX
 apt-get install --yes apt-file
 apt-get install --yes zerofree
 apt-get install --yes tmux
+apt-get install --yes dos2unix
 apt-get install --yes expect
 apt-get install --yes curl traceroute
 apt-get install --yes ifstat nethogs htop iptraf nmap

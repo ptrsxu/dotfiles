@@ -1,4 +1,4 @@
-# Copyright (C) 2015 ycmd contributors
+# Copyright (C) 2015-2017 ycmd contributors
 #
 # This file is part of ycmd.
 #
@@ -19,17 +19,15 @@ from __future__ import unicode_literals
 from __future__ import print_function
 from __future__ import division
 from __future__ import absolute_import
+# Not installing aliases from python-future; it's unreliable and slow.
 from builtins import *  # noqa
-from future.utils import native, iteritems
-from future import standard_library
-standard_library.install_aliases()
 
-from ycmd.utils import ToBytes, SetEnviron, ProcessIsRunning
+from ycmd.utils import ToBytes, SetEnviron, ProcessIsRunning, urljoin
 from ycmd.completers.completer import Completer
 from ycmd import responses, utils, hmac_utils
 
+from future.utils import iteritems, native
 import logging
-import urllib.parse
 import requests
 import json
 import tempfile
@@ -64,6 +62,8 @@ ERROR_FROM_RACERD_MESSAGE = (
   'Received error from racerd while retrieving completions. You did not '
   'set the rust_src_path option, which is probably causing this issue. '
   'See YCM docs for details.' )
+
+LOGFILE_FORMAT = 'racerd_{port}_{std}_'
 
 
 def FindRacerdBinary( user_options ):
@@ -102,6 +102,7 @@ class RustCompleter( Completer ):
   def __init__( self, user_options ):
     super( RustCompleter, self ).__init__( user_options )
     self._racerd_binary = FindRacerdBinary( user_options )
+    self._racerd_port = None
     self._racerd_host = None
     self._server_state_lock = threading.RLock()
     self._keep_logfiles = user_options[ 'server_keep_logfiles' ]
@@ -157,7 +158,7 @@ class RustCompleter( Completer ):
     _logger.info( 'RustCompleter._GetResponse' )
     handler = ToBytes( handler )
     method = ToBytes( method )
-    url = urllib.parse.urljoin( ToBytes( self._racerd_host ), handler )
+    url = urljoin( ToBytes( self._racerd_host ), handler )
     parameters = self._ConvertToRacerdRequest( request_data )
     body = ToBytes( json.dumps( parameters ) ) if parameters else bytes()
     extra_headers = self._ExtraHeaders( method, handler, body )
@@ -262,14 +263,14 @@ class RustCompleter( Completer ):
 
   def _StartServer( self ):
     with self._server_state_lock:
-      port = utils.GetUnusedLocalhostPort()
+      self._racerd_port = utils.GetUnusedLocalhostPort()
       self._hmac_secret = self._CreateHmacSecret()
 
       # racerd will delete the secret_file after it's done reading it
       with tempfile.NamedTemporaryFile( delete = False ) as secret_file:
         secret_file.write( self._hmac_secret )
         args = [ self._racerd_binary, 'serve',
-                '--port', str( port ),
+                '--port', str( self._racerd_port ),
                 '-l',
                 '--secret-file', secret_file.name ]
 
@@ -280,13 +281,10 @@ class RustCompleter( Completer ):
       if self._rust_source_path:
         args.extend( [ '--rust-src-path', self._rust_source_path ] )
 
-      filename_format = p.join( utils.PathToCreatedTempDir(),
-                                'racerd_{port}_{std}.log' )
-
-      self._server_stdout = filename_format.format( port = port,
-                                                    std = 'stdout' )
-      self._server_stderr = filename_format.format( port = port,
-                                                    std = 'stderr' )
+      self._server_stdout = utils.CreateLogfile(
+          LOGFILE_FORMAT.format( port = self._racerd_port, std = 'stdout' ) )
+      self._server_stderr = utils.CreateLogfile(
+          LOGFILE_FORMAT.format( port = self._racerd_port, std = 'stderr' ) )
 
       with utils.OpenForStdHandle( self._server_stderr ) as fstderr:
         with utils.OpenForStdHandle( self._server_stdout ) as fstdout:
@@ -295,7 +293,7 @@ class RustCompleter( Completer ):
                                                   stderr = fstderr,
                                                   env = env )
 
-      self._racerd_host = 'http://127.0.0.1:{0}'.format( port )
+      self._racerd_host = 'http://127.0.0.1:{0}'.format( self._racerd_port )
       if not self._ServerIsRunning():
         raise RuntimeError( 'Failed to start racerd!' )
       _logger.info( 'Racerd started on: ' + self._racerd_host )
@@ -347,6 +345,7 @@ class RustCompleter( Completer ):
 
   def _CleanUp( self ):
     self._racerd_phandle = None
+    self._racerd_port = None
     self._racerd_host = None
     if not self._keep_logfiles:
       if self._server_stdout:
@@ -380,6 +379,8 @@ class RustCompleter( Completer ):
                            self._StopServer() ),
       'RestartServer' : ( lambda self, request_data, args:
                            self._RestartServer() ),
+      'GetDoc' : ( lambda self, request_data, args:
+                           self._GetDoc( request_data ) ),
     }
 
 
@@ -395,6 +396,17 @@ class RustCompleter( Completer ):
       raise RuntimeError( 'Can\'t jump to definition.' )
 
 
+  def _GetDoc( self, request_data ):
+    try:
+      definition = self._GetResponse( '/find_definition',
+                                      request_data )
+
+      docs = [ definition[ 'context' ], definition[ 'docs' ] ]
+      return responses.BuildDetailedInfoResponse( '\n---\n'.join( docs ) )
+    except Exception as e:
+      _logger.exception( e )
+      raise RuntimeError( 'Can\'t lookup docs.' )
+
   def Shutdown( self ):
     self._StopServer()
 
@@ -405,35 +417,18 @@ class RustCompleter( Completer ):
 
   def DebugInfo( self, request_data ):
     with self._server_state_lock:
-      if self._ServerIsRunning():
-        return ( 'Rust completer debug information:\n'
-                 '  Racerd running at: {0}\n'
-                 '  Racerd process ID: {1}\n'
-                 '  Racerd executable: {2}\n'
-                 '  Racerd logfiles:\n'
-                 '    {3}\n'
-                 '    {4}\n'
-                 '  Rust sources: {5}'.format( self._racerd_host,
-                                               self._racerd_phandle.pid,
-                                               self._racerd_binary,
-                                               self._server_stdout,
-                                               self._server_stderr,
-                                               self._rust_source_path ) )
+      racerd_server = responses.DebugInfoServer(
+        name = 'Racerd',
+        handle = self._racerd_phandle,
+        executable = self._racerd_binary,
+        address = '127.0.0.1',
+        port = self._racerd_port,
+        logfiles = [ self._server_stdout, self._server_stderr ] )
 
-      if self._server_stdout and self._server_stderr:
-        return ( 'Rust completer debug information:\n'
-                 '  Racerd no longer running\n'
-                 '  Racerd executable: {0}\n'
-                 '  Racerd logfiles:\n'
-                 '    {1}\n'
-                 '    {2}\n'
-                 '  Rust sources: {3}'.format( self._racerd_binary,
-                                               self._server_stdout,
-                                               self._server_stderr,
-                                               self._rust_source_path ) )
+      rust_sources_item = responses.DebugInfoItem(
+        key = 'Rust sources',
+        value = self._rust_source_path )
 
-      return ( 'Rust completer debug information:\n'
-               '  Racerd is not running\n'
-               '  Racerd executable: {0}\n'
-               '  Rust sources: {1}'.format( self._racerd_binary,
-                                             self._rust_source_path ) )
+      return responses.BuildDebugInfoResponse( name = 'Rust',
+                                               servers = [ racerd_server ],
+                                               items = [ rust_sources_item ] )

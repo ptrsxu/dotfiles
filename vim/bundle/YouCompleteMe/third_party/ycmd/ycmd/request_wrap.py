@@ -21,8 +21,7 @@ from __future__ import unicode_literals
 from __future__ import print_function
 from __future__ import division
 from __future__ import absolute_import
-from future import standard_library
-standard_library.install_aliases()
+# Not installing aliases from python-future; it's unreliable and slow.
 from builtins import *  # noqa
 
 from ycmd.utils import ( ByteOffsetToCodepointOffset,
@@ -69,6 +68,8 @@ class RequestWrap( object ):
       'query': self._Query,
 
       'filetypes': self._Filetypes,
+
+      'first_filetype': self._FirstFiletype,
     }
     self._cached_computed = {}
 
@@ -102,29 +103,28 @@ class RequestWrap( object ):
 
 
   def CompletionStartColumn( self ):
-    try:
-      filetype = self[ 'filetypes' ][ 0 ]
-    except (KeyError, IndexError):
-      filetype = None
     return CompletionStartColumn( self[ 'line_value' ],
                                   self[ 'column_num' ],
-                                  filetype )
+                                  self[ 'first_filetype' ] )
 
 
   def CompletionStartCodepoint( self ):
-    try:
-      filetype = self[ 'filetypes' ][ 0 ]
-    except (KeyError, IndexError):
-      filetype = None
     return CompletionStartCodepoint( self[ 'line_value' ],
                                      self[ 'column_num' ],
-                                     filetype )
+                                     self[ 'first_filetype' ] )
 
 
   def _Query( self ):
     return self[ 'line_value' ][
         self[ 'start_codepoint' ] - 1 : self[ 'column_codepoint' ] - 1
     ]
+
+
+  def _FirstFiletype( self ):
+    try:
+      return self[ 'filetypes' ][ 0 ]
+    except (KeyError, IndexError):
+      return None
 
 
   def _Filetypes( self ):

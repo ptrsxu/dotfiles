@@ -19,8 +19,7 @@ from __future__ import absolute_import
 from __future__ import unicode_literals
 from __future__ import print_function
 from __future__ import division
-from future import standard_library
-standard_library.install_aliases()
+# Not installing aliases from python-future; it's unreliable and slow.
 from builtins import *  # noqa
 
 from hamcrest import ( assert_that, contains, contains_string, has_entries,
@@ -218,6 +217,35 @@ def Diagnostics_FixIt_Available_test( app ):
       'location': has_entries( { 'line_num': 11, 'column_num': 3 } ),
       'text': equal_to(
          'explicit conversion functions are a C++11 extension' ),
+      'fixit_available': False
+    } ),
+  ) )
+
+
+@IsolatedYcmd
+def Diagnostics_MultipleMissingIncludes_test( app ):
+  contents = ReadFile( PathToTestFile( 'multiple_missing_includes.cc' ) )
+
+  event_data = BuildRequest( contents = contents,
+                             event_name = 'FileReadyToParse',
+                             filetype = 'cpp',
+                             compilation_flags = [ '-x', 'c++' ] )
+
+  response = app.post_json( '/event_notification', event_data ).json
+
+  pprint( response )
+
+  assert_that( response, has_items(
+    has_entries( {
+      'kind': equal_to( 'ERROR' ),
+      'location': has_entries( { 'line_num': 1, 'column_num': 10 } ),
+      'text': equal_to( "'first_missing_include' file not found" ),
+      'fixit_available': False
+    } ),
+    has_entries( {
+      'kind': equal_to( 'ERROR' ),
+      'location': has_entries( { 'line_num': 2, 'column_num': 10 } ),
+      'text': equal_to( "'second_missing_include' file not found" ),
       'fixit_available': False
     } ),
   ) )

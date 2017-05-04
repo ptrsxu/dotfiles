@@ -19,8 +19,7 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 from __future__ import absolute_import
-from future import standard_library
-standard_library.install_aliases()
+# Not installing aliases from python-future; it's unreliable and slow.
 from builtins import *  # noqa
 
 from hamcrest import ( assert_that, calling, contains, contains_inanyorder,
@@ -191,10 +190,29 @@ def AddNearestThirdPartyFoldersToSysPath_FutureAfterStandardLibrary_test(
 
 
 @patch( 'sys.path', [
-  PathToTestFile( 'python_future', 'some', 'path' ),
-  PathToTestFile( 'python_future', 'another', 'path' ) ] )
+  PathToTestFile( 'python-future', 'some', 'path' ),
+  PathToTestFile( 'python-future', 'another', 'path' ) ] )
 def AddNearestThirdPartyFoldersToSysPath_ErrorIfNoStandardLibrary_test( *args ):
   assert_that(
     calling( AddNearestThirdPartyFoldersToSysPath ).with_args( __file__ ),
     raises( RuntimeError,
             'Could not find standard library path in Python path.' ) )
+
+
+@patch( 'sys.path', [
+  PathToTestFile( 'python-future', 'some', 'path' ),
+  PathToTestFile( 'python-future', 'virtualenv_library' ),
+  PathToTestFile( 'python-future', 'standard_library' ),
+  PathToTestFile( 'python-future', 'another', 'path' ) ] )
+def AddNearestThirdPartyFoldersToSysPath_IgnoreVirtualEnvLibrary_test( *args ):
+  AddNearestThirdPartyFoldersToSysPath( __file__ )
+  assert_that( sys.path[ : len( THIRD_PARTY_FOLDERS ) ], contains_inanyorder(
+    *THIRD_PARTY_FOLDERS
+  ) )
+  assert_that( sys.path[ len( THIRD_PARTY_FOLDERS ) : ], contains(
+    PathToTestFile( 'python-future', 'some', 'path' ),
+    PathToTestFile( 'python-future', 'virtualenv_library' ),
+    PathToTestFile( 'python-future', 'standard_library' ),
+    os.path.join( DIR_OF_THIRD_PARTY, 'python-future', 'src' ),
+    PathToTestFile( 'python-future', 'another', 'path' )
+  ) )

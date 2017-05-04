@@ -21,12 +21,10 @@ from __future__ import unicode_literals
 from __future__ import print_function
 from __future__ import division
 from __future__ import absolute_import
-from future import standard_library
-from future.utils import iteritems
-standard_library.install_aliases()
+# Not installing aliases from python-future; it's unreliable and slow.
 from builtins import *  # noqa
 
-from future.utils import itervalues, PY2
+from future.utils import iteritems, PY2
 from hamcrest import contains_string, has_entry, has_entries, assert_that
 from mock import patch
 from webtest import TestApp
@@ -39,10 +37,10 @@ import tempfile
 import time
 import stat
 
-from ycmd import handlers, user_options_store
+from ycmd import extra_conf_store, handlers, user_options_store
 from ycmd.completers.completer import Completer
 from ycmd.responses import BuildCompletionData
-from ycmd.utils import OnMac, OnWindows, ToUnicode
+from ycmd.utils import GetCurrentDirectory, OnMac, OnWindows, ToUnicode
 import ycm_core
 
 try:
@@ -163,17 +161,17 @@ def UserOption( key, value ):
     user_options = current_options.copy()
     user_options.update( { key: value } )
     handlers.UpdateUserOptions( user_options )
-    yield
+    yield user_options
   finally:
     handlers.UpdateUserOptions( current_options )
 
 
 @contextlib.contextmanager
 def CurrentWorkingDirectory( path ):
-  old_cwd = os.getcwd()
+  old_cwd = GetCurrentDirectory()
   os.chdir( path )
   try:
-    yield
+    yield old_cwd
   finally:
     os.chdir( old_cwd )
 
@@ -187,9 +185,12 @@ def TemporaryExecutable( extension = '.exe' ):
     yield executable.name
 
 
-def SetUpApp():
+def SetUpApp( custom_options = {} ):
   bottle.debug( True )
-  handlers.SetServerStateToDefaults()
+  options = user_options_store.DefaultOptions()
+  options.update( custom_options )
+  handlers.UpdateUserOptions( options )
+  extra_conf_store.Reset()
   return TestApp( handlers.app )
 
 
@@ -232,10 +233,8 @@ def ClearCompletionsCache():
   This function is used when sharing the application between tests so that
   no completions are cached by previous tests."""
   server_state = handlers._server_state
-  filetype_completers = server_state._filetype_completers
-  for completer in itervalues( filetype_completers ):
-    if completer:
-      completer._completions_cache.Invalidate()
+  for completer in server_state.GetLoadedFiletypeCompleters():
+    completer._completions_cache.Invalidate()
   general_completer = server_state.GetGeneralCompleter()
   for completer in general_completer._all_completers:
     completer._completions_cache.Invalidate()

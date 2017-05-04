@@ -1,4 +1,4 @@
-﻿// 
+// 
 // AutoAsyncTests.cs
 //  
 // Author:

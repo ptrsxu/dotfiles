@@ -160,6 +160,7 @@ class Mixin(SuperClass):
     def method_mixin(self):
         return int
 
+#? 20 SuperClass
 class SubClass(SuperClass):
     class_sub = 3
     def __init__(self):
@@ -293,20 +294,6 @@ class A():
 
 #? list()
 A().b()
-
-# -----------------
-# recursions
-# -----------------
-def Recursion():
-    def recurse(self):
-        self.a = self.a
-        self.b = self.b.recurse()
-
-#?
-Recursion().a
-
-#?
-Recursion().b
 
 # -----------------
 # ducktyping

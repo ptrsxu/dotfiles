@@ -19,17 +19,19 @@ from __future__ import unicode_literals
 from __future__ import print_function
 from __future__ import division
 from __future__ import absolute_import
-from future import standard_library
-standard_library.install_aliases()
+# Not installing aliases from python-future; it's unreliable and slow.
 from builtins import *  # noqa
 
 import functools
 import os
 
 from ycmd import handlers
-from ycmd.tests.test_utils import ( ClearCompletionsCache, SetUpApp,
+from ycmd.tests.test_utils import ( ClearCompletionsCache,
+                                    CurrentWorkingDirectory,
+                                    SetUpApp,
                                     StopCompleterServer,
                                     WaitUntilCompleterServerReady )
+from ycmd.utils import GetCurrentDirectory
 
 shared_app = None
 shared_current_dir = None
@@ -48,7 +50,7 @@ def setUpPackage():
   global shared_app, shared_current_dir
 
   shared_app = SetUpApp()
-  shared_current_dir = os.getcwd()
+  shared_current_dir = GetCurrentDirectory()
   os.chdir( PathToTestFile() )
   WaitUntilCompleterServerReady( shared_app, 'javascript' )
 
@@ -87,13 +89,11 @@ def IsolatedYcmd( test ):
   @functools.wraps( test )
   def Wrapper( *args, **kwargs ):
     old_server_state = handlers._server_state
-    old_current_dir = os.getcwd()
     app = SetUpApp()
-    os.chdir( PathToTestFile() )
     try:
-      test( app, *args, **kwargs )
+      with CurrentWorkingDirectory( PathToTestFile() ):
+        test( app, *args, **kwargs )
     finally:
       StopCompleterServer( app, 'javascript' )
-      os.chdir( old_current_dir )
       handlers._server_state = old_server_state
   return Wrapper

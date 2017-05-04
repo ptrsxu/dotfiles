@@ -4,8 +4,7 @@ from __future__ import print_function
 from __future__ import division
 from __future__ import unicode_literals
 from __future__ import absolute_import
-from future import standard_library
-standard_library.install_aliases()
+# Not installing aliases from python-future; it's unreliable and slow.
 from builtins import *  # noqa
 
 import platform
@@ -117,9 +116,9 @@ def ParseArguments():
                         COMPLETERS.keys()) )
   parser.add_argument( '--skip-build', action = 'store_true',
                        help = 'Do not build ycmd before testing.' )
-  parser.add_argument( '--msvc', type = int, choices = [ 11, 12, 14 ],
+  parser.add_argument( '--msvc', type = int, choices = [ 12, 14, 15 ],
                        help = 'Choose the Microsoft Visual '
-                       'Studio version. (default: 14).' )
+                       'Studio version. (default: 15).' )
   parser.add_argument( '--coverage', action = 'store_true',
                        help = 'Enable coverage report (requires coverage pkg)' )
   parser.add_argument( '--no-flake8', action = 'store_true',
@@ -178,6 +177,13 @@ def BuildYcmdLibs( args ):
 
     if args.msvc:
       build_cmd.extend( [ '--msvc', str( args.msvc ) ] )
+
+    if args.coverage:
+      # In order to generate coverage data for C++, we use gcov. This requires
+      # some files generated when building (*.gcno), so we store the build
+      # output in a known directory, which is then used by the CI infrastructure
+      # to generate the c++ coverage information.
+      build_cmd.extend( [ '--enable-coverage', '--build-dir', '.build' ] )
 
     subprocess.check_call( build_cmd )
 

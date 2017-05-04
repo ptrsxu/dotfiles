@@ -21,8 +21,7 @@ from __future__ import unicode_literals
 from __future__ import print_function
 from __future__ import division
 from __future__ import absolute_import
-from future import standard_library
-standard_library.install_aliases()
+# Not installing aliases from python-future; it's unreliable and slow.
 from builtins import *  # noqa
 
 from nose.tools import eq_, ok_
@@ -137,7 +136,13 @@ def ExtractIdentifiersFromText_Html_TemplateChars_test():
                has_item( 'goo' ) )
 
 
-def IsIdentifier_generic_test():
+def ExtractIdentifiersFromText_JavaScript_test():
+  eq_( [ "var", "foo", "require", "bar" ],
+       iu.ExtractIdentifiersFromText( "var foo = require('bar');",
+                                      'javascript' ) )
+
+
+def IsIdentifier_Default_test():
   ok_( iu.IsIdentifier( 'foo' ) )
   ok_( iu.IsIdentifier( 'foo129' ) )
   ok_( iu.IsIdentifier( 'f12' ) )
@@ -148,6 +153,11 @@ def IsIdentifier_generic_test():
   ok_( iu.IsIdentifier( '_f12' ) )
   ok_( iu.IsIdentifier( '_f12' ) )
 
+  ok_( iu.IsIdentifier( 'uniçode' ) )
+  ok_( iu.IsIdentifier( 'uç' ) )
+  ok_( iu.IsIdentifier( 'ç' ) )
+  ok_( iu.IsIdentifier( 'çode' ) )
+
   ok_( not iu.IsIdentifier( '1foo129' ) )
   ok_( not iu.IsIdentifier( '-foo' ) )
   ok_( not iu.IsIdentifier( 'foo-' ) )
@@ -156,17 +166,22 @@ def IsIdentifier_generic_test():
   ok_( not iu.IsIdentifier( '' ) )
 
 
-def IsIdentifier_generic_unicode_test():
-  ok_( iu.IsIdentifier( 'uniçode' ) )
-  ok_( iu.IsIdentifier( 'uç' ) )
+def IsIdentifier_JavaScript_test():
+  ok_( iu.IsIdentifier( '_føo1', 'javascript' ) )
+  ok_( iu.IsIdentifier( 'fø_o1', 'javascript' ) )
+  ok_( iu.IsIdentifier( '$føo1', 'javascript' ) )
+  ok_( iu.IsIdentifier( 'fø$o1', 'javascript' ) )
+
+  ok_( not iu.IsIdentifier( '1føo', 'javascript' ) )
 
 
-def IsIdentifier_generic_unicode_single_char_test():
-  ok_( iu.IsIdentifier( 'ç' ) )
+def IsIdentifier_TypeScript_test():
+  ok_( iu.IsIdentifier( '_føo1', 'typescript' ) )
+  ok_( iu.IsIdentifier( 'fø_o1', 'typescript' ) )
+  ok_( iu.IsIdentifier( '$føo1', 'typescript' ) )
+  ok_( iu.IsIdentifier( 'fø$o1', 'typescript' ) )
 
-
-def IsIdentifier_generic_unicode_char_first_test():
-  ok_( iu.IsIdentifier( 'çode' ) )
+  ok_( not iu.IsIdentifier( '1føo', 'typescript' ) )
 
 
 def IsIdentifier_Css_test():
