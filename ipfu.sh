@@ -24,6 +24,7 @@ apt-get install --yes ifstat nethogs htop iptraf nmap
 apt-get install --yes sysstat nicstat pstack
 apt-get install --yes p7zip-rar p7zip-full
 apt-get install --yes pkg-config
+apt-get install --yes proxychains
 
 ################################################################################
 # for bisic libs
