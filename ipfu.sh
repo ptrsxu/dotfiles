@@ -21,10 +21,18 @@ apt-get install --yes zerofree
 apt-get install --yes tmux
 apt-get install --yes dos2unix
 apt-get install --yes expect
-apt-get install --yes curl traceroute
-apt-get install --yes ifstat nethogs htop iptraf nmap
-apt-get install --yes sysstat nicstat pstack
-apt-get install --yes p7zip-rar p7zip-full
+apt-get install --yes curl
+apt-get install --yes traceroute
+apt-get install --yes ifstat
+apt-get install --yes nethogs
+apt-get install --yes htop
+apt-get install --yes iptraf
+apt-get install --yes nmap
+apt-get install --yes sysstat
+apt-get install --yes nicstat
+apt-get install --yes pstack
+apt-get install --yes p7zip-rar
+apt-get install --yes p7zip-full
 apt-get install --yes pkg-config
 apt-get install --yes proxychains
 apt-get install --yes rlwrap
@@ -32,15 +40,25 @@ apt-get install --yes rlwrap
 ################################################################################
 # for bisic libs
 ################################################################################
-apt-get install --yes libreadline-dev libbz2-dev liblzma-dev libncurses-dev libncursesw5-dev
-apt-get install --yes libxml2-dev libxslt-dev
-apt-get install --yes icu-devtools libicu-dev zlib1g-dev
-apt-get install --yes openssl libssl-dev
+apt-get install --yes libreadline-dev
+apt-get install --yes libbz2-dev
+apt-get install --yes liblzma-dev
+apt-get install --yes libncurses-dev
+apt-get install --yes libncursesw5-dev
+apt-get install --yes libxml2-dev
+apt-get install --yes libxslt-dev
+apt-get install --yes icu-devtools
+apt-get install --yes libicu-dev
+apt-get install --yes zlib1g-dev
+apt-get install --yes openssl
+apt-get install --yes libssl-dev
 
 ################################################################################
 # for numerical 
 ################################################################################
-apt-get install --yes libatlas libatlas-dev libatlas-base-dev libatlas3-base
+apt-get install --yes libatlas-dev
+apt-get install --yes libatlas-base-dev
+apt-get install --yes libatlas3-base
 apt-get install --yes libgsl-dev
 
 ################################################################################
@@ -49,14 +67,32 @@ apt-get install --yes libgsl-dev
 # ATTENTION: ubuntu 16.04 uses python3, which may cause vim configuration
 # compatibility error, use vim-nox-py2 instead if vim-gnome is not working.
 # apt-get install --yes vim-gnome ctags cscope global ack-grep
-apt-get install --yes vim-nox-py2 ctags cscope global ack-grep
-apt-get install --yes tig git gitolite mercurial subversion
+apt-get install --yes vim-nox-py2
+apt-get install --yes ctags
+apt-get install --yes cscope
+apt-get install --yes global
+apt-get install --yes ack-grep
+apt-get install --yes tig
+apt-get install --yes git
+apt-get install --yes gitolite3
+apt-get install --yes mercurial
+apt-get install --yes subversion
 
-apt-get install --yes automake autotools-dev autoconf libtool build-essential
-apt-get install --yes clang libclang-dev cmake cmake-data cmake-doc
+apt-get install --yes automake
+apt-get install --yes autotools-dev
+apt-get install --yes autoconf
+apt-get install --yes libtool
+apt-get install --yes build-essential
+apt-get install --yes clang
+apt-get install --yes libclang-dev
+apt-get install --yes cmake
+apt-get install --yes cmake-data
+apt-get install --yes cmake-doc
 apt-get install --yes linux-headers-`uname -r` dkms     # for kernel related.
 
-apt-get install --yes valgrind kcachegrind oprofile linux-tools  # for profiler.
+apt-get install --yes valgrind
+apt-get install --yes kcachegrind
+apt-get install --yes oprofile linux-tools  # for profiler.
 
 # for web
 apt-get install --yes nginx
@@ -86,7 +122,9 @@ apt-get install --yes python-flask
 apt-get install --yes vim-python
 
 # for python3
-apt-get install --yes python3-dev ipython3 python3-pip
+apt-get install --yes python3-dev
+apt-get install --yes ipython3
+apt-get install --yes python3-pip
 
 # for python-recsys
 # apt-get install --yes csc-pysparse
@@ -123,8 +161,11 @@ rm /tmp/scala-${SCALA_VERSION}.deb
 
 # for database, a password is required for mysql-server during the installation.
 # so we should keep the installation at the end of all.
-apt-get install --yes memcached libmemcached-dev redis-server
-apt-get install --yes sqlite3 libsqlite3-dev
+apt-get install --yes memcached
+apt-get install --yes libmemcached-dev
+apt-get install --yes redis-server
+apt-get install --yes sqlite3
+apt-get install --yes libsqlite3-dev
 # apt-get install --yes postgresql libpq-dev mysql-client libmysqlclient-dev mysql-server
 
 # for javascript
