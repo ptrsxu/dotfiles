@@ -40,7 +40,7 @@ apt-get install --yes openssl libssl-dev
 ################################################################################
 # for numerical 
 ################################################################################
-apt-get install --yes libatlas libatlas-dev libatlas-base-dev
+apt-get install --yes libatlas libatlas-dev libatlas-base-dev libatlas3-base
 apt-get install --yes libgsl-dev
 
 ################################################################################
@@ -50,7 +50,7 @@ apt-get install --yes libgsl-dev
 # compatibility error, use vim-nox-py2 instead if vim-gnome is not working.
 # apt-get install --yes vim-gnome ctags cscope global ack-grep
 apt-get install --yes vim-nox-py2 ctags cscope global ack-grep
-apt-get install --yes git tig gitolite mercurial subversion
+apt-get install --yes tig git gitolite mercurial subversion
 
 apt-get install --yes automake autotools-dev autoconf libtool build-essential
 apt-get install --yes clang libclang-dev cmake cmake-data cmake-doc
