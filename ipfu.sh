@@ -92,13 +92,17 @@ apt-get install --yes linux-headers-`uname -r` dkms     # for kernel related.
 
 apt-get install --yes valgrind
 apt-get install --yes kcachegrind
-apt-get install --yes oprofile linux-tools  # for profiler.
+apt-get install --yes oprofile
+apt-get install --yes linux-tools  # for profiler.
 
 # for web
 apt-get install --yes nginx
 
 # for better shell ops
-apt-get install --yes zsh zsh-common zsh-dev zsh-doc
+apt-get install --yes zsh
+apt-get install --yes zsh-common
+apt-get install --yes zsh-dev
+apt-get install --yes zsh-doc
 apt-get install --yes autojump
 apt-get install --yes powerline
 apt-get install --yes xclip
@@ -106,10 +110,15 @@ apt-get install --yes xclip
 # for some lib
 apt-get install --yes libyaml-dev
 apt-get install --yes libargtable2-dev  # for gnu arg parse
-apt-get install --yes libpcap-dev tcpdump libdnet-dev
+apt-get install --yes libpcap-dev
+apt-get install --yes tcpdump
+apt-get install --yes libdnet-dev
 
 # python pillow will need them for png/jpeg/... support
-apt-get install --yes libjpeg-dev libfreetype6 libfreetype6-dev zlib1g-dev
+apt-get install --yes libjpeg-dev
+apt-get install --yes libfreetype6
+apt-get install --yes libfreetype6-dev
+apt-get install --yes zlib1g-dev
 
 # for python2
 apt-get install --yes python-dev # ipython python-numpy python-scipy python-matplotlib
@@ -169,7 +178,8 @@ apt-get install --yes libsqlite3-dev
 # apt-get install --yes postgresql libpq-dev mysql-client libmysqlclient-dev mysql-server
 
 # for javascript
-apt-get install --yes nodejs nodejs-dev
+apt-get install --yes nodejs
+apt-get install --yes nodejs-dev
 
 # # for rust
 # curl -sSf https://static.rust-lang.org/rustup.sh | sh
@@ -181,4 +191,6 @@ apt-get install --yes nodejs nodejs-dev
 # cargo install bindgen
 
 # for ruby, a better way pls refer to: https://github.com/rvm/rvm
-apt-get install --yes ruby ruby-dev bundler
+apt-get install --yes ruby
+apt-get install --yes ruby-dev
+apt-get install --yes bundler
