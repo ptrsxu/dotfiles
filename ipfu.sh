@@ -54,6 +54,15 @@ apt-get install --yes openssl
 apt-get install --yes libssl-dev
 
 ################################################################################
+# for cgroups
+################################################################################
+apt-get install --yes cgroup-bin
+apt-get install --yes cgroup-lite
+apt-get install --yes cgroup-tools
+apt-get install --yes cgroupfs-mount
+apt-get install --yes libcgroup1
+
+################################################################################
 # for numerical 
 ################################################################################
 apt-get install --yes libatlas-dev
