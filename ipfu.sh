@@ -152,26 +152,6 @@ apt-get install --yes python3-pip
 # for python editor eric
 # apt-get install --yes eric
 
-# install oracle java 8, which would need confirmation.
-apt-get purge openjdk*   # just in case
-apt-get install --yes software-properties-common
-add-apt-repository ppa:webupd8team/java
-apt-get update
-apt-get install --yes oracle-java8-installer
-apt-get install --yes maven
-
-# for sbt
-echo "deb https://dl.bintray.com/sbt/debian /" | sudo tee -a /etc/apt/sources.list.d/sbt.list
-apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 642AC823
-apt-get update
-apt-get install --yes sbt
-
-# for scala
-SCALA_VERSION=2.12.1
-wget www.scala-lang.org/files/archive/scala-${SCALA_VERSION}.deb -O /tmp/scala-${SCALA_VERSION}.deb
-dpkg -i /tmp/scala-${SCALA_VERSION}.deb
-rm /tmp/scala-${SCALA_VERSION}.deb
-
 # for neovim
 # add-apt-repository ppa:neovim-ppa/unstable
 # apt-get update
@@ -203,3 +183,27 @@ apt-get install --yes nodejs-dev
 apt-get install --yes ruby
 apt-get install --yes ruby-dev
 apt-get install --yes bundler
+
+# install oracle java 8, which would need confirmation.
+apt-get purge openjdk*   # just in case
+apt-get install --yes software-properties-common
+add-apt-repository ppa:webupd8team/java
+apt-get update
+apt-get install --yes oracle-java8-installer
+apt-get install --yes maven
+
+# for sbt
+echo "deb https://dl.bintray.com/sbt/debian /" | sudo tee -a /etc/apt/sources.list.d/sbt.list
+apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 642AC823
+apt-get update
+apt-get install --yes sbt
+
+# for scala
+SCALA_VERSION=2.12.1
+wget www.scala-lang.org/files/archive/scala-${SCALA_VERSION}.deb -O /tmp/scala-${SCALA_VERSION}.deb
+dpkg -i /tmp/scala-${SCALA_VERSION}.deb
+rm /tmp/scala-${SCALA_VERSION}.deb
+
+# you may need to monitor your system by sending some email.
+# this is the easiest way.
+apt-get install --yes mailutils
