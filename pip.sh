@@ -10,6 +10,8 @@
 #      History:
 #
 
+install --upgrade pip
+
 ###############################################################################
 # system helper
 ###############################################################################
@@ -58,6 +60,7 @@ pip install flup
 pip install paste pastescript
 pip install twisted twisted-core twisted-names twisted-web
 pip install uwsgi
+pip install gunicorn
 
 pip install markupsafe pygments jinja2 mako
 pip install fontforge html5lib
@@ -88,6 +91,7 @@ pip install pillow
 # others
 pip install pytz
 pip install pyzmq
+pip install chardet
 
 
 ###############################################################################
@@ -103,3 +107,8 @@ pip install pypdf2
 pip install openpyxl
 pip install docx
 pip install xlrd xlwt
+
+###############################################################################
+# drivers
+###############################################################################
+# pip install neo4j-driver
