@@ -130,12 +130,6 @@ apt-get install --yes libfreetype6
 apt-get install --yes libfreetype6-dev
 apt-get install --yes zlib1g-dev
 
-# for cpp
-apt-get install --yes swig
-echo "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8" | tee /etc/apt/sources.list.d/bazel.list
-curl https://bazel.build/bazel-release.pub.gpg | apt-key add -
-apt-get update && apt-get install --yes bazel
-
 # for python2
 apt-get install --yes python-dev # ipython python-numpy python-scipy python-matplotlib
 apt-get install --yes python-pip
@@ -210,6 +204,12 @@ SCALA_VERSION=2.12.1
 wget www.scala-lang.org/files/archive/scala-${SCALA_VERSION}.deb -O /tmp/scala-${SCALA_VERSION}.deb
 dpkg -i /tmp/scala-${SCALA_VERSION}.deb
 rm /tmp/scala-${SCALA_VERSION}.deb
+
+# for cpp
+apt-get install --yes swig
+echo "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8" | tee /etc/apt/sources.list.d/bazel.list
+curl https://bazel.build/bazel-release.pub.gpg | apt-key add -
+apt-get update && apt-get install --yes bazel
 
 # you may need to monitor your system by sending some email.
 # this is the easiest way.
