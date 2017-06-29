@@ -132,6 +132,9 @@ apt-get install --yes zlib1g-dev
 
 # for cpp
 apt-get install --yes swig
+echo "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8" | tee /etc/apt/sources.list.d/bazel.list
+curl https://bazel.build/bazel-release.pub.gpg | apt-key add -
+apt-get update && apt-get install --yes bazel
 
 # for python2
 apt-get install --yes python-dev # ipython python-numpy python-scipy python-matplotlib
