@@ -130,6 +130,9 @@ apt-get install --yes libfreetype6
 apt-get install --yes libfreetype6-dev
 apt-get install --yes zlib1g-dev
 
+# for cpp
+apt-get install --yes swig
+
 # for python2
 apt-get install --yes python-dev # ipython python-numpy python-scipy python-matplotlib
 apt-get install --yes python-pip
