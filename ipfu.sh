@@ -26,6 +26,7 @@ apt-get install --yes traceroute
 apt-get install --yes ifstat
 apt-get install --yes nethogs
 apt-get install --yes htop
+apt-get install --yes nmon
 apt-get install --yes iptraf
 apt-get install --yes nmap
 apt-get install --yes sysstat
