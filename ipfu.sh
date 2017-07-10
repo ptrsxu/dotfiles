@@ -106,8 +106,12 @@ apt-get install --yes kcachegrind
 apt-get install --yes oprofile
 apt-get install --yes linux-tools  # for profiler.
 
+# for entertainment
+apt-get install --yes ffmpeg
+
 # for web
 apt-get install --yes nginx
+apt-get install --yes w3m
 
 # for better shell ops
 apt-get install --yes zsh

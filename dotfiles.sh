@@ -88,6 +88,21 @@ function install_vimscripts()
     fi
 }
 
+function install_w3m()
+{
+    echo
+    if [ -e "$INSTALL_TO/.w3m" ]; then
+        echo "Moving $INSTALL_TO/.w3m to $INSTALL_TO/.w3m.bak.$$"
+        mv $INSTALL_TO/.w3m $INSTALL_TO/.w3m.bak.$$
+    fi
+
+    if [ -d "$INSTALL_FROM/w3m" ]; then
+        echo "Installing w3m configure files..."
+        ln -s $INSTALL_FROM/w3m/ $INSTALL_TO/.w3m
+        echo "Installed."
+    fi
+}
+
 function install_gitconfig()
 {
     echo
@@ -197,5 +212,6 @@ install_pythonrc
 install_pylintrc
 install_tmux
 install_sh
+install_w3m
 
 print_end_notes
