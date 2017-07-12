@@ -101,6 +101,13 @@ apt-get install --yes cmake-data
 apt-get install --yes cmake-doc
 apt-get install --yes linux-headers-`uname -r` dkms     # for kernel related.
 
+apt-get install --yes libx11-dev
+apt-get install --yes libxtst-dev
+apt-get install --yes libxrandr-dev
+apt-get install --yes libxi-dev
+apt-get install --yes mesa-common-dev
+apt-get install --yes libglu1-mesa-dev
+
 apt-get install --yes valgrind
 apt-get install --yes kcachegrind
 apt-get install --yes oprofile
