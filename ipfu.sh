@@ -8,7 +8,7 @@ apt-get upgrade --yes
 # for basic settings
 ################################################################################
 timedatectl set-timezone Asia/Shanghai
-locale-gen
+locale-gen zh_CN.UTF-8
 update-locale LANG=zh_CN.UTF-8 LC_MESSAGES=POSIX
 unlink /bin/sh
 ln -s /bin/bash /bin/sh
