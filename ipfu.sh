@@ -191,6 +191,8 @@ apt-get install --yes nodejs-dev
 # cargo install racer
 # cargo install rustfmt
 # cargo install bindgen
+# cargo install cargo-edit
+# cargo install diesel_cli --no-default-features --features "postgres sqlite mysql"
 
 # for ruby, a better way pls refer to: https://github.com/rvm/rvm
 apt-get install --yes ruby
