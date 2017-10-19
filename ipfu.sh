@@ -128,6 +128,7 @@ apt-get install --yes zsh-doc
 apt-get install --yes autojump
 apt-get install --yes powerline
 apt-get install --yes xclip
+apt-get install --yes graphviz
 
 # for some lib
 apt-get install --yes libyaml-dev
