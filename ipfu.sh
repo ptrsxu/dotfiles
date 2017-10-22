@@ -136,6 +136,7 @@ apt-get install --yes libargtable2-dev  # for gnu arg parse
 apt-get install --yes libpcap-dev
 apt-get install --yes tcpdump
 apt-get install --yes libdnet-dev
+apt-get install --yes capnproto
 
 # python pillow will need them for png/jpeg/... support
 apt-get install --yes libjpeg-dev
