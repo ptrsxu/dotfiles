@@ -196,6 +196,7 @@ apt-get install --yes nodejs-dev
 # cargo install cargo-edit
 # cargo install cargo-graph
 # cargo install cargo-count
+# cargo install cargo-outdated
 # cargo install diesel_cli --no-default-features --features "postgres sqlite mysql"
 
 # for ruby, a better way pls refer to: https://github.com/rvm/rvm
