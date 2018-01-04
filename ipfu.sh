@@ -198,6 +198,9 @@ apt-get install --yes nodejs-dev
 # cargo install cargo-count
 # cargo install cargo-outdated
 # cargo install cargo-web
+# # For compiling to asmjs through Emscripten: rustup target add asmjs-unknown-emscripten
+# # For compiling to WebAssembly through Emscripten: rustup target add wasm32-unknown-emscripten
+# # For compiling to WebAssembly through Rust's native backend: rustup target add wasm32-unknown-unknown
 # cargo install diesel_cli --no-default-features --features "postgres sqlite mysql"
 
 # for ruby, a better way pls refer to: https://github.com/rvm/rvm
