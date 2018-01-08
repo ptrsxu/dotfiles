@@ -198,6 +198,7 @@ apt-get install --yes nodejs-dev
 # cargo install cargo-count
 # cargo install cargo-outdated
 # cargo install cargo-web
+# cargo install cargo-tree
 # # For compiling to asmjs through Emscripten: rustup target add asmjs-unknown-emscripten
 # # For compiling to WebAssembly through Emscripten: rustup target add wasm32-unknown-emscripten
 # # For compiling to WebAssembly through Rust's native backend: rustup target add wasm32-unknown-unknown
