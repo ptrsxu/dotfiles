@@ -37,6 +37,7 @@ apt-get install --yes p7zip-full
 apt-get install --yes pkg-config
 apt-get install --yes proxychains
 apt-get install --yes rlwrap
+apt-get install --yes tree
 apt-get install --yes supervisor
 
 ################################################################################
