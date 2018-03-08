@@ -100,6 +100,7 @@ apt-get install --yes libclang-dev
 apt-get install --yes cmake
 apt-get install --yes cmake-data
 apt-get install --yes cmake-doc
+apt-get install --yes cmake-curses-gui
 apt-get install --yes linux-headers-`uname -r` dkms     # for kernel related.
 
 apt-get install --yes libx11-dev
