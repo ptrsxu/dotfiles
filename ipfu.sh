@@ -155,6 +155,9 @@ apt-get install --yes libfreetype6-dev
 apt-get install --yes zlib1g-dev
 apt-get install --yes libfreeimage-dev
 
+apt-get install --yes libglfw3-dev
+apt-get install --yes libfontconfig1-dev
+
 # for python2
 apt-get install --yes python-dev # ipython python-numpy python-scipy python-matplotlib
 apt-get install --yes python-pip
