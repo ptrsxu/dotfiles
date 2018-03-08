@@ -68,10 +68,18 @@ apt-get install --yes libcgroup1
 ################################################################################
 # for numerical 
 ################################################################################
+# Using ATLAS
 apt-get install --yes libatlas-dev
 apt-get install --yes libatlas-base-dev
 apt-get install --yes libatlas3-base
 apt-get install --yes libgsl-dev
+apt-get install --yes libatlas3gf-base
+apt-get install --yes libfftw3-dev
+apt-get install --yes liblapacke-dev
+# Using OpenBLAS
+# apt-get install --yes libopenblas-dev
+# apt-get install --yes libfftw3-dev
+# apt-get install --yes liblapacke-dev
 
 ################################################################################
 # setup devel environment
