@@ -2,7 +2,7 @@
 #=============================================================================
 #     FileName: dotfiles.sh
 #         Desc: install the dot files.
-#               
+#
 #               1. If we have environment variables to export, we need to put
 #                  them in common/userenv.sh, the shell related environment
 #                  variables can be put in related shell menu.
@@ -13,7 +13,7 @@
 #                  tools by package manager(for example, apt-get install
 #                  python-django provides django-completion installed to
 #                  /etc/bash_completion.d).
-#  
+#
 #       Author: Peter Xu
 #        Email: p@cooliktas.com
 #     HomePage: http://peter.cooliktas.com
@@ -88,21 +88,6 @@ function install_vimscripts()
     fi
 }
 
-function install_w3m()
-{
-    echo
-    if [ -e "$INSTALL_TO/.w3m" ]; then
-        echo "Moving $INSTALL_TO/.w3m to $INSTALL_TO/.w3m.bak.$$"
-        mv $INSTALL_TO/.w3m $INSTALL_TO/.w3m.bak.$$
-    fi
-
-    if [ -d "$INSTALL_FROM/w3m" ]; then
-        echo "Installing w3m configure files..."
-        ln -s $INSTALL_FROM/w3m/ $INSTALL_TO/.w3m
-        echo "Installed."
-    fi
-}
-
 function install_gitconfig()
 {
     echo
@@ -144,14 +129,6 @@ function install_pylintrc()
         echo "Installing python configure files..."
         ln -s $INSTALL_FROM/python/pylintrc $INSTALL_TO/.pylintrc
         echo "Installed."
-    fi
-}
-
-function install_tmux()
-{
-    if [ ! -e $INSTALL_TO/.tmux ]; then
-        git clone https://github.com/gpakosz/.tmux $INSTALL_TO/.tmux
-        ln -s $INSTALL_TO/.tmux/.tmux.conf $INSTALL_TO/.tmux.conf
     fi
 }
 
@@ -201,6 +178,16 @@ function install_sh()
 
 }
 
+function install_tmux()
+{
+    if [ -x "$(command -v tmux)" ]; then
+        git clone https://github.com/gpakosz/.tmux.git $INSTALL_TO/.tmux
+        ln -s $INSTALL_TO/.tmux/.tmux.conf $HOME/.tmux.conf
+        cp $INSTALL_TO/.tmux/.tmux.conf.local $HOME/.tmux.conf.local
+    fi
+}
+
+
 
 print_head
 check_user
@@ -210,8 +197,7 @@ install_vimscripts
 install_gitconfig
 install_pythonrc
 install_pylintrc
-install_tmux
 install_sh
-install_w3m
+install_tmux
 
 print_end_notes
