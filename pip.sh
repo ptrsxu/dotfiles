@@ -10,7 +10,7 @@
 #      History:
 #
 
-install --upgrade pip
+pip install --upgrade pip
 
 ###############################################################################
 # system helper
@@ -18,21 +18,23 @@ install --upgrade pip
 pip install glances
 pip install pexpect
 # pip install launchpadlib
+pip install tig
+pip install htop
+pip install sshuttle
+pip install aiohttp
+pip install aiodns
 
 ###############################################################################
 # devel helper
 ###############################################################################
 pip install ipython
-pip install ipython
 
 # devassistant needs libyaml-dev
-pip install devassistant
-
-# cookiecutter
-pip install cookiecutter
-
-# for python2/python3 compatible
 pip install six pies
+pip install devassistant
+pip install pymysql
+pip install mycli
+pip install cookiecutter
 
 # for app package on mac/linux/win
 pip install pyinstaller
@@ -66,7 +68,7 @@ pip install markupsafe pygments jinja2 mako
 pip install fontforge html5lib
 
 pip install requests werkzeug greenlet
-pip install six south sqlalchemy
+pip install south sqlalchemy
 
 pip install impacket
 pip install paramiko fabric
@@ -78,9 +80,14 @@ pip install cffi
 
 # for bigdata
 pip install jieba
+pip install kafka
 # python-recsys
 # scikit-learn
 # scikits.crab
+pip install networkx
+pip install pymc
+pip install seaborn
+pip install wxpy
 
 # for serial
 pip install pyserial
@@ -89,9 +96,11 @@ pip install pyserial
 pip install pillow
 
 # others
+pip install arrow
 pip install pytz
 pip install pyzmq
 pip install chardet
+pip install cchardet
 
 
 ###############################################################################
@@ -112,3 +121,4 @@ pip install xlrd xlwt
 # drivers
 ###############################################################################
 # pip install neo4j-driver
+
