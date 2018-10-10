@@ -39,6 +39,7 @@ brew install synergy
 brew install dos2uinx
 brew install lrzsz
 brew install coreutils
+brew install parallel
 
 # for compress
 brew install xz
