@@ -87,7 +87,7 @@ apt-get install --yes liblapacke-dev
 # ATTENTION: ubuntu 16.04 uses python3, which may cause vim configuration
 # compatibility error, use vim-nox-py2 instead if vim-gnome is not working.
 # apt-get install --yes vim-gnome ctags cscope global ack-grep
-apt-get install --yes vim-nox-py2
+apt-get install --yes vim-nox
 apt-get install --yes ctags
 apt-get install --yes cscope
 apt-get install --yes global
