@@ -1,15 +1,15 @@
-" vi: fdl=1 
-let g:pymode_version = "0.7.8b"
-
-com! PymodeVersion echomsg "Current python-mode version: " . g:pymode_version
-com! PymodeTroubleshooting call pymode#troubleshooting#test()
+" vi: fdl=1
+let g:pymode_version = "0.9.4"
 
 " Enable pymode by default :)
 call pymode#default('g:pymode', 1)
 call pymode#default('g:pymode_debug', 0)
 
 " DESC: Disable script loading
-if !g:pymode || &cp
+if !g:pymode || &cp || &diff
+    " Update pymode status to prevent loading in other files and adding this
+    " condition to all of them.
+    let g:pymode = 0
     finish
 endif
 
@@ -19,7 +19,11 @@ filetype plugin on
 " OPTIONS: {{{
 
 " Vim Python interpreter. Set to 'disable' for remove python features.
-call pymode#default('g:pymode_python', '')
+if has("python3") && executable('python3')
+    call pymode#default('g:pymode_python', 'python3')
+else
+    call pymode#default('g:pymode_python', 'python')
+endif
 
 " Disable pymode warnings
 call pymode#default('g:pymode_warning', 1)
@@ -34,10 +38,15 @@ call pymode#default('g:pymode_doc_bind', 'K')
 " Enable/Disable pymode PEP8 indentation
 call pymode#default("g:pymode_indent", 1)
 
+" TODO: currently folding suffers from a bad performance and incorrect
+" implementation. This feature should be considered experimental.
 " Enable/disable pymode folding for pyfiles.
-call pymode#default("g:pymode_folding", 1)
+call pymode#default("g:pymode_folding", 0)
+" Maximum file length to check for nested class/def statements
+call pymode#default("g:pymode_folding_nest_limit", 1000)
 " Change for folding customization (by example enable fold for 'if', 'for')
-call pymode#default("g:pymode_folding_regex", '^\s*\%(class\|def\) \w\+')
+call pymode#default("g:pymode_folding_regex", '^\s*\%(class\|def\|async\s\+def\) .\+\(:\s\+\w\)\@!')
+" call pymode#default("g:pymode_folding_regex", '^\s*\%(class\|def\|async\s\+def\)')
 
 " Enable/disable python motion operators
 call pymode#default("g:pymode_motion", 1)
@@ -47,6 +56,11 @@ call pymode#default("g:pymode_trim_whitespaces", 1)
 
 " Set recomended python options
 call pymode#default("g:pymode_options", 1)
+call pymode#default("g:pymode_options_max_line_length", 79)
+call pymode#default("g:pymode_options_colorcolumn", 1)
+
+" Enable/disable vertical display of python documentation
+call pymode#default("g:pymode_doc_vertical", 0)
 
 " Minimal height of pymode quickfix window
 call pymode#default('g:pymode_quickfix_maxheight', 6)
@@ -98,14 +112,14 @@ call pymode#default("g:pymode_lint_on_fly", 0)
 " Show message about error in command line
 call pymode#default("g:pymode_lint_message", 1)
 
-" Choices are: pylint, pyflakes, pep8, mccabe
+" Choices are: pylint, pyflakes, pep8, mccabe and pep257
 call pymode#default("g:pymode_lint_checkers", ['pyflakes', 'pep8', 'mccabe'])
 
 " Skip errors and warnings (e.g. E4,W)
-call pymode#default("g:pymode_lint_ignore", "")
+call pymode#default("g:pymode_lint_ignore", [])
 
 " Select errors and warnings (e.g. E4,W)
-call pymode#default("g:pymode_lint_select", "")
+call pymode#default("g:pymode_lint_select", [])
 
 " Auto open cwindow if any errors has been finded
 call pymode#default("g:pymode_lint_cwindow", 1)
@@ -127,6 +141,21 @@ call pymode#default("g:pymode_lint_error_symbol", "EE")
 call pymode#default("g:pymode_lint_info_symbol", "II")
 call pymode#default("g:pymode_lint_pyflakes_symbol", "FF")
 
+" Code checkers options
+" TODO: check if most adequate name name is pep8 or pycodestyle.
+call pymode#default("g:pymode_lint_options_pep8",
+    \ {'max_line_length': g:pymode_options_max_line_length})
+
+call pymode#default("g:pymode_lint_options_pylint",
+    \ {'max-line-length': g:pymode_options_max_line_length})
+
+call pymode#default("g:pymode_lint_options_mccabe",
+    \ {'complexity': 12})
+
+call pymode#default("g:pymode_lint_options_pep257", {})
+call pymode#default("g:pymode_lint_options_pyflakes", { 'builtins': '_' })
+
+
 " }}}
 
 " SET/UNSET BREAKPOINTS {{{
@@ -146,90 +175,98 @@ call pymode#default('g:pymode_breakpoint_cmd', '')
 " ROPE (refactoring, codeassist) {{{
 "
 " Rope support
-call pymode#default('g:pymode_rope', 1)
+call pymode#default('g:pymode_rope', 0)
 
 " System plugin variable
-call pymode#default('g:pymode_rope_current', '')
+if g:pymode_rope
+    call pymode#default('g:pymode_rope_current', '')
 
-" If project hasnt been finded in current working directory, look at parents directory
-call pymode#default('g:pymode_rope_lookup_project', 1)
+    " Configurable rope project root
+    call pymode#default('g:pymode_rope_project_root', '')
 
-" Enable Rope completion
-call pymode#default('g:pymode_rope_completion', 1)
+    " Configurable rope project folder (always relative to project root)
+    call pymode#default('g:pymode_rope_ropefolder', '.ropeproject')
 
-" Complete keywords from not imported modules (could make completion slower)
-" Enable autoimport used modules
-call pymode#default('g:pymode_rope_autoimport', 1)
+    " If project hasnt been finded in current working directory, look at parents directory
+    call pymode#default('g:pymode_rope_lookup_project', 0)
 
-" Offer to import object after complete (if that not be imported before)
-call pymode#default('g:pymode_rope_autoimport_import_after_complete', 0)
+    " Enable Rope completion
+    call pymode#default('g:pymode_rope_completion', 1)
 
-" Autoimported modules
-call pymode#default('g:pymode_rope_autoimport_modules', ['os', 'shutil', 'datetime'])
+    " Complete keywords from not imported modules (could make completion slower)
+    " Enable autoimport used modules
+    call pymode#default('g:pymode_rope_autoimport', 0)
 
-" Bind keys to autoimport module for object under cursor
-call pymode#default('g:pymode_rope_autoimport_bind', '<C-c>ra')
+    " Offer to import object after complete (if that not be imported before)
+    call pymode#default('g:pymode_rope_autoimport_import_after_complete', 0)
 
-" Automatic completion on dot
-call pymode#default('g:pymode_rope_complete_on_dot', 1)
+    " Autoimported modules
+    call pymode#default('g:pymode_rope_autoimport_modules', ['os', 'shutil', 'datetime'])
 
-" Bind keys for autocomplete (leave empty for disable)
-call pymode#default('g:pymode_rope_completion_bind', '<C-Space>')
+    " Bind keys to autoimport module for object under cursor
+    call pymode#default('g:pymode_rope_autoimport_bind', '<C-c>ra')
 
-" Bind keys for goto definition (leave empty for disable)
-call pymode#default('g:pymode_rope_goto_definition_bind', '<C-c>g')
+    " Automatic completion on dot
+    call pymode#default('g:pymode_rope_complete_on_dot', 1)
 
-" set command for open definition (e, new, vnew)
-call pymode#default('g:pymode_rope_goto_definition_cmd', 'new')
+    " Bind keys for autocomplete (leave empty for disable)
+    call pymode#default('g:pymode_rope_completion_bind', '<C-Space>')
 
-" Bind keys for show documentation (leave empty for disable)
-call pymode#default('g:pymode_rope_show_doc_bind', '<C-c>d')
+    " Bind keys for goto definition (leave empty for disable)
+    call pymode#default('g:pymode_rope_goto_definition_bind', '<C-c>g')
 
-" Bind keys for find occurencies (leave empty for disable)
-call pymode#default('g:pymode_rope_find_it_bind', '<C-c>f')
+    " set command for open definition (e, new, vnew)
+    call pymode#default('g:pymode_rope_goto_definition_cmd', 'new')
 
-" Bind keys for organize imports (leave empty for disable)
-call pymode#default('g:pymode_rope_organize_imports_bind', '<C-c>ro')
+    " Bind keys for show documentation (leave empty for disable)
+    call pymode#default('g:pymode_rope_show_doc_bind', '<C-c>d')
 
-" Bind keys for rename variable/method/class in the project (leave empty for disable)
-call pymode#default('g:pymode_rope_rename_bind', '<C-c>rr')
+    " Bind keys for find occurencies (leave empty for disable)
+    call pymode#default('g:pymode_rope_find_it_bind', '<C-c>f')
 
-" Bind keys for rename module
-call pymode#default('g:pymode_rope_rename_module_bind', '<C-c>r1r')
+    " Bind keys for organize imports (leave empty for disable)
+    call pymode#default('g:pymode_rope_organize_imports_bind', '<C-c>ro')
 
-" Bind keys for convert module to package
-call pymode#default('g:pymode_rope_module_to_package_bind', '<C-c>r1p')
+    " Bind keys for rename variable/method/class in the project (leave empty for disable)
+    call pymode#default('g:pymode_rope_rename_bind', '<C-c>rr')
 
-" Creates a new function or method (depending on the context) from the selected lines
-call pymode#default('g:pymode_rope_extract_method_bind', '<C-c>rm')
+    " Bind keys for rename module
+    call pymode#default('g:pymode_rope_rename_module_bind', '<C-c>r1r')
 
-" Creates a variable from the selected lines
-call pymode#default('g:pymode_rope_extract_variable_bind', '<C-c>rl')
+    " Bind keys for convert module to package
+    call pymode#default('g:pymode_rope_module_to_package_bind', '<C-c>r1p')
 
-" Inline refactoring
-call pymode#default('g:pymode_rope_inline_bind', '<C-c>ri')
+    " Creates a new function or method (depending on the context) from the selected lines
+    call pymode#default('g:pymode_rope_extract_method_bind', '<C-c>rm')
 
-" Move refactoring
-call pymode#default('g:pymode_rope_move_bind', '<C-c>rv')
+    " Creates a variable from the selected lines
+    call pymode#default('g:pymode_rope_extract_variable_bind', '<C-c>rl')
 
-" Generate function
-call pymode#default('g:pymode_rope_generate_function_bind', '<C-c>rnf')
+    " Inline refactoring
+    call pymode#default('g:pymode_rope_inline_bind', '<C-c>ri')
 
-" Generate class
-call pymode#default('g:pymode_rope_generate_class_bind', '<C-c>rnc')
+    " Move refactoring
+    call pymode#default('g:pymode_rope_move_bind', '<C-c>rv')
 
-" Generate package
-call pymode#default('g:pymode_rope_generate_package_bind', '<C-c>rnp')
+    " Generate function
+    call pymode#default('g:pymode_rope_generate_function_bind', '<C-c>rnf')
 
-" Change signature
-call pymode#default('g:pymode_rope_change_signature_bind', '<C-c>rs')
+    " Generate class
+    call pymode#default('g:pymode_rope_generate_class_bind', '<C-c>rnc')
 
-" Tries to find the places in which a function can be used and changes the
-" code to call it instead
-call pymode#default('g:pymode_rope_use_function_bind', '<C-c>ru')
+    " Generate package
+    call pymode#default('g:pymode_rope_generate_package_bind', '<C-c>rnp')
 
-" Regenerate project cache on every save
-call pymode#default('g:pymode_rope_regenerate_on_write', 1)
+    " Change signature
+    call pymode#default('g:pymode_rope_change_signature_bind', '<C-c>rs')
+
+    " Tries to find the places in which a function can be used and changes the
+    " code to call it instead
+    call pymode#default('g:pymode_rope_use_function_bind', '<C-c>ru')
+
+    " Regenerate project cache on every save
+    call pymode#default('g:pymode_rope_regenerate_on_write', 1)
+endif
 
 " }}}
 
@@ -240,14 +277,6 @@ if &compatible
     set nocompatible
 endif
 filetype plugin on
-
-if exists('+shellslash')
-    set shellslash
-endif
-
-" Disable python-related functionality
-" let g:pymode_python = 'disable'
-" let g:pymode_python = 'python3'
 
 " UltiSnips Fixes
 if !len(g:pymode_python)
@@ -287,8 +316,6 @@ else
 
 endif
 
-
 command! PymodeVersion echomsg "Pymode version: " . g:pymode_version . " interpreter: " . g:pymode_python . " lint: " . g:pymode_lint . " rope: " . g:pymode_rope
 
 augroup pymode
-

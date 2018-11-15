@@ -12,13 +12,6 @@ endfunction "}}}
 " DESC: Import python libs
 fun! pymode#init(plugin_root, paths) "{{{
 
-    if g:pymode_python == 'disable'
-        if g:pymode_warning
-            call pymode#error("Pymode requires vim compiled with +python. Most of features will be disabled.")
-        endif
-        return
-    endif
-
     PymodePython import sys, vim
     PymodePython sys.path.insert(0, vim.eval('a:plugin_root'))
     PymodePython sys.path = vim.eval('a:paths') + sys.path
@@ -61,7 +54,7 @@ fun! pymode#quickfix_open(onlyRecognized, maxHeight, minHeight, jumpError) "{{{
     redraw
     if numOthers > 0
         call pymode#wide_message(printf('Quickfix: %d(+%d)', numErrors, numOthers))
-    else
+    elseif numErrors > 0
         call pymode#wide_message(printf('Quickfix: %d', numErrors))
     endif
 endfunction "}}}
@@ -76,11 +69,12 @@ endfunction "}}}
 
 " DESC: Remove unused whitespaces
 fun! pymode#trim_whitespaces() "{{{
-    let cursor_pos = getpos('.')
-    silent! %s/\s\+$//
-    call setpos('.', cursor_pos)
+    if g:pymode_trim_whitespaces
+        let cursor_pos = getpos('.')
+        silent! %s/\s\+$//e
+        call setpos('.', cursor_pos)
+    endif
 endfunction "}}}
-
 
 fun! pymode#save() "{{{
     if &modifiable && &modified
@@ -107,11 +101,11 @@ endfunction "}}}
 
 fun! pymode#buffer_pre_write() "{{{
     let b:pymode_modified = &modified
-endfunction
+endfunction "}}}
 
 fun! pymode#buffer_post_write() "{{{
     if g:pymode_rope
-        if b:pymode_modified && g:pymode_rope_regenerate_on_write
+        if g:pymode_rope_regenerate_on_write && b:pymode_modified
             call pymode#debug('regenerate')
             call pymode#rope#regenerate()
         endif
@@ -125,14 +119,30 @@ fun! pymode#buffer_post_write() "{{{
 endfunction "}}}
 
 fun! pymode#debug(msg) "{{{
+    " Pymode's debug function.
+    " Should be called by other pymode's functions to report outputs. See
+    " the function PymodeDebugFolding for example.
+    " TODO: why echom here creates a problem?
+    " echom '' . a:msg + '|||||||||||'
+
+    let l:info_separator = repeat('-', 79)
+
     if g:pymode_debug
-        let g:pymode_debug += 1
-        echom string(g:pymode_debug) . ': ' . string(a:msg)
+        if ! exists('g:pymode_debug_counter')
+            let g:pymode_debug_counter = 0
+        endif
+        let g:pymode_debug_counter += 1
+        " NOTE: Print a separator for every message except folding ones (since
+        " they could be many).
+        if a:msg !~ 'has folding:'
+            echom l:info_separator
+        endif
+        echom '' . 'pymode debug msg ' . g:pymode_debug_counter . ': ' . a:msg
     endif
 endfunction "}}}
 
 fun! pymode#quit() "{{{
     augroup pymode
-        au!
+        au! * <buffer>
     augroup END
 endfunction "}}}

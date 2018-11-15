@@ -161,7 +161,7 @@ Plugin 'tpope/vim-repeat'
 " create a .repeproject in current dir:
 "   :PymodeRopeNewProject
 Plugin 'klen/python-mode'
-let g:pymode_python='python'    " or 'python3'
+let g:pymode_python='python3'    " or 'python3'
 let g:pymode_run_bind = '<leader>pr'
 let g:pymode_breakpoint_bind = '<leader>pb'
 let g:pymode_rope_completion_bind = '<C-C>n'  " autocompletion binding

@@ -1,9 +1,74 @@
 Changelog
 =========
 
-    * Get fold's expression symbol from &fillchars;
-    * Fixed error when setting g:pymode_breakpoint_cmd (expobrain);
-    * Fixed code running;
+
+## TODO
+-------
+* Move changelog rst syntax to markdown
+* pymode_rope: check disables
+* When loading a file without a history, substituting a word (eg 'cw') moves
+  the cursor to position 0 (equivalent to 'cw' then '0l')
+    * Fixed on `917e484`
+* Inspect why files starting with:
+~~~~~~
+def main():
+    pass
+
+
+if __name__ == '__main__':
+    main()
+~~~~~~
+do not get loaded.
+
+
+## 2017-07-xxx 0.9.5
+--------------------
+* pylama: migrated to submodule
+
+
+## 2017-07-11 0.9.4
+--------------------
+* pylama: fixed erratic behavior of `skip` option causing unintended skipping
+  of lint checkers
+* PEP257 requires `snowbalstemmer`: added as submodule
+* Fixed handling of `g:pymode_lint_ignore` and `g:pymode_lint_select`: from
+  strings to list
+* Migrated modules from `pymode/libs` to `submodules/ <https://github.com/fmv1992/python-mode/tree/develop/submodules>`__
+    * Rationale: no need to single handedly update each module; removes burden
+      from developers
+* Improved folding accuracy
+    * Improved nested definitions folding
+    * Improved block delimiting
+
+
+## (changelog poorly maintained) 0.8.2
+--------------------------------------
+* Pylama updated to version 5.0.5
+* Rope libs updated
+* Add wdb to debugger list in breakpoint cmd
+* Add 'pymode_options_max_line_length' option
+* Add ability to set related checker options `:help pymode-lint-options`
+  Options added: 'pymode_lint_options_pep8', 'pymode_lint_options_pep257',
+  'pymode_lint_options_mccabe', 'pymode_lint_options_pyflakes',
+  'pymode_lint_options_pylint'
+* Highlight comments inside class/function arg lists
+* Don't fold single line def
+* Don't skip a line when the first docstring contains text
+* Add Python documentation vertical display option
+* Rope: correct refactoring function calls
+
+
+## 2014-06-11 0.8.1
+-------------------
+* Pylama updated to version 3.3.2
+* Get fold's expression symbol from &fillchars;
+* Fixed error when setting g:pymode_breakpoint_cmd (expobrain);
+* Fixed code running;
+* Ability to override rope project root and .ropeproject folder
+* Added path argument to `PymodeRopeNewProject` which skips prompt
+* Disable `pymode_rope_lookup_project` by default
+* Options added:
+    'pymode_rope_project_root', 'pymode_rope_ropefolder'
 
 
 ## 2013-12-04 0.7.8b
@@ -117,7 +182,7 @@ Changelog
 --------------------
 * Dont raise an exception when Logger has no message handler (c) nixon
 * Improve performance of white space removal (c) Dave Smith
-* Improve ropemode support (c) s0undt3ch 
+* Improve ropemode support (c) s0undt3ch
 * Add `g:pymode_updatetime` option
 * Update autopep8 to version 0.8.1
 
@@ -128,7 +193,7 @@ Changelog
 
 ## 2012-09-06 0.6.8
 -------------------
-* Add PEP8 indentation ":help 'pymode_indent'" 
+* Add PEP8 indentation ":help 'pymode_indent'"
 
 ## 2012-08-15 0.6.7
 -------------------
@@ -142,7 +207,7 @@ Changelog
 * Fixed virtualenv support for windows users
 * Added pymode modeline ':help PythonModeModeline'
 * Added diagnostic tool ':call pymode#troubleshooting#Test()'
-* Added `PyLintAuto` command ':help PyLintAuto' 
+* Added `PyLintAuto` command ':help PyLintAuto'
 * Code checking is async operation now
 * More, more fast the pymode folding
 * Repaired execution of python code
@@ -168,12 +233,12 @@ Changelog
 
 ## 2012-03-13 0.6.0
 -------------------
-* Add 'pymode_lint_hold' option 
+* Add 'pymode_lint_hold' option
 * Improve pymode loading speed
 * Add pep8, mccabe lint checkers
 * Now g:pymode_lint_checker can have many values
   Ex. "pep8,pyflakes,mccabe"
-* Add 'pymode_lint_ignore' and 'pymode_lint_select' options 
+* Add 'pymode_lint_ignore' and 'pymode_lint_select' options
 * Fix rope keys
 * Fix python motion in visual mode
 * Add folding 'pymode_folding'
@@ -235,6 +300,9 @@ Changelog
 -------------------
 * Enable all syntax highlighting
   For old settings set in your vimrc:
+
+  ::
+
     let g:pymode_syntax_builtin_objs = 0
     let g:pymode_syntax_builtin_funcs = 0
 

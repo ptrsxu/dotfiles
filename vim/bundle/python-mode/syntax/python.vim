@@ -16,6 +16,9 @@ call pymode#default('g:pymode_syntax_all', 1)
 
 " Highlight 'print' as function
 call pymode#default("g:pymode_syntax_print_as_function", 0)
+"
+" Highlight 'async/await' keywords
+call pymode#default("g:pymode_syntax_highlight_async_await", g:pymode_syntax_all)
 
 " Highlight '=' operator
 call pymode#default('g:pymode_syntax_highlight_equal_operator', g:pymode_syntax_all)
@@ -59,7 +62,6 @@ call pymode#default('g:pymode_syntax_slow_sync', 1)
 
 " }}}
 
-
 " For version 5.x: Clear all syntax items
 if version < 600
     syntax clear
@@ -80,13 +82,13 @@ endif
     syn match pythonFunction "\%(\%(def\s\|@\)\s*\)\@<=\h\%(\w\|\.\)*" contained nextgroup=pythonVars
     syn region pythonVars start="(" skip=+\(".*"\|'.*'\)+ end=")" contained contains=pythonParameters transparent keepend
     syn match pythonParameters "[^,]*" contained contains=pythonParam skipwhite
-    syn match pythonParam "[^,]*" contained contains=pythonExtraOperator,pythonLambdaExpr,pythonBuiltinObj,pythonBuiltinType,pythonConstant,pythonString,pythonNumber,pythonBrackets,pythonSelf skipwhite
+    syn match pythonParam "[^,]*" contained contains=pythonExtraOperator,pythonLambdaExpr,pythonBuiltinObj,pythonBuiltinType,pythonConstant,pythonString,pythonNumber,pythonBrackets,pythonSelf,pythonComment skipwhite
     syn match pythonBrackets "{[(|)]}" contained skipwhite
 
     syn keyword pythonStatement class nextgroup=pythonClass skipwhite
     syn match pythonClass "\%(\%(class\s\)\s*\)\@<=\h\%(\w\|\.\)*" contained nextgroup=pythonClassVars
     syn region pythonClassVars start="(" end=")" contained contains=pythonClassParameters transparent keepend
-    syn match pythonClassParameters "[^,\*]*" contained contains=pythonBuiltin,pythonBuiltinObj,pythonBuiltinType,pythonExtraOperatorpythonStatement,pythonBrackets,pythonString skipwhite
+    syn match pythonClassParameters "[^,\*]*" contained contains=pythonBuiltin,pythonBuiltinObj,pythonBuiltinType,pythonExtraOperatorpythonStatement,pythonBrackets,pythonString,pythonComment skipwhite
 
     syn keyword pythonRepeat        for while
     syn keyword pythonConditional   if elif else
@@ -101,6 +103,13 @@ endif
         syn keyword pythonStatement print
     endif
 
+    if g:pymode_syntax_highlight_async_await
+        syn keyword pythonStatement async await
+        syn match pythonStatement "\<async\s\+def\>" nextgroup=pythonFunction skipwhite
+        syn match pythonStatement "\<async\s\+with\>" display
+        syn match pythonStatement "\<async\s\+for\>" nextgroup=pythonRepeat skipwhite
+    endif
+
     if g:pymode_syntax_highlight_equal_operator
         syn match pythonExtraOperator "\%(=\)"
     endif
@@ -108,13 +117,12 @@ endif
     if g:pymode_syntax_highlight_stars_operator
         syn match pythonExtraOperator "\%(\*\|\*\*\)"
     endif
-    
+
     if g:pymode_syntax_highlight_self
         syn keyword pythonSelf self cls
     endif
 
 " }}}
-
 
 " Decorators {{{
 " ==============
@@ -125,7 +133,6 @@ endif
 
 " }}}
 
-
 " Comments {{{
 " ============
 
@@ -135,7 +142,6 @@ endif
     syn keyword pythonTodo      TODO FIXME XXX contained
 
 " }}}
-
 
 " Errors {{{
 " ==========
@@ -156,7 +162,6 @@ endif
     endif
 
 " }}}
-
 
 " Strings {{{
 " ===========
@@ -240,16 +245,16 @@ endif
 " Numbers {{{
 " ===========
 
-    syn match   pythonHexError  "\<0[xX]\x*[g-zG-Z]\x*[lL]\=\>" display
-    syn match   pythonHexNumber "\<0[xX]\x\+[lL]\=\>" display
-    syn match   pythonOctNumber "\<0[oO]\o\+[lL]\=\>" display
-    syn match   pythonBinNumber "\<0[bB][01]\+[lL]\=\>" display
-    syn match   pythonNumber    "\<\d\+[lLjJ]\=\>" display
-    syn match   pythonFloat "\.\d\+\([eE][+-]\=\d\+\)\=[jJ]\=\>" display
-    syn match   pythonFloat "\<\d\+[eE][+-]\=\d\+[jJ]\=\>" display
-    syn match   pythonFloat "\<\d\+\.\d*\([eE][+-]\=\d\+\)\=[jJ]\=" display
-    syn match   pythonOctError  "\<0[oO]\=\o*[8-9]\d*[lL]\=\>" display
-    syn match   pythonBinError  "\<0[bB][01]*[2-9]\d*[lL]\=\>" display
+    syn match   pythonHexError  "\<0[xX][0-9a-fA-F_]*[g-zG-Z][0-9a-fA-F_]*[lL]\=\>" display
+    syn match   pythonHexNumber "\<0[xX][0-9a-fA-F_]*[0-9a-fA-F][0-9a-fA-F_]*[lL]\=\>" display
+    syn match   pythonOctNumber "\<0[oO][0-7_]*[0-7][0-7_]*[lL]\=\>" display
+    syn match   pythonBinNumber "\<0[bB][01_]*[01][01_]*[lL]\=\>" display
+    syn match   pythonNumber    "\<[0-9][0-9_]*[lLjJ]\=\>" display
+    syn match   pythonFloat "\.[0-9_]*[0-9][0-9_]*\([eE][+-]\=[0-9_]*[0-9][0-9_]*\)\=[jJ]\=\>" display
+    syn match   pythonFloat "\<[0-9][0-9_]*[eE][+-]\=[0-9_]\+[jJ]\=\>" display
+    syn match   pythonFloat "\<[0-9][0-9_]*\.[0-9_]*\([eE][+-]\=[0-9_]*[0-9][0-9_]*\)\=[jJ]\=" display
+    syn match   pythonOctError  "\<0[oO]\=[0-7_]*[8-9][0-9_]*[lL]\=\>" display
+    syn match   pythonBinError  "\<0[bB][01_]*[2-9][0-9_]*[lL]\=\>" display
 
 " }}}
 
@@ -261,8 +266,8 @@ endif
         syn keyword pythonBuiltinObj True False Ellipsis None NotImplemented
         syn keyword pythonBuiltinObj __debug__ __doc__ __file__ __name__ __package__
     endif
-    
-    if g:pymode_syntax_builtin_types    
+
+    if g:pymode_syntax_builtin_types
         syn keyword pythonBuiltinType type object
         syn keyword pythonBuiltinType str basestring unicode buffer bytearray bytes chr unichr
         syn keyword pythonBuiltinType dict int long bool float complex set frozenset list tuple
@@ -302,6 +307,12 @@ endif
         syn keyword pythonExClass   UnboundLocalError UnicodeError
         syn keyword pythonExClass   UnicodeEncodeError UnicodeDecodeError
         syn keyword pythonExClass   UnicodeTranslateError ValueError VMSError
+        syn keyword pythonExClass   BlockingIOError ChildProcessError ConnectionError
+        syn keyword pythonExClass   BrokenPipeError ConnectionAbortedError
+        syn keyword pythonExClass   ConnectionRefusedError ConnectionResetError
+        syn keyword pythonExClass   FileExistsError FileNotFoundError InterruptedError
+        syn keyword pythonExClass   IsADirectoryError NotADirectoryError PermissionError
+        syn keyword pythonExClass   ProcessLookupError TimeoutError
         syn keyword pythonExClass   WindowsError ZeroDivisionError
         syn keyword pythonExClass   Warning UserWarning BytesWarning DeprecationWarning
         syn keyword pythonExClass   PendingDepricationWarning SyntaxWarning
@@ -310,7 +321,6 @@ endif
     endif
 
 " }}}
-
 
 if g:pymode_syntax_slow_sync
     syn sync minlines=2000
