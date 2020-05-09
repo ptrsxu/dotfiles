@@ -1,4 +1,4 @@
-// Copyright (C) 2011, 2012 Google Inc.
+// Copyright (C) 2011-2018 ycmd contributors
 //
 // This file is part of ycmd.
 //
@@ -20,8 +20,8 @@
 
 #include "ClangUtils.h"
 
-#include <string>
 #include <clang-c/Index.h>
+#include <string>
 
 namespace YouCompleteMe {
 
@@ -30,16 +30,18 @@ struct Location {
   Location()
     : line_number_( 0 ),
       column_number_( 0 ),
-      filename_( "" ) {}
+      filename_( "" ) {
+  }
 
   Location( const std::string &filename,
             unsigned int line,
             unsigned int column )
     : line_number_( line ),
       column_number_( column ),
-      filename_( filename ) {}
+      filename_( filename ) {
+  }
 
-  Location( const CXSourceLocation &location ) {
+  explicit Location( const CXSourceLocation &location ) {
     CXFile file;
     unsigned int unused_offset;
     clang_getExpansionLocation( location,
@@ -51,13 +53,12 @@ struct Location {
   }
 
   bool operator== ( const Location &other ) const {
-    return
-      line_number_ == other.line_number_ &&
-      column_number_ == other.column_number_ &&
-      filename_ == other.filename_;
+    return line_number_ == other.line_number_ &&
+           column_number_ == other.column_number_ &&
+           filename_ == other.filename_;
   }
 
-  bool IsValid() {
+  bool IsValid() const {
     return !filename_.empty();
   }
 

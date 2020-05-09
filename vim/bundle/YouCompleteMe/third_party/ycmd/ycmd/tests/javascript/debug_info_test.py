@@ -1,4 +1,4 @@
-# Copyright (C) 2016-2017 ycmd contributors
+# Copyright (C) 2020 ycmd contributors
 #
 # This file is part of ycmd.
 #
@@ -15,37 +15,51 @@
 # You should have received a copy of the GNU General Public License
 # along with ycmd.  If not, see <http://www.gnu.org/licenses/>.
 
-from __future__ import unicode_literals
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-# Not installing aliases from python-future; it's unreliable and slow.
-from builtins import *  # noqa
+from unittest.mock import patch
+from hamcrest import ( any_of,
+                       assert_that,
+                       contains_exactly,
+                       has_entries,
+                       has_entry,
+                       instance_of,
+                       none )
 
-from hamcrest import ( assert_that, contains, empty, has_entries, has_entry,
-                       instance_of )
-
-from ycmd.tests.javascript import SharedYcmd
+from ycmd.tests.javascript import IsolatedYcmd, SharedYcmd
 from ycmd.tests.test_utils import BuildRequest
 
 
 @SharedYcmd
-def DebugInfo_test( app ):
+def DebugInfo_TypeScriptCompleter_test( app ):
   request_data = BuildRequest( filetype = 'javascript' )
   assert_that(
     app.post_json( '/debug_info', request_data ).json,
     has_entry( 'completer', has_entries( {
-      'name': 'JavaScript',
-      'servers': contains( has_entries( {
-        'name': 'Tern',
-        'is_running': instance_of( bool ),
+      'name': 'TypeScript',
+      'servers': contains_exactly( has_entries( {
+        'name': 'TSServer',
+        'is_running': True,
         'executable': instance_of( str ),
         'pid': instance_of( int ),
-        'address': instance_of( str ),
-        'port': instance_of( int ),
-        'logfiles': contains( instance_of( str ),
-                              instance_of( str ) )
-      } ) ),
-      'items': empty()
+        'address': None,
+        'port': None,
+        'logfiles': contains_exactly( instance_of( str ) ),
+        'extras': contains_exactly( has_entries( {
+          'key': 'version',
+          'value': any_of( None, instance_of( str ) )
+        } ) )
+      } ) )
     } ) )
+  )
+
+
+@patch( 'ycmd.completers.javascript.hook.'
+        'ShouldEnableTypeScriptCompleter', return_value = False )
+@patch( 'ycmd.completers.javascript.hook.'
+        'ShouldEnableTernCompleter', return_value = False )
+@IsolatedYcmd
+def DebugInfo_NoCompleter_test( app, *args ):
+  request_data = BuildRequest( filetype = 'javascript' )
+  assert_that(
+    app.post_json( '/debug_info', request_data ).json,
+    has_entry( 'completer', none() )
   )

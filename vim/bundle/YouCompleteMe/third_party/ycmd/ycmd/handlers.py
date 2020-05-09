@@ -1,5 +1,4 @@
-# Copyright (C) 2013 Google Inc.
-#               2017 ycmd contributors
+# Copyright (C) 2013-2020 ycmd contributors
 #
 # This file is part of ycmd.
 #
@@ -16,30 +15,26 @@
 # You should have received a copy of the GNU General Public License
 # along with ycmd.  If not, see <http://www.gnu.org/licenses/>.
 
-from __future__ import absolute_import
-from __future__ import unicode_literals
-from __future__ import print_function
-from __future__ import division
-# Not installing aliases from python-future; it's unreliable and slow.
-from builtins import *  # noqa
-
 import bottle
 import json
-import logging
 import platform
 import sys
 import time
 import traceback
 from bottle import request
-from threading import Thread
 
-import ycm_core
+
 from ycmd import extra_conf_store, hmac_plugin, server_state, user_options_store
-from ycmd.responses import ( BuildExceptionResponse, BuildCompletionResponse,
+from ycmd.responses import ( BuildExceptionResponse,
+                             BuildCompletionResponse,
+                             BuildSignatureHelpResponse,
+                             BuildSignatureHelpAvailableResponse,
+                             SignatureHelpAvailalability,
                              UnknownExtraConf )
 from ycmd.request_wrap import RequestWrap
-from ycmd.bottle_utils import SetResponseHeader
 from ycmd.completers.completer_utils import FilterAndSortCandidatesWrap
+from ycmd.utils import LOGGER, StartThread, ImportCore
+ycm_core = ImportCore()
 
 
 # num bytes for the request body buffer; request.json only works if the request
@@ -48,17 +43,16 @@ bottle.Request.MEMFILE_MAX = 10 * 1024 * 1024
 
 _server_state = None
 _hmac_secret = bytes()
-_logger = logging.getLogger( __name__ )
 app = bottle.Bottle()
 wsgi_server = None
 
 
 @app.post( '/event_notification' )
 def EventNotification():
-  _logger.info( 'Received event notification' )
+  LOGGER.info( 'Received event notification' )
   request_data = RequestWrap( request.json )
   event_name = request_data[ 'event_name' ]
-  _logger.debug( 'Event name: %s', event_name )
+  LOGGER.debug( 'Event name: %s', event_name )
 
   event_handler = 'On' + event_name
   getattr( _server_state.GetGeneralCompleter(), event_handler )( request_data )
@@ -74,9 +68,25 @@ def EventNotification():
   return _JsonResponse( {} )
 
 
+@app.get( '/signature_help_available' )
+def GetSignatureHelpAvailable():
+  LOGGER.info( 'Received signature help available request' )
+  if request.query.subserver:
+    filetype = request.query.subserver
+    try:
+      completer = _server_state.GetFiletypeCompleter( [ filetype ] )
+    except ValueError:
+      return _JsonResponse( BuildSignatureHelpAvailableResponse(
+        SignatureHelpAvailalability.NOT_AVAILABLE ) )
+    value = completer.SignatureHelpAvailable()
+    return _JsonResponse( BuildSignatureHelpAvailableResponse( value ) )
+  else:
+    raise RuntimeError( 'Subserver not specified' )
+
+
 @app.post( '/run_completer_command' )
 def RunCompleterCommand():
-  _logger.info( 'Received command request' )
+  LOGGER.info( 'Received command request' )
   request_data = RequestWrap( request.json )
   completer = _GetCompleterForRequestData( request_data )
 
@@ -85,94 +95,123 @@ def RunCompleterCommand():
       request_data ) )
 
 
+@app.post( '/resolve_fixit' )
+def ResolveFixit():
+  LOGGER.info( 'Received resolve_fixit request' )
+  request_data = RequestWrap( request.json )
+  completer = _GetCompleterForRequestData( request_data )
+
+  return _JsonResponse( completer.ResolveFixit( request_data ) )
+
+
 @app.post( '/completions' )
 def GetCompletions():
-  _logger.info( 'Received completion request' )
+  LOGGER.info( 'Received completion request' )
   request_data = RequestWrap( request.json )
-  ( do_filetype_completion, forced_filetype_completion ) = (
-                    _server_state.ShouldUseFiletypeCompleter( request_data ) )
-  _logger.debug( 'Using filetype completion: %s', do_filetype_completion )
+  do_filetype_completion = _server_state.ShouldUseFiletypeCompleter(
+    request_data )
+  LOGGER.debug( 'Using filetype completion: %s', do_filetype_completion )
 
   errors = None
   completions = None
 
   if do_filetype_completion:
     try:
-      completions = ( _server_state.GetFiletypeCompleter(
-                                  request_data[ 'filetypes' ] )
-                                 .ComputeCandidates( request_data ) )
-
+      filetype_completer = _server_state.GetFiletypeCompleter(
+        request_data[ 'filetypes' ] )
+      completions = filetype_completer.ComputeCandidates( request_data )
     except Exception as exception:
-      if forced_filetype_completion:
+      if request_data[ 'force_semantic' ]:
         # user explicitly asked for semantic completion, so just pass the error
         # back
         raise
-      else:
-        # store the error to be returned with results from the identifier
-        # completer
-        stack = traceback.format_exc()
-        _logger.error( 'Exception from semantic completer (using general): ' +
-                        "".join( stack ) )
-        errors = [ BuildExceptionResponse( exception, stack ) ]
 
-  if not completions and not forced_filetype_completion:
-    completions = ( _server_state.GetGeneralCompleter()
-                                 .ComputeCandidates( request_data ) )
+      # store the error to be returned with results from the identifier
+      # completer
+      LOGGER.exception( 'Exception from semantic completer (using general)' )
+      stack = traceback.format_exc()
+      errors = [ BuildExceptionResponse( exception, stack ) ]
+
+  if not completions and not request_data[ 'force_semantic' ]:
+    completions = _server_state.GetGeneralCompleter().ComputeCandidates(
+      request_data )
 
   return _JsonResponse(
       BuildCompletionResponse( completions if completions else [],
-                               request_data.CompletionStartColumn(),
+                               request_data[ 'start_column' ],
                                errors = errors ) )
+
+
+@app.post( '/signature_help' )
+def GetSignatureHelp():
+  LOGGER.info( 'Received signature help request' )
+  request_data = RequestWrap( request.json )
+
+  if not _server_state.FiletypeCompletionUsable( request_data[ 'filetypes' ],
+                                                 silent = True ):
+    return _JsonResponse( BuildSignatureHelpResponse( None ) )
+
+  errors = None
+  signature_info = None
+
+  try:
+    filetype_completer = _server_state.GetFiletypeCompleter(
+      request_data[ 'filetypes' ] )
+    signature_info = filetype_completer.ComputeSignatures( request_data )
+  except Exception as exception:
+    LOGGER.exception( 'Exception from semantic completer during sig help' )
+    errors = [ BuildExceptionResponse( exception, traceback.format_exc() ) ]
+
+  # No fallback for signature help. The general completer is unlikely to be able
+  # to offer anything of for that here.
+  return _JsonResponse(
+      BuildSignatureHelpResponse( signature_info, errors = errors ) )
 
 
 @app.post( '/filter_and_sort_candidates' )
 def FilterAndSortCandidates():
-  _logger.info( 'Received filter & sort request' )
+  LOGGER.info( 'Received filter & sort request' )
   # Not using RequestWrap because no need and the requests coming in aren't like
   # the usual requests we handle.
   request_data = request.json
 
   return _JsonResponse( FilterAndSortCandidatesWrap(
-    request_data[ 'candidates'],
+    request_data[ 'candidates' ],
     request_data[ 'sort_property' ],
-    request_data[ 'query' ] ) )
+    request_data[ 'query' ],
+    _server_state.user_options[ 'max_num_candidates' ] ) )
 
 
 @app.get( '/healthy' )
 def GetHealthy():
-  _logger.info( 'Received health request' )
-  if request.query.include_subservers:
-    cs_completer = _server_state.GetFiletypeCompleter( ['cs'] )
-    return _JsonResponse( cs_completer.ServerIsHealthy() )
+  LOGGER.info( 'Received health request' )
+  if request.query.subserver:
+    filetype = request.query.subserver
+    completer = _server_state.GetFiletypeCompleter( [ filetype ] )
+    return _JsonResponse( completer.ServerIsHealthy() )
   return _JsonResponse( True )
 
 
 @app.get( '/ready' )
 def GetReady():
-  _logger.info( 'Received ready request' )
+  LOGGER.info( 'Received ready request' )
   if request.query.subserver:
     filetype = request.query.subserver
-    return _JsonResponse( _IsSubserverReady( filetype ) )
-  if request.query.include_subservers:
-    return _JsonResponse( _IsSubserverReady( 'cs' ) )
+    completer = _server_state.GetFiletypeCompleter( [ filetype ] )
+    return _JsonResponse( completer.ServerIsReady() )
   return _JsonResponse( True )
-
-
-def _IsSubserverReady( filetype ):
-  completer = _server_state.GetFiletypeCompleter( [filetype] )
-  return completer.ServerIsReady()
 
 
 @app.post( '/semantic_completion_available' )
 def FiletypeCompletionAvailable():
-  _logger.info( 'Received filetype completion available request' )
+  LOGGER.info( 'Received filetype completion available request' )
   return _JsonResponse( _server_state.FiletypeCompletionAvailable(
       RequestWrap( request.json )[ 'filetypes' ] ) )
 
 
 @app.post( '/defined_subcommands' )
 def DefinedSubcommands():
-  _logger.info( 'Received defined subcommands request' )
+  LOGGER.info( 'Received defined subcommands request' )
   completer = _GetCompleterForRequestData( RequestWrap( request.json ) )
 
   return _JsonResponse( completer.DefinedSubcommands() )
@@ -180,7 +219,7 @@ def DefinedSubcommands():
 
 @app.post( '/detailed_diagnostic' )
 def GetDetailedDiagnostic():
-  _logger.info( 'Received detailed diagnostic request' )
+  LOGGER.info( 'Received detailed diagnostic request' )
   request_data = RequestWrap( request.json )
   completer = _GetCompleterForRequestData( request_data )
 
@@ -189,7 +228,7 @@ def GetDetailedDiagnostic():
 
 @app.post( '/load_extra_conf_file' )
 def LoadExtraConfFile():
-  _logger.info( 'Received extra conf load request' )
+  LOGGER.info( 'Received extra conf load request' )
   request_data = RequestWrap( request.json, validate = False )
   extra_conf_store.Load( request_data[ 'filepath' ], force = True )
 
@@ -198,7 +237,7 @@ def LoadExtraConfFile():
 
 @app.post( '/ignore_extra_conf_file' )
 def IgnoreExtraConfFile():
-  _logger.info( 'Received extra conf ignore request' )
+  LOGGER.info( 'Received extra conf ignore request' )
   request_data = RequestWrap( request.json, validate = False )
   extra_conf_store.Disable( request_data[ 'filepath' ] )
 
@@ -207,7 +246,7 @@ def IgnoreExtraConfFile():
 
 @app.post( '/debug_info' )
 def DebugInfo():
-  _logger.info( 'Received debug info request' )
+  LOGGER.info( 'Received debug info request' )
   request_data = RequestWrap( request.json )
 
   has_clang_support = ycm_core.HasClangSupport()
@@ -240,18 +279,35 @@ def DebugInfo():
   try:
     response[ 'completer' ] = _GetCompleterForRequestData(
         request_data ).DebugInfo( request_data )
-  except Exception as error:
-    _logger.exception( error )
+  except Exception:
+    LOGGER.exception( 'Error retrieving completer debug info' )
 
   return _JsonResponse( response )
 
 
 @app.post( '/shutdown' )
 def Shutdown():
-  _logger.info( 'Received shutdown request' )
+  LOGGER.info( 'Received shutdown request' )
   ServerShutdown()
 
   return _JsonResponse( True )
+
+
+@app.post( '/receive_messages' )
+def ReceiveMessages():
+  # Receive messages is a "long-poll" handler.
+  # The client makes the request with a long timeout (1 hour).
+  # When we have data to send, we send it and close the socket.
+  # The client then sends a new request.
+  request_data = RequestWrap( request.json )
+  try:
+    completer = _GetCompleterForRequestData( request_data )
+  except Exception:
+    # No semantic completer for this filetype, don't requery. This is not an
+    # error.
+    return _JsonResponse( False )
+
+  return _JsonResponse( completer.PollForMessages( request_data ) )
 
 
 # The type of the param is Bottle.HTTPError
@@ -267,8 +323,10 @@ app.default_error_handler = ErrorHandler
 
 
 def _JsonResponse( data ):
-  SetResponseHeader( 'Content-Type', 'application/json' )
-  return json.dumps( data, default = _UniversalSerialize )
+  bottle.response.set_header( 'Content-Type', 'application/json' )
+  return json.dumps( data,
+                     separators = ( ',', ':' ),
+                     default = _UniversalSerialize )
 
 
 def _UniversalSerialize( obj ):
@@ -298,9 +356,7 @@ def ServerShutdown():
 
   # Use a separate thread to let the server send the response before shutting
   # down.
-  terminator = Thread( target = Terminator )
-  terminator.daemon = True
-  terminator.start()
+  StartThread( Terminator )
 
 
 def ServerCleanup():
@@ -331,12 +387,9 @@ def KeepSubserversAlive( check_interval_seconds ):
     while True:
       time.sleep( check_interval_seconds )
 
-      _logger.debug( 'Keeping subservers alive' )
+      LOGGER.debug( 'Keeping subservers alive' )
       loaded_completers = _server_state.GetLoadedFiletypeCompleters()
       for completer in loaded_completers:
         completer.ServerIsHealthy()
 
-  keepalive = Thread( target = Keepalive,
-                      args = ( check_interval_seconds, ) )
-  keepalive.daemon = True
-  keepalive.start()
+  StartThread( Keepalive, check_interval_seconds )

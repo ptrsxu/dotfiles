@@ -18,11 +18,10 @@
 #ifndef COMPLETER_H_7AR4UGXE
 #define COMPLETER_H_7AR4UGXE
 
-#include "DLLDefines.h"
 #include "IdentifierDatabase.h"
 
-#include <vector>
 #include <string>
+#include <vector>
 
 
 namespace YouCompleteMe {
@@ -34,28 +33,29 @@ class IdentifierCompleter {
 public:
 
   IdentifierCompleter( const IdentifierCompleter& ) = delete;
-  IdentifierCompleter& operator=( const IdentifierCompleter ) = delete;
+  IdentifierCompleter& operator=( const IdentifierCompleter& ) = delete;
 
-  YCM_DLL_EXPORT IdentifierCompleter();
-  YCM_DLL_EXPORT IdentifierCompleter(
-    const std::vector< std::string > &candidates );
-  IdentifierCompleter( const std::vector< std::string > &candidates,
+  YCM_EXPORT IdentifierCompleter() = default;
+  YCM_EXPORT explicit IdentifierCompleter(
+    std::vector< std::string > candidates );
+  YCM_EXPORT IdentifierCompleter(
+                       std::vector< std::string >&& candidates,
                        const std::string &filetype,
                        const std::string &filepath );
 
   void AddIdentifiersToDatabase(
-    const std::vector< std::string > &new_candidates,
+    std::vector< std::string > new_candidates,
     const std::string &filetype,
     const std::string &filepath );
 
   // Same as above, but clears all identifiers stored for the file before adding
   // new identifiers.
   void ClearForFileAndAddIdentifiersToDatabase(
-    const std::vector< std::string > &new_candidates,
+    std::vector< std::string > new_candidates,
     const std::string &filetype,
     const std::string &filepath );
 
-  YCM_DLL_EXPORT void AddIdentifiersToDatabaseFromTagFiles(
+  YCM_EXPORT void AddIdentifiersToDatabaseFromTagFiles(
     const std::vector< std::string > &absolute_paths_to_tag_files );
 
   void AddIdentifiersToDatabaseFromBuffer(
@@ -65,12 +65,14 @@ public:
     bool collect_from_comments_and_strings );
 
   // Only provided for tests!
-  YCM_DLL_EXPORT std::vector< std::string > CandidatesForQuery(
-    const std::string &query ) const;
+  YCM_EXPORT std::vector< std::string > CandidatesForQuery(
+    std::string&& query,
+    const size_t max_candidates = 0 ) const;
 
-  YCM_DLL_EXPORT std::vector< std::string > CandidatesForQueryAndType(
-    const std::string &query,
-    const std::string &filetype ) const;
+  YCM_EXPORT std::vector< std::string > CandidatesForQueryAndType(
+    std::string query,
+    const std::string &filetype,
+    const size_t max_candidates = 0 ) const;
 
 private:
 

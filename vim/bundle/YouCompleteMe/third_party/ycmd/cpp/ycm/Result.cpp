@@ -1,4 +1,4 @@
-// Copyright (C) 2011, 2012 Google Inc.
+// Copyright (C) 2011-2018 ycmd contributors
 //
 // This file is part of ycmd.
 //
@@ -17,60 +17,32 @@
 
 #include "Result.h"
 #include "Utils.h"
-#include <functional>
-#include <algorithm>
-#include <locale>
 
 namespace YouCompleteMe {
 
 namespace {
 
-char ChangeCharCase( char c ) {
-  if ( std::isupper( c, std::locale() ) )
-    return std::tolower( c, std::locale() );
+size_t LongestCommonSubsequenceLength( const CharacterSequence &first,
+                                       const CharacterSequence &second ) {
+  const auto &longer  = first.size() > second.size() ? first  : second;
+  const auto &shorter = first.size() > second.size() ? second : first;
 
-  return std::toupper( c, std::locale() );
-}
+  size_t longer_len  = longer.size();
+  size_t shorter_len = shorter.size();
 
+  std::vector< size_t > previous( shorter_len + 1, 0 );
+  std::vector< size_t > current(  shorter_len + 1, 0 );
 
-bool CharLessThanWithLowercasePriority( const char &first,
-                                        const char &second ) {
-  char swap_first = ChangeCharCase( first );
-  char swap_second = ChangeCharCase( second );
-  return swap_first < swap_second;
-}
-
-
-bool StringLessThanWithLowercasePriority( const std::string &first,
-                                          const std::string &second ) {
-  return std::lexicographical_compare(
-           first.begin(), first.end(),
-           second.begin(), second.end(),
-           std::function< bool( const char &, const char & ) >(
-             &CharLessThanWithLowercasePriority ) );
-}
-
-
-int LongestCommonSubsequenceLength( const std::string &first,
-                                    const std::string &second ) {
-  const std::string &longer  = first.size() > second.size() ? first  : second;
-  const std::string &shorter = first.size() > second.size() ? second : first;
-
-  int longer_len  = longer.size();
-  int shorter_len = shorter.size();
-
-  std::vector<int> previous( shorter_len + 1, 0 );
-  std::vector<int> current(  shorter_len + 1, 0 );
-
-  for ( int i = 0; i < longer_len; ++i ) {
-    for ( int j = 0; j < shorter_len; ++j ) {
-      if ( toupper( longer[ i ] ) == toupper( shorter[ j ] ) )
+  for ( size_t i = 0; i < longer_len; ++i ) {
+    for ( size_t j = 0; j < shorter_len; ++j ) {
+      if ( longer[ i ]->EqualsBase( *shorter[ j ] ) ) {
         current[ j + 1 ] = previous[ j ] + 1;
-      else
+      } else {
         current[ j + 1 ] = std::max( current[ j ], previous[ j + 1 ] );
+      }
     }
 
-    for ( int j = 0; j < shorter_len; ++j ) {
+    for ( size_t j = 0; j < shorter_len; ++j ) {
       previous[ j + 1 ] = current[ j + 1 ];
     }
   }
@@ -79,59 +51,20 @@ int LongestCommonSubsequenceLength( const std::string &first,
 }
 
 
-int NumWordBoundaryCharMatches( const std::string &query,
-                                const std::string &word_boundary_chars ) {
-  return LongestCommonSubsequenceLength( query, word_boundary_chars );
-}
-
 } // unnamed namespace
 
-Result::Result()
-  :
-  query_is_empty_( true ),
-  is_subsequence_( false ),
-  first_char_same_in_query_and_text_( false ),
-  ratio_of_word_boundary_chars_in_query_( 0 ),
-  word_boundary_char_utilization_( 0 ),
-  query_is_candidate_prefix_( false ),
-  text_is_lowercase_( false ),
-  char_match_index_sum_( 0 ),
-  text_( NULL ) {
-}
-
-
-Result::Result( bool is_subsequence )
-  :
-  query_is_empty_( true ),
-  is_subsequence_( is_subsequence ),
-  first_char_same_in_query_and_text_( false ),
-  ratio_of_word_boundary_chars_in_query_( 0 ),
-  word_boundary_char_utilization_( 0 ),
-  query_is_candidate_prefix_( false ),
-  text_is_lowercase_( false ),
-  char_match_index_sum_( 0 ),
-  text_( NULL ) {
-}
-
-
-Result::Result( bool is_subsequence,
-                const std::string *text,
-                bool text_is_lowercase,
-                int char_match_index_sum,
-                const std::string &word_boundary_chars,
-                const std::string &query )
-  :
-  query_is_empty_( true ),
-  is_subsequence_( is_subsequence ),
-  first_char_same_in_query_and_text_( false ),
-  ratio_of_word_boundary_chars_in_query_( 0 ),
-  word_boundary_char_utilization_( 0 ),
-  query_is_candidate_prefix_( false ),
-  text_is_lowercase_( text_is_lowercase ),
-  char_match_index_sum_( char_match_index_sum ),
-  text_( text ) {
-  if ( is_subsequence )
-    SetResultFeaturesFromQuery( word_boundary_chars, query );
+Result::Result( const Candidate *candidate,
+                const Word *query,
+                size_t char_match_index_sum,
+                bool query_is_candidate_prefix )
+  : is_subsequence_( true ),
+    first_char_same_in_query_and_text_( false ),
+    query_is_candidate_prefix_( query_is_candidate_prefix ),
+    char_match_index_sum_( char_match_index_sum ),
+    num_wb_matches_( 0 ),
+    candidate_( candidate ),
+    query_( query ) {
+  SetResultFeaturesFromQuery();
 }
 
 
@@ -140,92 +73,83 @@ bool Result::operator< ( const Result &other ) const {
   // bazillion times, we have to make sure only the required comparisons are
   // made, and no more.
 
-  if ( !query_is_empty_ ) {
+  if ( !query_->IsEmpty() ) {
+    // This is the core of the ranking system. A result has more weight than
+    // another if one of these conditions is satisfied, in that order:
+    //  - it starts with the same character as the query while the other does
+    //    not;
+    //  - one of the results has all its word boundary characters matched and
+    //    it has more word boundary characters matched than the other;
+    //  - both results have all their word boundary characters matched and it
+    //    has less word boundary characters than the other;
+    //  - the query is a prefix of the result but not a prefix of the other;
+    //  - it has more word boundary characters matched than the other;
+    //  - it has less word boundary characters than the other;
+    //  - its sum of indexes of its matched characters is less than the sum of
+    //    indexes of the other result;
+    //  - it has less characters than the other result;
+    //  - all its characters are in lowercase while the other has at least one
+    //    uppercase character;
+    //  - it appears before the other result in lexicographic order.
+
     if ( first_char_same_in_query_and_text_ !=
          other.first_char_same_in_query_and_text_ ) {
       return first_char_same_in_query_and_text_;
     }
 
-    bool equal_wb_ratios = AlmostEqual(
-                             ratio_of_word_boundary_chars_in_query_,
-                             other.ratio_of_word_boundary_chars_in_query_ );
-
-    bool equal_wb_utilization = AlmostEqual(
-                                  word_boundary_char_utilization_,
-                                  other.word_boundary_char_utilization_ );
-
-    if ( AlmostEqual( ratio_of_word_boundary_chars_in_query_, 1.0 ) ||
-         AlmostEqual( other.ratio_of_word_boundary_chars_in_query_, 1.0 ) ) {
-      if ( !equal_wb_ratios ) {
-        return ratio_of_word_boundary_chars_in_query_ >
-               other.ratio_of_word_boundary_chars_in_query_;
+    if ( num_wb_matches_ == query_->Length() ||
+         other.num_wb_matches_ == query_->Length() ) {
+      if ( num_wb_matches_ != other.num_wb_matches_ ) {
+        return num_wb_matches_ > other.num_wb_matches_;
       }
 
-      else {
-        if ( !equal_wb_utilization )
-          return word_boundary_char_utilization_ >
-                 other.word_boundary_char_utilization_;
+      if ( NumWordBoundaryChars() != other.NumWordBoundaryChars() ) {
+        return NumWordBoundaryChars() < other.NumWordBoundaryChars();
       }
     }
 
-    if ( query_is_candidate_prefix_ != other.query_is_candidate_prefix_ )
+    if ( query_is_candidate_prefix_ != other.query_is_candidate_prefix_ ) {
       return query_is_candidate_prefix_;
-
-    if ( !equal_wb_ratios ) {
-      return ratio_of_word_boundary_chars_in_query_ >
-             other.ratio_of_word_boundary_chars_in_query_;
     }
 
-    else {
-      if ( !equal_wb_utilization )
-        return word_boundary_char_utilization_ >
-               other.word_boundary_char_utilization_;
+    if ( num_wb_matches_ != other.num_wb_matches_ ) {
+      return num_wb_matches_ > other.num_wb_matches_;
     }
 
-    if ( char_match_index_sum_ != other.char_match_index_sum_ )
+    if ( NumWordBoundaryChars() != other.NumWordBoundaryChars() ) {
+      return NumWordBoundaryChars() < other.NumWordBoundaryChars();
+    }
+
+    if ( char_match_index_sum_ != other.char_match_index_sum_ ) {
       return char_match_index_sum_ < other.char_match_index_sum_;
+    }
 
-    if ( text_->length() != other.text_->length() )
-      return text_->length() < other.text_->length();
+    if ( candidate_->Length() != other.candidate_->Length() ) {
+      return candidate_->Length() < other.candidate_->Length();
+    }
 
-    if ( text_is_lowercase_ != other.text_is_lowercase_ )
-      return text_is_lowercase_;
+    if ( candidate_->TextIsLowercase() !=
+         other.candidate_->TextIsLowercase() ) {
+      return candidate_->TextIsLowercase();
+    }
   }
 
   // Lexicographic comparison, but we prioritize lowercase letters over
   // uppercase ones. So "foo" < "Foo".
-  return StringLessThanWithLowercasePriority( *text_, *other.text_ );
+  return candidate_->CaseSwappedText() < other.candidate_->CaseSwappedText();
 }
 
 
-void Result::SetResultFeaturesFromQuery(
-  const std::string &word_boundary_chars,
-  const std::string &query ) {
-  query_is_empty_ = query.empty();
-
-  if ( query.empty() || text_->empty() )
+void Result::SetResultFeaturesFromQuery() {
+  if ( query_->IsEmpty() || candidate_->IsEmpty() ) {
     return;
+  }
 
   first_char_same_in_query_and_text_ =
-    toupper( query[ 0 ] ) == toupper( ( *text_ )[ 0 ] );
-  int num_wb_matches = NumWordBoundaryCharMatches( query,
-                                                   word_boundary_chars );
-  ratio_of_word_boundary_chars_in_query_ =
-    num_wb_matches / static_cast< double >( query.length() );
-  word_boundary_char_utilization_ =
-    num_wb_matches / static_cast< double >( word_boundary_chars.length() );
-  query_is_candidate_prefix_ = QueryIsPrefix( *text_, query );
+    candidate_->Characters()[ 0 ]->EqualsBase( *query_->Characters()[ 0 ] );
 
-}
-
-
-bool Result::QueryIsPrefix( const std::string &text,
-                            const std::string &query ) {
-  for ( size_t i = 0; i < query.length(); ++i )
-    if ( toupper( query[ i ] ) != toupper( text[ i ] ) )
-      return false;
-
-  return true;
+  num_wb_matches_ = LongestCommonSubsequenceLength(
+    query_->Characters(), candidate_->WordBoundaryChars() );
 }
 
 } // namespace YouCompleteMe

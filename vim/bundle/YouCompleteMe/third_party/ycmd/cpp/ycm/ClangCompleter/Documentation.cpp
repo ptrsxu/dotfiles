@@ -1,4 +1,4 @@
-// Copyright (C) 2015 YouCompleteMe Contributors
+// Copyright (C) 2015-2018 ycmd contributors
 //
 // This file is part of ycmd.
 //
@@ -28,16 +28,16 @@ bool CXCommentValid( const CXComment &comment ) {
   return clang_Comment_getKind( comment ) != CXComment_Null;
 }
 
-}
+} // unnamed namespace
 
 DocumentationData::DocumentationData( const CXCursor &cursor )
-  : raw_comment( CXStringToString( clang_Cursor_getRawCommentText( cursor ) ) )
-  , brief_comment( CXStringToString(
-                     clang_Cursor_getBriefCommentText( cursor ) ) )
-  , canonical_type( CXStringToString(
-                      clang_getTypeSpelling( clang_getCursorType( cursor ) ) ) )
-  , display_name( CXStringToString( clang_getCursorSpelling( cursor ) ) ) {
-
+  : raw_comment( CXStringToString(
+      clang_Cursor_getRawCommentText( cursor ) ) ),
+    brief_comment( CXStringToString(
+      clang_Cursor_getBriefCommentText( cursor ) ) ),
+    canonical_type( CXStringToString(
+      clang_getTypeSpelling( clang_getCursorType( cursor ) ) ) ),
+    display_name( CXStringToString( clang_getCursorSpelling( cursor ) ) ) {
 
   CXComment parsed_comment = clang_Cursor_getParsedComment( cursor );
 

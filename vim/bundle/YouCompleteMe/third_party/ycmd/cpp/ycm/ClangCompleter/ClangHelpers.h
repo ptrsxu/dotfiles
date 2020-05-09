@@ -1,4 +1,4 @@
-// Copyright (C) 2013 Google Inc.
+// Copyright (C) 2013-2018 ycmd contributors
 //
 // This file is part of ycmd.
 //
@@ -18,18 +18,18 @@
 #ifndef CLANGHELPERS_H_T3ME71LG
 #define CLANGHELPERS_H_T3ME71LG
 
-#include "Diagnostic.h"
 #include "CompletionData.h"
+#include "Diagnostic.h"
 #include "UnsavedFile.h"
 
-#include <vector>
 #include <clang-c/Index.h>
 #include <memory>
+#include <vector>
 
 namespace YouCompleteMe {
 
-typedef std::shared_ptr <
-std::remove_pointer< CXDiagnostic >::type > DiagnosticWrap;
+using DiagnosticWrap =
+  std::shared_ptr< std::remove_pointer< CXDiagnostic >::type >;
 
 std::vector< CompletionData > ToCompletionDataVector(
   CXCodeCompleteResults *results );
@@ -39,7 +39,7 @@ std::vector< CompletionData > ToCompletionDataVector(
 std::vector< CXUnsavedFile > ToCXUnsavedFiles(
   const std::vector< UnsavedFile > &unsaved_files );
 
-Diagnostic BuildDiagnostic( DiagnosticWrap diagnostic_wrap,
+Diagnostic BuildDiagnostic( const DiagnosticWrap &diagnostic_wrap,
                             CXTranslationUnit translation_unit );
 
 } // namespace YouCompleteMe

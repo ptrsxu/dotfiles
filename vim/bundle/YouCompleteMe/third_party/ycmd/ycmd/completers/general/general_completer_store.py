@@ -1,5 +1,4 @@
-# Copyright (C) 2013 Stanislav Golovanov <stgolovanov@gmail.com>
-#                    Google Inc.
+# Copyright (C) 2013-2020 ycmd contributors
 #
 # This file is part of ycmd.
 #
@@ -16,13 +15,6 @@
 # You should have received a copy of the GNU General Public License
 # along with ycmd.  If not, see <http://www.gnu.org/licenses/>.
 
-from __future__ import unicode_literals
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-# Not installing aliases from python-future; it's unreliable and slow.
-from builtins import *  # noqa
-
 from ycmd.completers.completer import Completer
 from ycmd.completers.all.identifier_completer import IdentifierCompleter
 from ycmd.completers.general.filename_completer import FilenameCompleter
@@ -33,23 +25,21 @@ class GeneralCompleterStore( Completer ):
   """
   Holds a list of completers that can be used in all filetypes.
 
-  It overrides all Competer API methods so that specific calls to
+  It overrides all Completer API methods so that specific calls to
   GeneralCompleterStore are passed to all general completers.
   """
 
   def __init__( self, user_options ):
-    super( GeneralCompleterStore, self ).__init__( user_options )
+    super().__init__( user_options )
     self._identifier_completer = IdentifierCompleter( user_options )
     self._filename_completer = FilenameCompleter( user_options )
     self._ultisnips_completer = UltiSnipsCompleter( user_options )
     self._non_filename_completers = [ self._identifier_completer ]
     if user_options.get( 'use_ultisnips_completer', True ):
       self._non_filename_completers.append( self._ultisnips_completer )
-
     self._all_completers = [ self._identifier_completer,
                              self._filename_completer,
                              self._ultisnips_completer ]
-    self._current_query_completers = []
 
 
   def SupportedFiletypes( self ):
@@ -60,33 +50,12 @@ class GeneralCompleterStore( Completer ):
     return self._identifier_completer
 
 
-  def ShouldUseNow( self, request_data ):
-    self._current_query_completers = []
-
-    if self._filename_completer.ShouldUseNow( request_data ):
-      self._current_query_completers = [ self._filename_completer ]
-      return True
-
-    should_use_now = False
-
-    for completer in self._non_filename_completers:
-      should_use_this_completer = completer.ShouldUseNow( request_data )
-      should_use_now = should_use_now or should_use_this_completer
-
-      if should_use_this_completer:
-        self._current_query_completers.append( completer )
-
-    return should_use_now
-
-
   def ComputeCandidates( self, request_data ):
-    if not self.ShouldUseNow( request_data ):
-      return []
-
-    candidates = []
-    for completer in self._current_query_completers:
+    candidates = self._filename_completer.ComputeCandidates( request_data )
+    if candidates:
+      return candidates
+    for completer in self._non_filename_completers:
       candidates += completer.ComputeCandidates( request_data )
-
     return candidates
 
 

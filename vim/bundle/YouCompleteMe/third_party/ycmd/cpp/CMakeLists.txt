@@ -1,19 +1,19 @@
-# Copyright (C) 2011, 2012  Google Inc.
+# Copyright (C) 2011-2020 ycmd contributors
 #
-# This file is part of YouCompleteMe.
+# This file is part of ycmd.
 #
-# YouCompleteMe is free software: you can redistribute it and/or modify
+# ycmd is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# YouCompleteMe is distributed in the hope that it will be useful,
+# ycmd is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with YouCompleteMe.  If not, see <http://www.gnu.org/licenses/>.
+# along with ycmd.  If not, see <http://www.gnu.org/licenses/>.
 
 if ( APPLE )
   # OSX requires CMake >= 2.8.12, see YCM issue #1439
@@ -52,6 +52,27 @@ if( CMAKE_SIZEOF_VOID_P EQUAL 4 )
   set( 64_BIT_PLATFORM 0 )
 else()
   set( 64_BIT_PLATFORM 1 )
+endif()
+
+#############################################################################
+
+# Linux distribution detection.
+
+# Red Hat and CentOS detection.
+if ( EXISTS /etc/redhat-release )
+  file( READ /etc/redhat-release CONTENTS )
+  if ( CONTENTS MATCHES "Red Hat" )
+    set( DISTRIBUTION "Red Hat" )
+  elseif ( CONTENTS MATCHES "CentOS" )
+    set( DISTRIBUTION "CentOS" )
+  endif()
+# Gentoo detection. Needed because Gentoo is a special snowflake that puts
+# llvm in weird places.
+elseif ( EXISTS /etc/os-release )
+  file( READ /etc/os-release CONTENTS )
+  if ( CONTENTS MATCHES "Gentoo" )
+    set( DISTRIBUTION "Gentoo" )
+  endif()
 endif()
 
 #############################################################################
@@ -105,6 +126,37 @@ endif()
 
 #############################################################################
 
+# MSVC has symbols hidden by default. On GCC and Clang we need to explicitly
+# set the visibility to hidden to achieve the same result and then manually
+# expose what we need. This results in smaller ycm_core dynamic library and thus
+# a shorter loading time and higher performance.
+if( CMAKE_COMPILER_IS_GNUCXX OR COMPILER_IS_CLANG )
+  set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden" )
+endif()
+
+if ( DEFINED ENV{YCM_BENCHMARK} OR DEFINED ENV{YCM_TESTRUN})
+  if ( MSVC )
+    add_definitions( -DYCM_EXPORT=__declspec\(\ dllexport\ \) )
+  elseif( CMAKE_COMPILER_IS_GNUCXX OR COMPILER_IS_CLANG )
+    add_definitions(
+      -DYCM_EXPORT=__attribute__\(\(visibility\(\"default\"\)\)\) )
+  else()
+    add_definitions( -DYCM_EXPORT= )
+  endif()
+else()
+  add_definitions( -DYCM_EXPORT= )
+endif()
+
+#############################################################################
+
+# MSVC has snprintf since version 14 which is newer than what we support.
+# *NOT* defining HAVE_SNPRINTF will break compiling the bundled boost libraries.
+if ( MSVC )
+  add_definitions( -DHAVE_SNPRINTF )
+endif()
+
+#############################################################################
+
 # Force release build by default, speed is of the essence
 if ( NOT CMAKE_BUILD_TYPE )
   set( CMAKE_BUILD_TYPE Release )
@@ -115,97 +167,80 @@ endif()
 # Determining the presence of C++11 support in the compiler
 set( CPP11_AVAILABLE false )
 if ( CMAKE_COMPILER_IS_GNUCXX )
-  if ( NOT  CMAKE_CXX_COMPILER_VERSION VERSION_LESS 4.6  )
+  if ( NOT CMAKE_CXX_COMPILER_VERSION VERSION_LESS 4.8 )
     set( CPP11_AVAILABLE true )
   endif()
 elseif( COMPILER_IS_CLANG )
-  if ( NOT  CMAKE_CXX_COMPILER_VERSION VERSION_LESS 3.3  )
+  if ( NOT CMAKE_CXX_COMPILER_VERSION VERSION_LESS 3.3 )
     set( CPP11_AVAILABLE true )
     set( CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LANGUAGE_STANDARD "c++11" )
     set( CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LIBRARY "libc++" )
   endif()
 elseif( MSVC )
-  if ( NOT  MSVC_VERSION LESS 1800  )
+  if ( NOT MSVC_VERSION LESS 1900 )
     set( CPP11_AVAILABLE true )
   endif()
 endif()
 
 #############################################################################
 
-# For MSVC enable UNICODE and compilation on multiple processors
+# For MSVC enable UNICODE and compilation on multiple processors. Increase the
+# number of sections that an object file can hold. This is needed for storing
+# the Unicode table. Also, force MSVC to treat source files as UTF-8 encoded.
 if ( MSVC )
   add_definitions( /DUNICODE /D_UNICODE /Zc:wchar_t- )
-  set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP" )
+  set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP /bigobj /utf-8" )
 endif()
-
-# Solves the conflict in names of hypot in python sources and boost::python
-if ( MINGW )
-  set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -include cmath")
-endif()
-
-# Due to a bug/misconfiguration/stupidity, boost 1.52 and libc++ don't like each
-# other much: a compilation error "Constexpr function never produces a constant
-# expression" pops up when trying to compile anything that uses
-# boost/chrono/duration.hpp (namely boost/thread for us). This is a workaround
-# that prevents this from happening. Also present in cpp/BoostParts/CMakeLists.txt.
-# See here for more details: https://svn.boost.org/trac/boost/ticket/7671
-# TODO: remove this when it's fixed upstream (probably boost 1.53).
-add_definitions( -DBOOST_THREAD_DONT_USE_CHRONO )
 
 if( MSVC OR CYGWIN OR MSYS)
   # BOOST_ALL_NO_LIB turns off MSVC library autolinking
   add_definitions( -DBOOST_ALL_NO_LIB )
 endif()
 
-if( WIN32 OR CYGWIN OR MSYS)
-  # BOOST_PYTHON_SOURCE makes boost use the correct __declspec
-  add_definitions( -DBOOST_PYTHON_SOURCE -DBOOST_THREAD_USE_LIB )
-  if ( NOT MSVC AND 64_BIT_PLATFORM )
-      # Enables Python compilation for 64-bit Windows. Already defined by Python
-      # headers when compiling with MSVC.
-    add_definitions( -DMS_WIN64 )
-  endif()
+# Enables Python compilation for 64-bit Windows. Already defined by Python
+# headers when compiling with MSVC.
+if( WIN32 OR CYGWIN OR MSYS AND NOT MSVC AND 64_BIT_PLATFORM )
+  add_definitions( -DMS_WIN64 )
 endif()
 
 #############################################################################
 
-# When used with Clang, adding the -std=c++11 flag to CMAKE_CXX_FLAGS will cause
-# the compiler to output a warning during linking:
-#  clang: warning: argument unused during compilation: '-std=c++11'
-# This is caused by cmake passing this flag to the linking stage which it
-# shouldn't do. It's ignored so it does no harm, but the warning is annoying.
-#
-# Putting the flag in add_definitions() works around the issue, even though it
-# shouldn't in theory go there.
 if ( CPP11_AVAILABLE )
   # Cygwin needs its hand held a bit; see issue #473
   if ( CYGWIN AND CMAKE_COMPILER_IS_GNUCXX )
-    add_definitions( -std=gnu++11 )
+    set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++11" )
   elseif( NOT MSVC )
-    add_definitions( -std=c++11 )
+    set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11" )
   endif()
 else()
-  message( FATAL_ERROR "Your C++ compiler does NOT support C++11." )
-endif()
+  # Platform-specific advice goes here. In particular, we have plenty of users
+  # in corporate environments on RHEL/CentOS, where the default system compiler
+  # is too old.
 
-# Note: build.py always explicitly sets this option, so the default used here
-# rarely matters.
-option( USE_PYTHON2 "If on, link to Python 2 instead of 3" ON )
+  # on RHEL and CentOS, users require the devtoolset-3 or greater. However, we
+  # recommended the devtoolset-6 because it is the newest at the time of
+  # writing. And why not.
+  if ( DISTRIBUTION STREQUAL "CentOS" OR DISTRIBUTION STREQUAL "Red Hat" )
+    message( STATUS "NOTE: You appear to be on ${DISTRIBUTION}. "
+    "In order to use this application, you require a more modern compiler "
+    "than the default compiler on this platform. "
+    "Please install the devtoolset-6 or greater. For example, see this link: "
+    "https://www.softwarecollections.org/en/scls/rhscl/devtoolset-6/" )
 
-if ( USE_PYTHON2 )
-  set( Python_ADDITIONAL_VERSIONS 2.7 2.6 )
-  find_package( PythonLibs 2.6 REQUIRED )  # 2.6 is ONLY the mininum
-
-  if ( NOT PYTHONLIBS_VERSION_STRING VERSION_LESS "3.0.0" )
-    message( FATAL_ERROR
-      "You set USE_PYTHON2 to make CMake find python2 libs only, but CMake "
-      "found python3 libs instead. Either don't set USE_PYTHON2 or install the "
-      "necessary python2 headers & libraries." )
+    # Finally, just check if it is installed and they just need to activate it.
+    if ( EXISTS /opt/rh/devtoolset-6 )
+      message( STATUS "NOTE: It looks like you have the devtoolset-6 "
+                      "installed in /opt/rh/devtoolset-6, so you probably "
+                      "just need to activate it and re-run the installation. "
+                      "For example: source /opt/rh/devtoolset-6/enable")
+    endif()
   endif()
-else()
-  set( Python_ADDITIONAL_VERSIONS 3.6 3.5 3.4 3.3 )
-  find_package( PythonLibs 3.3 REQUIRED )  # 3.3 is ONLY the mininum
+
+  message( FATAL_ERROR "Your C++ compiler does NOT fully support C++11." )
 endif()
+
+set( Python_ADDITIONAL_VERSIONS 3.9 3.8 3.7 3.6 3.5 )
+find_package( PythonLibs 3.5 REQUIRED )  # 3.5 is ONLY the mininum
 
 #############################################################################
 

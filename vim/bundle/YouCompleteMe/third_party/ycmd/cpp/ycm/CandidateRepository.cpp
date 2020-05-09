@@ -1,4 +1,4 @@
-// Copyright (C) 2011, 2012 Google Inc.
+// Copyright (C) 2011-2018 ycmd contributors
 //
 // This file is part of ycmd.
 //
@@ -31,53 +31,46 @@ namespace {
 
 // We set a reasonable max limit to prevent issues with huge candidate strings
 // entering the database. Such large candidates are almost never desirable.
-const int MAX_CANDIDATE_SIZE = 80;
+const size_t MAX_CANDIDATE_SIZE = 80;
 
 }  // unnamed namespace
 
 
-std::mutex CandidateRepository::singleton_mutex_;
-CandidateRepository *CandidateRepository::instance_ = NULL;
-
 CandidateRepository &CandidateRepository::Instance() {
-  std::lock_guard< std::mutex > locker( singleton_mutex_ );
-
-  if ( !instance_ ) {
-    static CandidateRepository repo;
-    instance_ = &repo;
-  }
-
-  return *instance_;
+  static CandidateRepository repo;
+  return repo;
 }
 
 
-int CandidateRepository::NumStoredCandidates() {
-  std::lock_guard< std::mutex > locker( holder_mutex_ );
+size_t CandidateRepository::NumStoredCandidates() {
+  std::lock_guard< std::mutex > locker( candidate_holder_mutex_ );
   return candidate_holder_.size();
 }
 
 
 std::vector< const Candidate * > CandidateRepository::GetCandidatesForStrings(
-  const std::vector< std::string > &strings ) {
+  std::vector< std::string >&& strings ) {
   std::vector< const Candidate * > candidates;
   candidates.reserve( strings.size() );
 
   {
-    std::lock_guard< std::mutex > locker( holder_mutex_ );
+    std::lock_guard< std::mutex > locker( candidate_holder_mutex_ );
 
-    for ( const std::string & candidate_text : strings ) {
-      const std::string &validated_candidate_text =
-        ValidatedCandidateText( candidate_text );
+    for ( auto&& candidate_text : strings ) {
+      if ( candidate_text.size() > MAX_CANDIDATE_SIZE ) {
+        candidate_text = "";
+      }
 
-      const Candidate *&candidate = GetValueElseInsert(
-                                      candidate_holder_,
-                                      validated_candidate_text,
-                                      NULL );
+      std::unique_ptr< Candidate > &candidate = GetValueElseInsert(
+                                                  candidate_holder_,
+                                                  candidate_text,
+                                                  nullptr );
 
-      if ( !candidate )
-        candidate = new Candidate( validated_candidate_text );
+      if ( !candidate ) {
+        candidate.reset( new Candidate( std::move( candidate_text ) ) );
+      }
 
-      candidates.push_back( candidate );
+      candidates.push_back( candidate.get() );
     }
   }
 
@@ -85,21 +78,8 @@ std::vector< const Candidate * > CandidateRepository::GetCandidatesForStrings(
 }
 
 
-CandidateRepository::~CandidateRepository() {
-  for ( const CandidateHolder::value_type & pair : candidate_holder_ ) {
-    delete pair.second;
-  }
-}
-
-
-// Returns a ref to empty_ if candidate not valid.
-const std::string &CandidateRepository::ValidatedCandidateText(
-  const std::string &candidate_text ) {
-  if ( candidate_text.size() <= MAX_CANDIDATE_SIZE &&
-       IsPrintable( candidate_text ) )
-    return candidate_text;
-
-  return empty_;
+void CandidateRepository::ClearCandidates() {
+  candidate_holder_.clear();
 }
 
 } // namespace YouCompleteMe

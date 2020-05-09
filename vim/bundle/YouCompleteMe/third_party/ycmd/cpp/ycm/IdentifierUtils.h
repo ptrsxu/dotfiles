@@ -1,4 +1,4 @@
-// Copyright (C) 2011, 2012 Google Inc.
+// Copyright (C) 2011-2018 ycmd contributors
 //
 // This file is part of ycmd.
 //
@@ -18,17 +18,13 @@
 #ifndef IDENTIFIERUTILS_CPP_WFFUZNET
 #define IDENTIFIERUTILS_CPP_WFFUZNET
 
-#include "DLLDefines.h"
 #include "IdentifierDatabase.h"
-
-#include <vector>
-#include <string>
 
 #include <boost/filesystem.hpp>
 
 namespace YouCompleteMe {
 
-YCM_DLL_EXPORT FiletypeIdentifierMap ExtractIdentifiersFromTagsFile(
+YCM_EXPORT FiletypeIdentifierMap ExtractIdentifiersFromTagsFile(
   const boost::filesystem::path &path_to_tag_file );
 
 } // namespace YouCompleteMe

@@ -15,15 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with YouCompleteMe.  If not, see <http://www.gnu.org/licenses/>.
 
-from __future__ import unicode_literals
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-# Not installing aliases from python-future; it's unreliable and slow.
-from builtins import *  # noqa
-
-from ycm.client.base_request import ( BaseRequest, BuildRequestData,
-                                      HandleServerException )
+from ycm.client.base_request import BaseRequest, BuildRequestData
 
 
 class DebugInfoRequest( BaseRequest ):
@@ -37,8 +29,9 @@ class DebugInfoRequest( BaseRequest ):
     request_data = BuildRequestData()
     if self._extra_data:
       request_data.update( self._extra_data )
-    with HandleServerException( display = False ):
-      self._response = self.PostDataToHandler( request_data, 'debug_info' )
+    self._response = self.PostDataToHandler( request_data,
+                                             'debug_info',
+                                             display_message = False )
 
 
   def Response( self ):
@@ -94,7 +87,7 @@ def _FormatCompleterDebugInfo( completer ):
       message += '  {0} process ID: {1}\n'.format( name, server[ 'pid' ] )
     else:
       message += '  {0} not running\n'.format( name )
-    message += '  {0} executable: {1}\n'.format( name, server[ 'executable'] )
+    message += '  {0} executable: {1}\n'.format( name, server[ 'executable' ] )
     logfiles = server[ 'logfiles' ]
     if logfiles:
       message += '  {0} logfiles:\n'.format( name )

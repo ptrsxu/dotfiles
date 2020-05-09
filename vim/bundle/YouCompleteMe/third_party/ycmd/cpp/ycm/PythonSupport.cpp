@@ -1,4 +1,4 @@
-// Copyright (C) 2011, 2012, 2013 Google Inc.
+// Copyright (C) 2011-2018 ycmd contributors
 //
 // This file is part of ycmd.
 //
@@ -16,95 +16,85 @@
 // along with ycmd.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "PythonSupport.h"
-#include "Result.h"
 #include "Candidate.h"
 #include "CandidateRepository.h"
-#include "ReleaseGil.h"
+#include "Result.h"
 #include "Utils.h"
 
-#include <algorithm>
-#include <vector>
-#include <locale>
 #include <utility>
+#include <vector>
 
-using std::any_of;
-using boost::python::len;
-using boost::python::str;
-using boost::python::extract;
-using boost::python::object;
-typedef boost::python::list pylist;
+using pybind11::len;
+using pybind11::str;
+using pybind11::bytes;
+using pybind11::object;
+using pybind11::isinstance;
+using pylist = pybind11::list;
 
 namespace YouCompleteMe {
 
 namespace {
 
 std::vector< const Candidate * > CandidatesFromObjectList(
-  const pylist &candidates,
+  pylist candidates,
   const std::string &candidate_property ) {
-  int num_candidates = len( candidates );
+  size_t num_candidates = len( candidates );
   std::vector< std::string > candidate_strings;
   candidate_strings.reserve( num_candidates );
+  // Store the property in a native Python string so that the below doesn't need
+  // to reconvert over and over:
+  str py_prop( candidate_property );
 
-  for ( int i = 0; i < num_candidates; ++i ) {
+  for ( size_t i = 0; i < num_candidates; ++i ) {
     if ( candidate_property.empty() ) {
-      candidate_strings.push_back( GetUtf8String( candidates[ i ] ) );
+      candidate_strings.emplace_back( GetUtf8String( candidates[ i ] ) );
     } else {
-      object holder = extract< object >( candidates[ i ] );
-      candidate_strings.push_back( GetUtf8String(
-                                     holder[ candidate_property.c_str() ] ) );
+      candidate_strings.emplace_back( GetUtf8String(
+                                        candidates[ i ][ py_prop ] ) );
     }
   }
 
   return CandidateRepository::Instance().GetCandidatesForStrings(
-           candidate_strings );
+           std::move( candidate_strings ) );
 }
 
 } // unnamed namespace
 
 
-boost::python::list FilterAndSortCandidates(
-  const boost::python::list &candidates,
+pylist FilterAndSortCandidates(
+  pylist candidates,
   const std::string &candidate_property,
-  const std::string &query ) {
+  std::string query,
+  const size_t max_candidates ) {
   pylist filtered_candidates;
 
-  if ( query.empty() )
-    return candidates;
-
-  if ( !IsPrintable( query ) )
-    return boost::python::list();
-
-  int num_candidates = len( candidates );
+  size_t num_candidates = len( candidates );
   std::vector< const Candidate * > repository_candidates =
     CandidatesFromObjectList( candidates, candidate_property );
 
-  std::vector< ResultAnd< int > > result_and_objects;
+  std::vector< ResultAnd< size_t > > result_and_objects;
   {
-    ReleaseGil unlock;
-    Bitset query_bitset = LetterBitsetFromString( query );
-    bool query_has_uppercase_letters = any_of( query.cbegin(),
-                                               query.cend(),
-                                               IsUpper );
+    pybind11::gil_scoped_release unlock;
+    Word query_object( std::move( query ) );
 
-    for ( int i = 0; i < num_candidates; ++i ) {
+    for ( size_t i = 0; i < num_candidates; ++i ) {
       const Candidate *candidate = repository_candidates[ i ];
 
-      if ( !candidate->MatchesQueryBitset( query_bitset ) )
+      if ( candidate->IsEmpty() || !candidate->ContainsBytes( query_object ) ) {
         continue;
+      }
 
-      Result result = candidate->QueryMatchResult( query,
-                                                   query_has_uppercase_letters );
+      Result result = candidate->QueryMatchResult( query_object );
 
       if ( result.IsSubsequence() ) {
-        ResultAnd< int > result_and_object( result, i );
-        result_and_objects.push_back( std::move( result_and_object ) );
+        result_and_objects.emplace_back( result, i );
       }
     }
 
-    std::sort( result_and_objects.begin(), result_and_objects.end() );
+    PartialSort( result_and_objects, max_candidates );
   }
 
-  for ( const ResultAnd< int > &result_and_object : result_and_objects ) {
+  for ( const ResultAnd< size_t > &result_and_object : result_and_objects ) {
     filtered_candidates.append( candidates[ result_and_object.extra_object_ ] );
   }
 
@@ -112,13 +102,17 @@ boost::python::list FilterAndSortCandidates(
 }
 
 
-std::string GetUtf8String( const boost::python::object &string_or_unicode ) {
-  extract< std::string > to_string( string_or_unicode );
+std::string GetUtf8String( const object &value ) {
+  // If already a unicode or string (or something derived from it)
+  // pybind will already convert to utf8 when converting to std::string.
+  // For `bytes` the contents are left untouched:
+  if ( isinstance< str >( value ) || isinstance< bytes >( value ) ) {
+    return value.cast< std::string >();
+  }
 
-  if ( to_string.check() )
-    return to_string();
-
-  return extract< std::string >( str( string_or_unicode ).encode( "utf8" ) );
+  // Otherwise go through `pybind11::str()`,
+  // which goes through Python's built-in `str`.
+  return str( value );
 }
 
 } // namespace YouCompleteMe

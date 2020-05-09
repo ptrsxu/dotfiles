@@ -19,6 +19,7 @@
 #define CLANGUTILS_H_9MVHQLJS
 
 #include <clang-c/Index.h>
+#include <stdexcept>
 #include <string>
 
 namespace YouCompleteMe {
@@ -33,13 +34,19 @@ std::string CXStringToString( CXString text );
 
 bool CursorIsValid( CXCursor cursor );
 
-bool CursorIsReference( CXCursor cursor );
-
-bool CursorIsDeclaration( CXCursor cursor );
-
 std::string CXFileToFilepath( CXFile file );
 
 std::string ClangVersion();
+
+const char *CXErrorCodeToString( CXErrorCode code );
+
+/**
+ * Thrown when libclang fails to parse (or reparse) the translation unit.
+ */
+struct YCM_EXPORT ClangParseError : std::runtime_error {
+  explicit ClangParseError( const char *what_arg );
+  explicit ClangParseError( CXErrorCode code );
+};
 
 } // namespace YouCompleteMe
 

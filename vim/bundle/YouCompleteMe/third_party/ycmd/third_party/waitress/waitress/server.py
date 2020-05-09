@@ -12,7 +12,6 @@
 #
 ##############################################################################
 
-import asyncore
 import os
 import os.path
 import socket
@@ -22,15 +21,24 @@ from waitress import trigger
 from waitress.adjustments import Adjustments
 from waitress.channel import HTTPChannel
 from waitress.task import ThreadedTaskDispatcher
-from waitress.utilities import cleanup_unix_socket, logging_dispatcher
+from waitress.utilities import cleanup_unix_socket
 
-def create_server(application,
-                  map=None,
-                  _start=True,      # test shim
-                  _sock=None,       # test shim
-                  _dispatcher=None, # test shim
-                  **kw              # adjustments
-                  ):
+from waitress.compat import (
+    IPPROTO_IPV6,
+    IPV6_V6ONLY,
+)
+from . import wasyncore
+from .proxy_headers import proxy_headers_middleware
+
+
+def create_server(
+    application,
+    map=None,
+    _start=True,  # test shim
+    _sock=None,  # test shim
+    _dispatcher=None,  # test shim
+    **kw  # adjustments
+):
     """
     if __name__ == '__main__':
         server = create_server(app)
@@ -39,84 +47,245 @@ def create_server(application,
     if application is None:
         raise ValueError(
             'The "app" passed to ``create_server`` was ``None``.  You forgot '
-            'to return a WSGI app within your application.'
-            )
+            "to return a WSGI app within your application."
+        )
     adj = Adjustments(**kw)
-    if adj.unix_socket and hasattr(socket, 'AF_UNIX'):
-        cls = UnixWSGIServer
-    else:
-        cls = TcpWSGIServer
-    return cls(application, map, _start, _sock, _dispatcher, adj)
 
-class BaseWSGIServer(logging_dispatcher, object):
+    if map is None:  # pragma: nocover
+        map = {}
+
+    dispatcher = _dispatcher
+    if dispatcher is None:
+        dispatcher = ThreadedTaskDispatcher()
+        dispatcher.set_thread_count(adj.threads)
+
+    if adj.unix_socket and hasattr(socket, "AF_UNIX"):
+        sockinfo = (socket.AF_UNIX, socket.SOCK_STREAM, None, None)
+        return UnixWSGIServer(
+            application,
+            map,
+            _start,
+            _sock,
+            dispatcher=dispatcher,
+            adj=adj,
+            sockinfo=sockinfo,
+        )
+
+    effective_listen = []
+    last_serv = None
+    if not adj.sockets:
+        for sockinfo in adj.listen:
+            # When TcpWSGIServer is called, it registers itself in the map. This
+            # side-effect is all we need it for, so we don't store a reference to
+            # or return it to the user.
+            last_serv = TcpWSGIServer(
+                application,
+                map,
+                _start,
+                _sock,
+                dispatcher=dispatcher,
+                adj=adj,
+                sockinfo=sockinfo,
+            )
+            effective_listen.append(
+                (last_serv.effective_host, last_serv.effective_port)
+            )
+
+    for sock in adj.sockets:
+        sockinfo = (sock.family, sock.type, sock.proto, sock.getsockname())
+        if sock.family == socket.AF_INET or sock.family == socket.AF_INET6:
+            last_serv = TcpWSGIServer(
+                application,
+                map,
+                _start,
+                sock,
+                dispatcher=dispatcher,
+                adj=adj,
+                bind_socket=False,
+                sockinfo=sockinfo,
+            )
+            effective_listen.append(
+                (last_serv.effective_host, last_serv.effective_port)
+            )
+        elif hasattr(socket, "AF_UNIX") and sock.family == socket.AF_UNIX:
+            last_serv = UnixWSGIServer(
+                application,
+                map,
+                _start,
+                sock,
+                dispatcher=dispatcher,
+                adj=adj,
+                bind_socket=False,
+                sockinfo=sockinfo,
+            )
+            effective_listen.append(
+                (last_serv.effective_host, last_serv.effective_port)
+            )
+
+    # We are running a single server, so we can just return the last server,
+    # saves us from having to create one more object
+    if len(effective_listen) == 1:
+        # In this case we have no need to use a MultiSocketServer
+        return last_serv
+
+    # Return a class that has a utility function to print out the sockets it's
+    # listening on, and has a .run() function. All of the TcpWSGIServers
+    # registered themselves in the map above.
+    return MultiSocketServer(map, adj, effective_listen, dispatcher)
+
+
+# This class is only ever used if we have multiple listen sockets. It allows
+# the serve() API to call .run() which starts the wasyncore loop, and catches
+# SystemExit/KeyboardInterrupt so that it can atempt to cleanly shut down.
+class MultiSocketServer(object):
+    asyncore = wasyncore  # test shim
+
+    def __init__(
+        self, map=None, adj=None, effective_listen=None, dispatcher=None,
+    ):
+        self.adj = adj
+        self.map = map
+        self.effective_listen = effective_listen
+        self.task_dispatcher = dispatcher
+
+    def print_listen(self, format_str):  # pragma: nocover
+        for l in self.effective_listen:
+            l = list(l)
+
+            if ":" in l[0]:
+                l[0] = "[{}]".format(l[0])
+
+            print(format_str.format(*l))
+
+    def run(self):
+        try:
+            self.asyncore.loop(
+                timeout=self.adj.asyncore_loop_timeout,
+                map=self.map,
+                use_poll=self.adj.asyncore_use_poll,
+            )
+        except (SystemExit, KeyboardInterrupt):
+            self.close()
+
+    def close(self):
+        self.task_dispatcher.shutdown()
+        wasyncore.close_all(self.map)
+
+
+class BaseWSGIServer(wasyncore.dispatcher, object):
 
     channel_class = HTTPChannel
     next_channel_cleanup = 0
-    socketmod = socket # test shim
-    asyncore = asyncore # test shim
-    family = None
+    socketmod = socket  # test shim
+    asyncore = wasyncore  # test shim
 
-    def __init__(self,
-                 application,
-                 map=None,
-                 _start=True,      # test shim
-                 _sock=None,       # test shim
-                 _dispatcher=None, # test shim
-                 adj=None,         # adjustments
-                 **kw
-                 ):
+    def __init__(
+        self,
+        application,
+        map=None,
+        _start=True,  # test shim
+        _sock=None,  # test shim
+        dispatcher=None,  # dispatcher
+        adj=None,  # adjustments
+        sockinfo=None,  # opaque object
+        bind_socket=True,
+        **kw
+    ):
         if adj is None:
             adj = Adjustments(**kw)
+
+        if adj.trusted_proxy or adj.clear_untrusted_proxy_headers:
+            # wrap the application to deal with proxy headers
+            # we wrap it here because webtest subclasses the TcpWSGIServer
+            # directly and thus doesn't run any code that's in create_server
+            application = proxy_headers_middleware(
+                application,
+                trusted_proxy=adj.trusted_proxy,
+                trusted_proxy_count=adj.trusted_proxy_count,
+                trusted_proxy_headers=adj.trusted_proxy_headers,
+                clear_untrusted=adj.clear_untrusted_proxy_headers,
+                log_untrusted=adj.log_untrusted_proxy_headers,
+                logger=self.logger,
+            )
+
         if map is None:
             # use a nonglobal socket map by default to hopefully prevent
-            # conflicts with apps and libs that use the asyncore global socket
+            # conflicts with apps and libs that use the wasyncore global socket
             # map ala https://github.com/Pylons/waitress/issues/63
             map = {}
+        if sockinfo is None:
+            sockinfo = adj.listen[0]
+
+        self.sockinfo = sockinfo
+        self.family = sockinfo[0]
+        self.socktype = sockinfo[1]
         self.application = application
         self.adj = adj
         self.trigger = trigger.trigger(map)
-        if _dispatcher is None:
-            _dispatcher = ThreadedTaskDispatcher()
-            _dispatcher.set_thread_count(self.adj.threads)
-        self.task_dispatcher = _dispatcher
+        if dispatcher is None:
+            dispatcher = ThreadedTaskDispatcher()
+            dispatcher.set_thread_count(self.adj.threads)
+
+        self.task_dispatcher = dispatcher
         self.asyncore.dispatcher.__init__(self, _sock, map=map)
         if _sock is None:
-            self.create_socket(self.family, socket.SOCK_STREAM)
+            self.create_socket(self.family, self.socktype)
+            if self.family == socket.AF_INET6:  # pragma: nocover
+                self.socket.setsockopt(IPPROTO_IPV6, IPV6_V6ONLY, 1)
+
         self.set_reuse_addr()
-        self.bind_server_socket()
+
+        if bind_socket:
+            self.bind_server_socket()
+
         self.effective_host, self.effective_port = self.getsockname()
-        self.server_name = self.get_server_name(self.adj.host)
+        self.server_name = self.get_server_name(self.effective_host)
         self.active_channels = {}
         if _start:
             self.accept_connections()
 
     def bind_server_socket(self):
-        raise NotImplementedError # pragma: no cover
+        raise NotImplementedError  # pragma: no cover
 
     def get_server_name(self, ip):
         """Given an IP or hostname, try to determine the server name."""
-        if ip:
-            server_name = str(ip)
-        else:
-            server_name = str(self.socketmod.gethostname())
-        # Convert to a host name if necessary.
-        for c in server_name:
-            if c != '.' and not c.isdigit():
-                return server_name
+
+        if not ip:
+            raise ValueError("Requires an IP to get the server name")
+
+        server_name = str(ip)
+
+        # If we are bound to all IP's, just return the current hostname, only
+        # fall-back to "localhost" if we fail to get the hostname
+        if server_name == "0.0.0.0" or server_name == "::":
+            try:
+                return str(self.socketmod.gethostname())
+            except (socket.error, UnicodeDecodeError):  # pragma: no cover
+                # We also deal with UnicodeDecodeError in case of Windows with
+                # non-ascii hostname
+                return "localhost"
+
+        # Now let's try and convert the IP address to a proper hostname
         try:
-            if server_name == '0.0.0.0':
-                return 'localhost'
             server_name = self.socketmod.gethostbyaddr(server_name)[0]
-        except socket.error: # pragma: no cover
+        except (socket.error, UnicodeDecodeError):  # pragma: no cover
+            # We also deal with UnicodeDecodeError in case of Windows with
+            # non-ascii hostname
             pass
+
+        # If it contains an IPv6 literal, make sure to surround it with
+        # brackets
+        if ":" in server_name and "[" not in server_name:
+            server_name = "[{}]".format(server_name)
+
         return server_name
 
     def getsockname(self):
-        raise NotImplementedError # pragma: no cover
+        raise NotImplementedError  # pragma: no cover
 
     def accept_connections(self):
         self.accepting = True
-        self.socket.listen(self.adj.backlog) # Get around asyncore NT limit
+        self.socket.listen(self.adj.backlog)  # Get around asyncore NT limit
 
     def add_task(self, task):
         self.task_dispatcher.add_task(task)
@@ -126,7 +295,7 @@ class BaseWSGIServer(logging_dispatcher, object):
         if now >= self.next_channel_cleanup:
             self.next_channel_cleanup = now + self.adj.cleanup_interval
             self.maintenance(now)
-        return (self.accepting and len(self._map) < self.adj.connection_limit)
+        return self.accepting and len(self._map) < self.adj.connection_limit
 
     def writable(self):
         return False
@@ -149,8 +318,7 @@ class BaseWSGIServer(logging_dispatcher, object):
             # address family is unknown.  We don't want the whole server
             # to shut down because of this.
             if self.adj.log_socket_errors:
-                self.logger.warning('server accept() threw an exception',
-                                    exc_info=True)
+                self.logger.warning("server accept() threw an exception", exc_info=True)
             return
         self.set_socket_options(conn)
         addr = self.fix_addr(addr)
@@ -186,25 +354,67 @@ class BaseWSGIServer(logging_dispatcher, object):
             if (not channel.requests) and channel.last_activity < cutoff:
                 channel.will_close = True
 
+    def print_listen(self, format_str):  # pragma: nocover
+        print(format_str.format(self.effective_host, self.effective_port))
+
+    def close(self):
+        self.trigger.close()
+        return wasyncore.dispatcher.close(self)
+
+
 class TcpWSGIServer(BaseWSGIServer):
-
-    family = socket.AF_INET
-
     def bind_server_socket(self):
-        self.bind((self.adj.host, self.adj.port))
+        (_, _, _, sockaddr) = self.sockinfo
+        self.bind(sockaddr)
 
     def getsockname(self):
-        return self.socket.getsockname()
+        try:
+            return self.socketmod.getnameinfo(
+                self.socket.getsockname(), self.socketmod.NI_NUMERICSERV
+            )
+        except:  # pragma: no cover
+            # This only happens on Linux because a DNS issue is considered a
+            # temporary failure that will raise (even when NI_NAMEREQD is not
+            # set). Instead we try again, but this time we just ask for the
+            # numerichost and the numericserv (port) and return those. It is
+            # better than nothing.
+            return self.socketmod.getnameinfo(
+                self.socket.getsockname(),
+                self.socketmod.NI_NUMERICHOST | self.socketmod.NI_NUMERICSERV,
+            )
 
     def set_socket_options(self, conn):
         for (level, optname, value) in self.adj.socket_options:
             conn.setsockopt(level, optname, value)
 
-if hasattr(socket, 'AF_UNIX'):
+
+if hasattr(socket, "AF_UNIX"):
 
     class UnixWSGIServer(BaseWSGIServer):
+        def __init__(
+            self,
+            application,
+            map=None,
+            _start=True,  # test shim
+            _sock=None,  # test shim
+            dispatcher=None,  # dispatcher
+            adj=None,  # adjustments
+            sockinfo=None,  # opaque object
+            **kw
+        ):
+            if sockinfo is None:
+                sockinfo = (socket.AF_UNIX, socket.SOCK_STREAM, None, None)
 
-        family = socket.AF_UNIX
+            super(UnixWSGIServer, self).__init__(
+                application,
+                map=map,
+                _start=_start,
+                _sock=_sock,
+                dispatcher=dispatcher,
+                adj=adj,
+                sockinfo=sockinfo,
+                **kw
+            )
 
         def bind_server_socket(self):
             cleanup_unix_socket(self.adj.unix_socket)
@@ -213,10 +423,14 @@ if hasattr(socket, 'AF_UNIX'):
                 os.chmod(self.adj.unix_socket, self.adj.unix_socket_perms)
 
         def getsockname(self):
-            return ('unix', self.socket.getsockname())
+            return ("unix", self.socket.getsockname())
 
         def fix_addr(self, addr):
-            return ('localhost', None)
+            return ("localhost", None)
+
+        def get_server_name(self, ip):
+            return "localhost"
+
 
 # Compatibility alias.
 WSGIServer = TcpWSGIServer

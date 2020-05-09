@@ -1,4 +1,4 @@
-# Copyright (C) 2016 ycmd contributors
+# Copyright (C) 2020 ycmd contributors
 #
 # This file is part of ycmd.
 #
@@ -15,21 +15,13 @@
 # You should have received a copy of the GNU General Public License
 # along with ycmd.  If not, see <http://www.gnu.org/licenses/>.
 
-# Intentionally not importing unicode_literals!
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-# Not installing aliases from python-future; it's unreliable and slow.
-# Intentionally not importing all builtins!
-
 import os
 
-from nose.tools import eq_
-from future.utils import native
+from hamcrest import assert_that, equal_to
 
-import ycm_core
-from ycmd.tests.test_utils import ClangOnly, Py2Only, Py3Only
-from ycmd.utils import ToBytes, ToUnicode, OnWindows
+from ycmd.tests.test_utils import ClangOnly
+from ycmd.utils import ToBytes, OnWindows, ImportCore
+ycm_core = ImportCore()
 
 
 # We don't use PathToTestFile from test_utils module because this module
@@ -42,71 +34,37 @@ PATH_TO_COMPILE_COMMANDS = (
 COMPILE_COMMANDS_WORKING_DIR = 'C:\\dir' if OnWindows() else '/dir'
 
 
-@Py2Only
-def GetUtf8String_Py2Str_test():
-  eq_( 'foo', str( ycm_core.GetUtf8String( 'foo' ) ) )
+def GetUtf8String_Str_test():
+  assert_that( b'fo\xc3\xb8', equal_to( ycm_core.GetUtf8String( 'foø' ) ) )
 
 
-@Py3Only
-def GetUtf8String_Py3Bytes_test():
-  eq_( 'foo', str( ycm_core.GetUtf8String( b'foo' ) ) )
+def GetUtf8String_Bytes_test():
+  assert_that( b'fo\xc3\xb8',
+               equal_to( ycm_core.GetUtf8String( bytes( 'foø', 'utf8' ) ) ) )
 
 
-# No test for `bytes` from builtins because it's very difficult to make
-# GetUtf8String work with that and also it should never receive that type in the
-# first place (only py2 str/unicode and py3 bytes/str).
-
-
-def GetUtf8String_Unicode_test():
-  eq_( 'foo', str( ycm_core.GetUtf8String( u'foo' ) ) )
+def GetUtf8String_Int_test():
+  assert_that( b'123', equal_to( ycm_core.GetUtf8String( 123 ) ) )
 
 
 @ClangOnly
-@Py2Only
-def CompilationDatabase_Py2Str_test():
-  cc_dir = native( ToBytes( PATH_TO_COMPILE_COMMANDS ) )
-  cc_filename = native( ToBytes( os.path.join( COMPILE_COMMANDS_WORKING_DIR,
-                                               'example.cc' ) ) )
-
-  # Ctor reads ycmd/tests/testdata/[unix|windows]/compile_commands.json
-  db = ycm_core.CompilationDatabase( cc_dir )
-  info = db.GetCompilationInfoForFile( cc_filename )
-
-  eq_( str( info.compiler_working_dir_ ), COMPILE_COMMANDS_WORKING_DIR )
-  eq_( str( info.compiler_flags_[ 0 ] ), '/usr/bin/clang++' )
-  eq_( str( info.compiler_flags_[ 1 ] ), 'example.cc' )
-
-
-@ClangOnly
-@Py2Only
-def CompilationDatabase_Py2Unicode_test():
-  cc_dir = native( ToUnicode( PATH_TO_COMPILE_COMMANDS ) )
-  cc_filename = native( ToUnicode( os.path.join( COMPILE_COMMANDS_WORKING_DIR,
-                                                 'example.cc' ) ) )
-
-  # Ctor reads ycmd/tests/testdata/[unix|windows]/compile_commands.json
-  db = ycm_core.CompilationDatabase( cc_dir )
-  info = db.GetCompilationInfoForFile( cc_filename )
-
-  eq_( str( info.compiler_working_dir_ ), COMPILE_COMMANDS_WORKING_DIR )
-  eq_( str( info.compiler_flags_[ 0 ] ), '/usr/bin/clang++' )
-  eq_( str( info.compiler_flags_[ 1 ] ), 'example.cc' )
-
-
-@ClangOnly
-@Py3Only
 def CompilationDatabase_Py3Bytes_test():
-  cc_dir = native( ToBytes( PATH_TO_COMPILE_COMMANDS ) )
-  cc_filename = native( ToBytes( os.path.join( COMPILE_COMMANDS_WORKING_DIR,
-                                               'example.cc' ) ) )
+  cc_dir = ToBytes( PATH_TO_COMPILE_COMMANDS )
+  cc_filename = ToBytes( os.path.join( COMPILE_COMMANDS_WORKING_DIR,
+                                       'example.cc' ) )
 
   # Ctor reads ycmd/tests/testdata/[unix|windows]/compile_commands.json
   db = ycm_core.CompilationDatabase( cc_dir )
   info = db.GetCompilationInfoForFile( cc_filename )
 
-  eq_( str( info.compiler_working_dir_ ), COMPILE_COMMANDS_WORKING_DIR )
-  eq_( str( info.compiler_flags_[ 0 ] ), '/usr/bin/clang++' )
-  eq_( str( info.compiler_flags_[ 1 ] ), 'example.cc' )
+  assert_that( str( info.compiler_working_dir_ ),
+               equal_to( COMPILE_COMMANDS_WORKING_DIR ) )
+  assert_that( str( info.compiler_flags_[ 0 ] ),
+               equal_to( '/usr/bin/clang++' ) )
+  assert_that( str( info.compiler_flags_[ 1 ] ),
+               equal_to( '--driver-mode=g++' ) )
+  assert_that( str( info.compiler_flags_[ 2 ] ),
+               equal_to( 'example.cc' ) )
 
 
 @ClangOnly
@@ -118,6 +76,11 @@ def CompilationDatabase_NativeString_test():
   db = ycm_core.CompilationDatabase( cc_dir )
   info = db.GetCompilationInfoForFile( cc_filename )
 
-  eq_( str( info.compiler_working_dir_ ), COMPILE_COMMANDS_WORKING_DIR )
-  eq_( str( info.compiler_flags_[ 0 ] ), '/usr/bin/clang++' )
-  eq_( str( info.compiler_flags_[ 1 ] ), 'example.cc' )
+  assert_that( str( info.compiler_working_dir_ ),
+               equal_to( COMPILE_COMMANDS_WORKING_DIR ) )
+  assert_that( str( info.compiler_flags_[ 0 ] ),
+               equal_to( '/usr/bin/clang++' ) )
+  assert_that( str( info.compiler_flags_[ 1 ] ),
+               equal_to( '--driver-mode=g++' ) )
+  assert_that( str( info.compiler_flags_[ 2 ] ),
+               equal_to( 'example.cc' ) )

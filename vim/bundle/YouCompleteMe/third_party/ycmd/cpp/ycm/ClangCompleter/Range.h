@@ -1,4 +1,4 @@
-// Copyright (C) 2013 Google Inc.
+// Copyright (C) 2013-2018 ycmd contributors
 //
 // This file is part of ycmd.
 //
@@ -24,18 +24,14 @@ namespace YouCompleteMe {
 
 // Half-open, [start, end>
 struct Range {
-  Range() {}
+  Range() = default;
 
   Range( const Location &start_location, const Location &end_location )
-    : start_( start_location ), end_( end_location ) {}
-
-  Range( const CXSourceRange &range );
-
-  bool operator== ( const Range &other ) const {
-    return
-      start_ == other.start_ &&
-      end_ == other.end_;
+    : start_( start_location ),
+      end_( end_location ) {
   }
+
+  explicit Range( const CXSourceRange &range );
 
   Location start_;
   Location end_;

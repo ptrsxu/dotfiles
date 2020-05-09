@@ -1,4 +1,4 @@
-// Copyright (C) 2011, 2012 Google Inc.
+// Copyright (C) 2011-2018 ycmd contributors
 //
 // This file is part of ycmd.
 //
@@ -18,34 +18,60 @@
 #ifndef UTILS_H_KEPMRPBH
 #define UTILS_H_KEPMRPBH
 
-#include "DLLDefines.h"
-
+#include <boost/filesystem.hpp>
+#include <cmath>
+#include <limits>
 #include <string>
 #include <vector>
-#include <boost/filesystem.hpp>
 
 namespace fs = boost::filesystem;
 
 namespace YouCompleteMe {
 
-bool AlmostEqual( double a, double b );
+YCM_EXPORT inline bool IsUppercase( uint8_t ascii_character ) {
+  return 'A' <= ascii_character && ascii_character <= 'Z';
+}
+
+
+// An uppercase ASCII character can be converted to lowercase and vice versa by
+// flipping its third most significant bit.
+YCM_EXPORT inline char Lowercase( uint8_t ascii_character ) {
+  if ( IsUppercase( ascii_character ) ) {
+    return static_cast< char >( ascii_character ^ 0x20 );
+  }
+  return static_cast< char >( ascii_character );
+}
+
+
+YCM_EXPORT inline std::string Lowercase( const std::string &text ) {
+  std::string result;
+  for ( auto ascii_character : text ) {
+    result.push_back( Lowercase( static_cast< uint8_t >( ascii_character ) ) );
+  }
+  return result;
+}
+
 
 // Reads the entire contents of the specified file. If the file does not exist,
 // an exception is thrown.
-std::string ReadUtf8File( const fs::path &filepath );
+std::vector< std::string > ReadUtf8File( const fs::path &filepath );
 
-// Writes the entire contents of the specified file. If the file does not exist,
-// an exception is thrown.
-YCM_DLL_EXPORT void WriteUtf8File( const fs::path &filepath,
-                                   const std::string &contents );
+
+// Normalizes a path by making it absolute relative to |base|, resolving
+// symbolic links, removing '.' and '..' in the path, and converting slashes
+// into backslashes on Windows. Contrarily to boost::filesystem::canonical, this
+// works even if the file doesn't exist.
+YCM_EXPORT fs::path NormalizePath( const fs::path &filepath,
+                                   const fs::path &base = fs::current_path() );
+
 
 template <class Container, class Key>
 typename Container::mapped_type &
 GetValueElseInsert( Container &container,
                     const Key &key,
-                    const typename Container::mapped_type &value ) {
-  return container.insert( typename Container::value_type( key, value ) )
-         .first->second;
+                    typename Container::mapped_type &&value ) {
+  return container.insert(
+    typename Container::value_type( key, std::move( value ) ) ).first->second;
 }
 
 
@@ -78,7 +104,43 @@ bool Erase( Container &container, const Key &key ) {
 }
 
 
-bool IsUpper( char c );
+// Shrink a vector to its sorted |num_sorted_elements| smallest elements. If
+// |num_sorted_elements| is 0 or larger than the vector size, sort the whole
+// vector.
+template <typename Element>
+void PartialSort( std::vector< Element > &elements,
+                  const size_t num_sorted_elements ) {
+
+  using diff = typename std::vector< Element >::iterator::difference_type;
+  size_t nb_elements = elements.size();
+  size_t max_elements = num_sorted_elements > 0 &&
+                        nb_elements >= num_sorted_elements ?
+                        num_sorted_elements : nb_elements;
+
+  // When the number of elements to sort is more than 1024 and one sixty-fourth
+  // of the total number of elements, switch to std::nth_element followed by
+  // std::sort. This heuristic is based on the observation that
+  // std::partial_sort (heapsort) is the most efficient algorithm when the
+  // number of elements to sort is small and that std::nth_element (introselect)
+  // combined with std::sort (introsort) always perform better than std::sort
+  // alone in other cases.
+  if ( max_elements <= std::max( static_cast< size_t >( 1024 ),
+                                 nb_elements / 64 ) ) {
+    std::partial_sort( elements.begin(),
+                       elements.begin() + static_cast< diff >( max_elements ),
+                       elements.end() );
+  } else {
+    std::nth_element( elements.begin(),
+                      elements.begin() + static_cast< diff >( max_elements ),
+                      elements.end() );
+    std::sort( elements.begin(), elements.begin() + static_cast< diff >( max_elements ) );
+  }
+
+  // Remove the unsorted elements. Use erase instead of resize as it doesn't
+  // require a default constructor on Element.
+  elements.erase( elements.begin() + static_cast< diff >( max_elements ),
+                  elements.end() );
+}
 
 } // namespace YouCompleteMe
 

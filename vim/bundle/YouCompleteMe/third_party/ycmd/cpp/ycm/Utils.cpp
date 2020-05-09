@@ -16,48 +16,59 @@
 // along with ycmd.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "Utils.h"
-#include <cmath>
-#include <limits>
+
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>
+#include <cmath>
+#include <limits>
+#include <string>
+#include <vector>
 
 namespace fs = boost::filesystem;
 
 namespace YouCompleteMe {
 
-bool AlmostEqual( double a, double b ) {
-  return std::abs( a - b ) <=
-         ( std::numeric_limits< double >::epsilon() *
-           std::max( std::abs( a ), std::abs( b ) ) );
-}
-
-
-std::string ReadUtf8File( const fs::path &filepath ) {
-  // fs::is_empty() can throw basic_filesystem_error< Path >
-  // in case filepath doesn't exist, or
-  // in case filepath's file_status is "other".
-  // "other" in this case means everything that is not a regular file,
-  // directory or a symlink.
+std::vector< std::string > ReadUtf8File( const fs::path &filepath ) {
+  std::vector< std::string > contents;
   if ( !fs::is_empty( filepath ) && fs::is_regular_file( filepath ) ) {
-    fs::ifstream file( filepath, std::ios::in | std::ios::binary );
-    std::vector< char > contents( ( std::istreambuf_iterator< char >( file ) ),
-                                  std::istreambuf_iterator< char >() );
-    return std::string( contents.begin(), contents.end() );
+    std::string line;
+    for( fs::ifstream file( filepath, std::ios::in | std::ios::binary );
+         std::getline( file, line ); ) {
+      contents.push_back( std::move( line ) );
+    }
   }
-  return std::string();
+  return contents;
 }
 
 
-void WriteUtf8File( const fs::path &filepath, const std::string &contents ) {
-  fs::ofstream file;
-  file.open( filepath );
-  file << contents;
-  file.close();
-}
+// Cannot use boost::filesystem::weakly_canonical because it raises an exception
+// for non-existing paths in some cases.
+fs::path NormalizePath( const fs::path &filepath, const fs::path &base ) {
+  // Absolutize the path relative to |base|.
+  fs::path absolute_path( fs::absolute( filepath, base ) );
+  fs::path normalized_path( absolute_path );
 
+  // Canonicalize the existing part of the path.
+  fs::path::iterator component( absolute_path.end() );
+  while ( !exists( normalized_path ) && !normalized_path.empty() ) {
+    normalized_path.remove_filename();
+    --component;
+  }
+  if ( !normalized_path.empty() ) {
+    normalized_path = fs::canonical( normalized_path );
+  }
 
-bool IsUpper( char c ) {
-  return std::isupper( c, std::locale::classic() );
+  // Remove '.' and '..' in the remaining part.
+  for ( ; component != absolute_path.end(); ++component ) {
+    if ( *component == ".." ) {
+      normalized_path = normalized_path.parent_path();
+    } else if ( *component != "." ) {
+      normalized_path /= *component;
+    }
+  }
+
+  // Finally, convert slashes into backslashes on Windows.
+  return normalized_path.make_preferred();
 }
 
 } // namespace YouCompleteMe

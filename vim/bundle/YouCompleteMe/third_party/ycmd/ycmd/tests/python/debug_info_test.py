@@ -1,4 +1,4 @@
-# Copyright (C) 2016-2017 ycmd contributors
+# Copyright (C) 2016-2020 ycmd contributors
 #
 # This file is part of ycmd.
 #
@@ -15,14 +15,11 @@
 # You should have received a copy of the GNU General Public License
 # along with ycmd.  If not, see <http://www.gnu.org/licenses/>.
 
-from __future__ import unicode_literals
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-# Not installing aliases from python-future; it's unreliable and slow.
-from builtins import *  # noqa
-
-from hamcrest import assert_that, contains, has_entry, has_entries, instance_of
+from hamcrest import ( assert_that,
+                       contains_exactly,
+                       has_entry,
+                       has_entries,
+                       instance_of )
 
 from ycmd.tests.python import SharedYcmd
 from ycmd.tests.test_utils import BuildRequest
@@ -35,19 +32,31 @@ def DebugInfo_test( app ):
     app.post_json( '/debug_info', request_data ).json,
     has_entry( 'completer', has_entries( {
       'name': 'Python',
-      'servers': contains( has_entries( {
-        'name': 'JediHTTP',
-        'is_running': instance_of( bool ),
-        'executable': instance_of( str ),
-        'pid': instance_of( int ),
-        'address': instance_of( str ),
-        'port': instance_of( int ),
-        'logfiles': contains( instance_of( str ),
-                              instance_of( str ) )
-      } ) ),
-      'items': contains( has_entries( {
-        'key': 'Python interpreter',
-        'value': instance_of( str )
-      } ) )
+      'items': contains_exactly(
+        has_entries( {
+          'key': 'Python interpreter',
+          'value': instance_of( str )
+        } ),
+        has_entries( {
+          'key': 'Python root',
+          'value': instance_of( str )
+        } ),
+        has_entries( {
+          'key': 'Python path',
+          'value': instance_of( str )
+        } ),
+        has_entries( {
+          'key': 'Python version',
+          'value': instance_of( str )
+        } ),
+        has_entries( {
+          'key': 'Jedi version',
+          'value': instance_of( str )
+        } ),
+        has_entries( {
+          'key': 'Parso version',
+          'value': instance_of( str )
+        } )
+      )
     } ) )
   )

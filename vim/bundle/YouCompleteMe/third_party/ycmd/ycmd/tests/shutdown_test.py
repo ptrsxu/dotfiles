@@ -1,4 +1,4 @@
-# Copyright (C) 2016 ycmd contributors
+# Copyright (C) 2020 ycmd contributors
 #
 # This file is part of ycmd.
 #
@@ -15,16 +15,22 @@
 # You should have received a copy of the GNU General Public License
 # along with ycmd.  If not, see <http://www.gnu.org/licenses/>.
 
-from __future__ import unicode_literals
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-# Not installing aliases from python-future; it's unreliable and slow.
-from builtins import *  # noqa
-
 from hamcrest import assert_that, equal_to
+from threading import Event
+import time
+import requests
+import pytest
 
 from ycmd.tests.client_test import Client_test
+from ycmd.utils import StartThread
+
+# Time to wait for all the servers to shutdown. Tweak for the CI environment.
+#
+# NOTE: The timeout is 2 minutes. That is a long time, but the java sub-server
+# (jdt.ls) takes a _long time_ to finally actually shut down. This is because it
+# is based on eclipse, which must do whatever eclipse must do when it shuts down
+# its workspace.
+SUBSERVER_SHUTDOWN_TIMEOUT = 120
 
 
 class Shutdown_test( Client_test ):
@@ -37,18 +43,19 @@ class Shutdown_test( Client_test ):
     response = self.PostRequest( 'shutdown' )
     self.AssertResponse( response )
     assert_that( response.json(), equal_to( True ) )
-    self.AssertServersShutDown( timeout = 5 )
+    self.AssertServersShutDown( timeout = SUBSERVER_SHUTDOWN_TIMEOUT )
     self.AssertLogfilesAreRemoved()
 
 
+  @pytest.mark.valgrind_skip
   @Client_test.CaptureLogfiles
   def FromHandlerWithSubservers_test( self ):
     self.Start()
 
     filetypes = [ 'cs',
                   'go',
+                  'java',
                   'javascript',
-                  'python',
                   'typescript',
                   'rust' ]
     for filetype in filetypes:
@@ -58,7 +65,7 @@ class Shutdown_test( Client_test ):
     response = self.PostRequest( 'shutdown' )
     self.AssertResponse( response )
     assert_that( response.json(), equal_to( True ) )
-    self.AssertServersShutDown( timeout = 5 )
+    self.AssertServersShutDown( timeout = SUBSERVER_SHUTDOWN_TIMEOUT )
     self.AssertLogfilesAreRemoved()
 
 
@@ -67,23 +74,40 @@ class Shutdown_test( Client_test ):
     self.Start( idle_suicide_seconds = 2, check_interval_seconds = 1 )
     self.AssertServersAreRunning()
 
-    self.AssertServersShutDown( timeout = 5 )
+    self.AssertServersShutDown( timeout = SUBSERVER_SHUTDOWN_TIMEOUT )
     self.AssertLogfilesAreRemoved()
 
 
+  @pytest.mark.valgrind_skip
   @Client_test.CaptureLogfiles
   def FromWatchdogWithSubservers_test( self ):
-    self.Start( idle_suicide_seconds = 5, check_interval_seconds = 1 )
+    all_servers_are_running = Event()
 
-    filetypes = [ 'cs',
-                  'go',
-                  'javascript',
-                  'python',
-                  'typescript',
-                  'rust' ]
-    for filetype in filetypes:
-      self.StartSubserverForFiletype( filetype )
-    self.AssertServersAreRunning()
+    def KeepServerAliveInAnotherThread():
+      while not all_servers_are_running.is_set():
+        try:
+          self.GetRequest( 'ready' )
+        except requests.exceptions.ConnectionError:
+          pass
+        finally:
+          time.sleep( 0.1 )
 
-    self.AssertServersShutDown( timeout = 15 )
+    self.Start( idle_suicide_seconds = 2, check_interval_seconds = 1 )
+
+    StartThread( KeepServerAliveInAnotherThread )
+
+    try:
+      filetypes = [ 'cs',
+                    'go',
+                    'java',
+                    'javascript',
+                    'typescript',
+                    'rust' ]
+      for filetype in filetypes:
+        self.StartSubserverForFiletype( filetype )
+      self.AssertServersAreRunning()
+    finally:
+      all_servers_are_running.set()
+
+    self.AssertServersShutDown( timeout = SUBSERVER_SHUTDOWN_TIMEOUT + 10 )
     self.AssertLogfilesAreRemoved()

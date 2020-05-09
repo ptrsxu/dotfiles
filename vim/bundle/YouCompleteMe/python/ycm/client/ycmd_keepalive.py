@@ -15,22 +15,15 @@
 # You should have received a copy of the GNU General Public License
 # along with YouCompleteMe.  If not, see <http://www.gnu.org/licenses/>.
 
-from __future__ import unicode_literals
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-# Not installing aliases from python-future; it's unreliable and slow.
-from builtins import *  # noqa
-
 import time
 from threading import Thread
-from ycm.client.base_request import BaseRequest, HandleServerException
+from ycm.client.base_request import BaseRequest
 
 
 # This class can be used to keep the ycmd server alive for the duration of the
 # life of the client. By default, ycmd shuts down if it doesn't see a request in
 # a while.
-class YcmdKeepalive( object ):
+class YcmdKeepalive:
   def __init__( self, ping_interval_seconds = 60 * 10 ):
     self._keepalive_thread = Thread( target = self._ThreadMain )
     self._keepalive_thread.daemon = True
@@ -45,5 +38,4 @@ class YcmdKeepalive( object ):
     while True:
       time.sleep( self._ping_interval_seconds )
 
-      with HandleServerException( display = False ):
-        BaseRequest.GetDataFromHandler( 'healthy' )
+      BaseRequest().GetDataFromHandler( 'healthy', display_message = False )

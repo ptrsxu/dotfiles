@@ -1,4 +1,4 @@
-# Copyright (C) 2016-2017 ycmd contributors
+# Copyright (C) 2016-2020 ycmd contributors
 #
 # This file is part of ycmd.
 #
@@ -15,16 +15,9 @@
 # You should have received a copy of the GNU General Public License
 # along with ycmd.  If not, see <http://www.gnu.org/licenses/>.
 
-from __future__ import unicode_literals
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-# Not installing aliases from python-future; it's unreliable and slow.
-from builtins import *  # noqa
-
 from base64 import b64decode, b64encode
-from future.utils import native
 from hamcrest import assert_that, empty, equal_to, is_in
+from hmac import compare_digest
 from tempfile import NamedTemporaryFile
 import functools
 import json
@@ -34,15 +27,15 @@ import requests
 import subprocess
 import sys
 import time
+from urllib.parse import urljoin, urlparse
 
-from ycmd.hmac_utils import CreateHmac, CreateRequestHmac, SecureBytesEqual
+from ycmd.hmac_utils import CreateHmac, CreateRequestHmac
 from ycmd.tests import PathToTestFile
 from ycmd.tests.test_utils import BuildRequest
 from ycmd.user_options_store import DefaultOptions
 from ycmd.utils import ( CloseStandardStreams, CreateLogfile,
                          GetUnusedLocalhostPort, ReadFile, RemoveIfExists,
-                         SafePopen, SetEnviron, ToBytes, ToUnicode, urljoin,
-                         urlparse )
+                         SafePopen, ToBytes, ToUnicode )
 
 HEADERS = { 'content-type': 'application/json' }
 HMAC_HEADER = 'x-ycm-hmac'
@@ -52,25 +45,20 @@ PATH_TO_YCMD = os.path.join( DIR_OF_THIS_SCRIPT, '..' )
 LOGFILE_FORMAT = 'server_{port}_{std}_'
 
 
-class Client_test( object ):
-
-  def __init__( self ):
+class Client_test:
+  def setup_method( self ):
     self._location = None
     self._port = None
-    self._hmac_secret = None
     self._servers = []
     self._logfiles = []
     self._options_dict = DefaultOptions()
     self._popen_handle = None
-
-
-  def setUp( self ):
     self._hmac_secret = os.urandom( HMAC_SECRET_LENGTH )
     self._options_dict[ 'hmac_secret' ] = ToUnicode(
       b64encode( self._hmac_secret ) )
 
 
-  def tearDown( self ):
+  def teardown_method( self ):
     for server in self._servers:
       if server.is_running():
         server.terminate()
@@ -81,46 +69,46 @@ class Client_test( object ):
 
   def Start( self, idle_suicide_seconds = 60,
              check_interval_seconds = 60 * 10 ):
-    # The temp options file is deleted by ycmd during startup
+    # The temp options file is deleted by ycmd during startup.
     with NamedTemporaryFile( mode = 'w+', delete = False ) as options_file:
       json.dump( self._options_dict, options_file )
-      options_file.flush()
-      self._port = GetUnusedLocalhostPort()
-      self._location = 'http://127.0.0.1:' + str( self._port )
 
-      # Define environment variable to enable subprocesses coverage. See:
-      # http://coverage.readthedocs.org/en/coverage-4.0.3/subprocess.html
-      env = os.environ.copy()
-      SetEnviron( env, 'COVERAGE_PROCESS_START', '.coveragerc' )
+    self._port = GetUnusedLocalhostPort()
+    self._location = 'http://127.0.0.1:' + str( self._port )
 
-      ycmd_args = [
-        sys.executable,
-        PATH_TO_YCMD,
-        '--port={0}'.format( self._port ),
-        '--options_file={0}'.format( options_file.name ),
-        '--log=debug',
-        '--idle_suicide_seconds={0}'.format( idle_suicide_seconds ),
-        '--check_interval_seconds={0}'.format( check_interval_seconds ),
-      ]
+    # Define environment variable to enable subprocesses coverage. See:
+    # http://coverage.readthedocs.org/en/coverage-4.0.3/subprocess.html
+    env = os.environ.copy()
+    env[ 'COVERAGE_PROCESS_START' ] = '.coveragerc'
 
-      stdout = CreateLogfile(
-          LOGFILE_FORMAT.format( port = self._port, std = 'stdout' ) )
-      stderr = CreateLogfile(
-          LOGFILE_FORMAT.format( port = self._port, std = 'stderr' ) )
-      self._logfiles.extend( [ stdout, stderr ] )
-      ycmd_args.append( '--stdout={0}'.format( stdout ) )
-      ycmd_args.append( '--stderr={0}'.format( stderr ) )
+    ycmd_args = [
+      sys.executable,
+      PATH_TO_YCMD,
+      '--port={0}'.format( self._port ),
+      '--options_file={0}'.format( options_file.name ),
+      '--log=debug',
+      '--idle_suicide_seconds={0}'.format( idle_suicide_seconds ),
+      '--check_interval_seconds={0}'.format( check_interval_seconds ),
+    ]
 
-      self._popen_handle = SafePopen( ycmd_args,
-                                      stdin_windows = subprocess.PIPE,
-                                      stdout = subprocess.PIPE,
-                                      stderr = subprocess.PIPE,
-                                      env = env )
-      self._servers.append( psutil.Process( self._popen_handle.pid ) )
+    stdout = CreateLogfile(
+        LOGFILE_FORMAT.format( port = self._port, std = 'stdout' ) )
+    stderr = CreateLogfile(
+        LOGFILE_FORMAT.format( port = self._port, std = 'stderr' ) )
+    self._logfiles.extend( [ stdout, stderr ] )
+    ycmd_args.append( '--stdout={0}'.format( stdout ) )
+    ycmd_args.append( '--stderr={0}'.format( stderr ) )
 
-      self._WaitUntilReady()
-      extra_conf = PathToTestFile( 'client', '.ycm_extra_conf.py' )
-      self.PostRequest( 'load_extra_conf_file', { 'filepath': extra_conf } )
+    self._popen_handle = SafePopen( ycmd_args,
+                                    stdin_windows = subprocess.PIPE,
+                                    stdout = subprocess.PIPE,
+                                    stderr = subprocess.PIPE,
+                                    env = env )
+    self._servers.append( psutil.Process( self._popen_handle.pid ) )
+
+    self._WaitUntilReady()
+    extra_conf = PathToTestFile( 'client', '.ycm_extra_conf.py' )
+    self.PostRequest( 'load_extra_conf_file', { 'filepath': extra_conf } )
 
 
   def _IsReady( self, filetype = None ):
@@ -130,7 +118,7 @@ class Client_test( object ):
     return response.json()
 
 
-  def _WaitUntilReady( self, filetype = None, timeout = 10 ):
+  def _WaitUntilReady( self, filetype = None, timeout = 60 ):
     expiration = time.time() + timeout
     while True:
       try:
@@ -221,7 +209,7 @@ class Client_test( object ):
 
 
   def _BuildUri( self, handler ):
-    return native( ToBytes( urljoin( self._location, handler ) ) )
+    return ToBytes( urljoin( self._location, handler ) )
 
 
   def _ExtraHeaders( self, method, request_uri, request_body = None ):
@@ -248,7 +236,7 @@ class Client_test( object ):
   def _ContentHmacValid( self, response ):
     our_hmac = CreateHmac( response.content, self._hmac_secret )
     their_hmac = ToBytes( b64decode( response.headers[ HMAC_HEADER ] ) )
-    return SecureBytesEqual( our_hmac, their_hmac )
+    return compare_digest( our_hmac, their_hmac )
 
 
   @staticmethod

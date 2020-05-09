@@ -1,4 +1,4 @@
-// Copyright (C) 2011, 2012 Google Inc.
+// Copyright (C) 2011-2018 ycmd contributors
 //
 // This file is part of ycmd.
 //
@@ -18,15 +18,14 @@
 #ifndef CLANGCOMPLETE_H_WLKDU0ZV
 #define CLANGCOMPLETE_H_WLKDU0ZV
 
-#include "../DLLDefines.h"
-#include "UnsavedFile.h"
 #include "Diagnostic.h"
-#include "TranslationUnitStore.h"
 #include "Documentation.h"
+#include "TranslationUnitStore.h"
+#include "UnsavedFile.h"
 
 #include <string>
 
-typedef struct CXTranslationUnitImpl *CXTranslationUnit;
+using CXTranslationUnit = CXTranslationUnitImpl*;
 
 namespace YouCompleteMe {
 
@@ -34,32 +33,34 @@ class TranslationUnit;
 struct CompletionData;
 struct Location;
 
-typedef std::vector< CompletionData > CompletionDatas;
+using CompletionDatas = std::vector< CompletionData >;
 
 
 // All filename parameters must be absolute paths.
 class ClangCompleter {
 public:
-  YCM_DLL_EXPORT ClangCompleter();
-  YCM_DLL_EXPORT ~ClangCompleter();
+  YCM_EXPORT ClangCompleter();
+  YCM_EXPORT ~ClangCompleter();
   ClangCompleter( const ClangCompleter& ) = delete;
   ClangCompleter& operator=( const ClangCompleter& ) = delete;
 
   bool UpdatingTranslationUnit( const std::string &filename );
 
-  std::vector< Diagnostic > UpdateTranslationUnit(
-    const std::string &filename,
+  YCM_EXPORT std::vector< Diagnostic > UpdateTranslationUnit(
+    const std::string &translation_unit,
     const std::vector< UnsavedFile > &unsaved_files,
     const std::vector< std::string > &flags );
 
-  YCM_DLL_EXPORT std::vector< CompletionData > CandidatesForLocationInFile(
+  YCM_EXPORT std::vector< CompletionData > CandidatesForLocationInFile(
+    const std::string &translation_unit,
     const std::string &filename,
     int line,
     int column,
     const std::vector< UnsavedFile > &unsaved_files,
     const std::vector< std::string > &flags );
 
-  Location GetDeclarationLocation(
+  YCM_EXPORT Location GetDeclarationLocation(
+    const std::string &translation_unit,
     const std::string &filename,
     int line,
     int column,
@@ -67,7 +68,8 @@ public:
     const std::vector< std::string > &flags,
     bool reparse = true );
 
-  YCM_DLL_EXPORT Location GetDefinitionLocation(
+  YCM_EXPORT Location GetDefinitionLocation(
+    const std::string &translation_unit,
     const std::string &filename,
     int line,
     int column,
@@ -75,7 +77,8 @@ public:
     const std::vector< std::string > &flags,
     bool reparse = true );
 
-  std::string GetTypeAtLocation(
+  YCM_EXPORT Location GetDefinitionOrDeclarationLocation(
+    const std::string &translation_unit,
     const std::string &filename,
     int line,
     int column,
@@ -83,7 +86,8 @@ public:
     const std::vector< std::string > &flags,
     bool reparse = true );
 
-  std::string GetEnclosingFunctionAtLocation(
+  YCM_EXPORT std::string GetTypeAtLocation(
+    const std::string &translation_unit,
     const std::string &filename,
     int line,
     int column,
@@ -91,7 +95,8 @@ public:
     const std::vector< std::string > &flags,
     bool reparse = true );
 
-  std::vector< FixIt > GetFixItsForLocationInFile(
+  YCM_EXPORT std::string GetEnclosingFunctionAtLocation(
+    const std::string &translation_unit,
     const std::string &filename,
     int line,
     int column,
@@ -99,7 +104,17 @@ public:
     const std::vector< std::string > &flags,
     bool reparse = true );
 
-  DocumentationData GetDocsForLocationInFile(
+  YCM_EXPORT std::vector< FixIt > GetFixItsForLocationInFile(
+    const std::string &translation_unit,
+    const std::string &filename,
+    int line,
+    int column,
+    const std::vector< UnsavedFile > &unsaved_files,
+    const std::vector< std::string > &flags,
+    bool reparse = true );
+
+  YCM_EXPORT DocumentationData GetDocsForLocationInFile(
+    const std::string &translation_unit,
     const std::string &filename,
     int line,
     int column,

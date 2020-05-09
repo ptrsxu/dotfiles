@@ -1,4 +1,4 @@
-// Copyright (C) 2013 Google Inc.
+// Copyright (C) 2013-2018 ycmd contributors
 //
 // This file is part of ycmd.
 //
@@ -18,13 +18,13 @@
 #ifndef IDENTIFIERDATABASE_H_ZESX3CVR
 #define IDENTIFIERDATABASE_H_ZESX3CVR
 
-#include <unordered_map>
+#include <map>
 #include <memory>
 #include <mutex>
-#include <vector>
-#include <string>
-#include <map>
 #include <set>
+#include <string>
+#include <unordered_map>
+#include <vector>
 
 namespace YouCompleteMe {
 
@@ -34,12 +34,11 @@ class CandidateRepository;
 
 
 // filepath -> identifiers
-typedef std::map< std::string, std::vector< std::string > >
-FilepathToIdentifiers;
+using FilepathToIdentifiers = std::map< std::string,
+                                        std::vector< std::string > >;
 
 // filetype -> (filepath -> identifiers)
-typedef std::map< std::string, FilepathToIdentifiers >
-FiletypeIdentifierMap;
+using FiletypeIdentifierMap = std::map< std::string, FilepathToIdentifiers >;
 
 
 // This class stores the database of identifiers the identifier completer has
@@ -53,23 +52,24 @@ FiletypeIdentifierMap;
 // This class is thread-safe.
 class IdentifierDatabase {
 public:
-  IdentifierDatabase();
+  YCM_EXPORT IdentifierDatabase();
   IdentifierDatabase( const IdentifierDatabase& ) = delete;
   IdentifierDatabase& operator=( const IdentifierDatabase& ) = delete;
 
-  void AddIdentifiers( const FiletypeIdentifierMap &filetype_identifier_map );
+  void AddIdentifiers( FiletypeIdentifierMap&& filetype_identifier_map );
 
   void AddIdentifiers(
-    const std::vector< std::string > &new_candidates,
+    std::vector< std::string >&& new_candidates,
     const std::string &filetype,
     const std::string &filepath );
 
   void ClearCandidatesStoredForFile( const std::string &filetype,
                                      const std::string &filepath );
 
-  void ResultsForQueryAndType( const std::string &query,
-                               const std::string &filetype,
-                               std::vector< Result > &results ) const;
+  std::vector< Result > ResultsForQueryAndType(
+    std::string&& query,
+    const std::string &filetype,
+    const size_t max_results ) const;
 
 private:
   std::set< const Candidate * > &GetCandidateSet(
@@ -77,19 +77,19 @@ private:
     const std::string &filepath );
 
   void AddIdentifiersNoLock(
-    const std::vector< std::string > &new_candidates,
+    std::vector< std::string >&& new_candidates,
     const std::string &filetype,
     const std::string &filepath );
 
 
   // filepath -> *( *candidate )
-  typedef std::unordered_map < std::string,
-          std::shared_ptr< std::set< const Candidate * > > >
-          FilepathToCandidates;
+  using FilepathToCandidates =
+    std::unordered_map < std::string,
+                         std::shared_ptr< std::set< const Candidate * > > >;
 
   // filetype -> *( filepath -> *( *candidate ) )
-  typedef std::unordered_map < std::string,
-          std::shared_ptr< FilepathToCandidates > > FiletypeCandidateMap;
+  using FiletypeCandidateMap =
+    std::unordered_map < std::string, std::shared_ptr< FilepathToCandidates > >;
 
 
   CandidateRepository &candidate_repository_;

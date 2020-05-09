@@ -1,4 +1,4 @@
-// Copyright (C) 2011, 2012 Google Inc.
+// Copyright (C) 2011-2018 ycmd contributors
 //
 // This file is part of ycmd.
 //
@@ -18,108 +18,116 @@
 #include "Candidate.h"
 #include "Result.h"
 
-#include <algorithm>
-#include <locale>
-
-using std::all_of;
-
 namespace YouCompleteMe {
 
-static bool IsPrint( char c ) {
-  return std::isprint( c, std::locale::classic() );
+void Candidate::ComputeCaseSwappedText() {
+  for ( const auto &character : Characters() ) {
+    case_swapped_text_.append( character->SwappedCase() );
+  }
 }
 
 
-static bool IsLower( char c ) {
-  return std::islower( c, std::locale::classic() );
+void Candidate::ComputeWordBoundaryChars() {
+  const CharacterSequence &characters = Characters();
+
+  auto character_pos = characters.begin();
+  if ( character_pos == characters.end() ) {
+    return;
+  }
+
+  const auto &first_character = *character_pos;
+  if ( !first_character->IsPunctuation() ) {
+    word_boundary_chars_.push_back( first_character );
+  }
+
+  auto previous_character_pos = characters.begin();
+  ++character_pos;
+  for ( ; character_pos != characters.end(); ++previous_character_pos,
+                                             ++character_pos ) {
+    const auto &previous_character = *previous_character_pos;
+    const auto &character = *character_pos;
+
+    if ( ( !previous_character->IsUppercase() && character->IsUppercase() ) ||
+         ( previous_character->IsPunctuation() && character->IsLetter() ) ) {
+      word_boundary_chars_.push_back( character );
+    }
+  }
 }
 
 
-bool IsPrintable( const std::string &text ) {
-  return all_of( text.cbegin(), text.cend(), IsPrint );
-}
-
-
-std::string GetWordBoundaryChars( const std::string &text ) {
-  std::string result;
-
-  for ( size_t i = 0; i < text.size(); ++i ) {
-    bool is_first_char_but_not_punctuation = i == 0 && !ispunct( text[ i ] );
-    bool is_good_uppercase = i > 0 &&
-                             IsUppercase( text[ i ] ) &&
-                             !IsUppercase( text[ i - 1 ] );
-    bool is_alpha_after_punctuation = i > 0 &&
-                                      ispunct( text[ i - 1 ] ) &&
-                                      isalpha( text[ i ] );
-
-    if ( is_first_char_but_not_punctuation ||
-         is_good_uppercase ||
-         is_alpha_after_punctuation ) {
-      result.push_back( tolower( text[ i ] ) );
+void Candidate::ComputeTextIsLowercase() {
+  for ( const auto &character : Characters() ) {
+    if ( character->IsUppercase() ) {
+      text_is_lowercase_ = false;
+      return;
     }
   }
 
-  return result;
+  text_is_lowercase_ = true;
 }
 
 
-Bitset LetterBitsetFromString( const std::string &text ) {
-  Bitset letter_bitset;
+Candidate::Candidate( std::string&& text )
+  : Word( std::move( text ) ) {
+  ComputeCaseSwappedText();
+  ComputeWordBoundaryChars();
+  ComputeTextIsLowercase();
+}
 
-  for ( char letter : text ) {
-    int letter_index = IndexForLetter( letter );
 
-    if ( IsInAsciiRange( letter_index ) )
-      letter_bitset.set( letter_index );
+Result Candidate::QueryMatchResult( const Word &query ) const {
+  // Check if the query is a subsequence of the candidate and return a result
+  // accordingly. This is done by simultaneously going through the characters of
+  // the query and the candidate. If both characters match, we move to the next
+  // character in the query and the candidate. Otherwise, we only move to the
+  // next character in the candidate. The matching is a combination of smart
+  // base matching and smart case matching. If there is no character left in the
+  // query, the query is not a subsequence and we return an empty result. If
+  // there is no character left in the candidate, the query is a subsequence and
+  // we return a result with the query, the candidate, the sum of indexes of the
+  // candidate where characters matched, and a boolean that is true if the query
+  // is a prefix of the candidate.
+
+  if ( query.IsEmpty() ) {
+    return Result( this, &query, 0, false );
   }
 
-  return letter_bitset;
-}
+  if ( Length() < query.Length() ) {
+    return Result();
+  }
 
+  size_t query_index = 0;
+  size_t candidate_index = 0;
+  size_t index_sum = 0;
 
-Candidate::Candidate( const std::string &text )
-  :
-  text_( text ),
-  word_boundary_chars_( GetWordBoundaryChars( text ) ),
-  text_is_lowercase_( all_of( text.cbegin(), text.cend(), IsLower ) ),
-  letters_present_( LetterBitsetFromString( text ) ),
-  root_node_( new LetterNode( text ) ) {
-}
+  const CharacterSequence &query_characters = query.Characters();
+  const CharacterSequence &candidate_characters = Characters();
 
+  auto query_character_pos = query_characters.begin();
+  auto candidate_character_pos = candidate_characters.begin();
 
-Result Candidate::QueryMatchResult( const std::string &query,
-                                    bool case_sensitive ) const {
-  LetterNode *node = root_node_.get();
-  int index_sum = 0;
+  for ( ; candidate_character_pos != candidate_characters.end();
+          ++candidate_character_pos, ++candidate_index ) {
 
-  for ( char letter : query ) {
-    const NearestLetterNodeIndices *nearest =
-      node->NearestLetterNodesForLetter( letter );
+    const auto &candidate_character = *candidate_character_pos;
+    const auto &query_character = *query_character_pos;
 
-    if ( !nearest )
-      return Result( false );
+    if ( query_character->MatchesSmart( *candidate_character ) ) {
+      index_sum += candidate_index;
 
-    // When the query letter is uppercase, then we force an uppercase match
-    // but when the query letter is lowercase, then it can match both an
-    // uppercase and a lowercase letter. This is by design and it's much
-    // better than forcing lowercase letter matches.
-    node = NULL;
-    if ( case_sensitive && IsUppercase( letter ) ) {
-      if ( nearest->indexOfFirstUppercaseOccurrence >= 0 )
-        node = ( *root_node_ )[ nearest->indexOfFirstUppercaseOccurrence ];
-    } else {
-      if ( nearest->indexOfFirstOccurrence >= 0 )
-        node = ( *root_node_ )[ nearest->indexOfFirstOccurrence ];
+      ++query_character_pos;
+      if ( query_character_pos == query_characters.end() ) {
+        return Result( this,
+                       &query,
+                       index_sum,
+                       candidate_index == query_index );
+      }
+
+      ++query_index;
     }
-
-    if ( !node )
-      return Result( false );
-
-    index_sum += node->Index();
   }
 
-  return Result( true, &text_, text_is_lowercase_, index_sum,
-                 word_boundary_chars_, query );
+  return Result();
 }
 
 } // namespace YouCompleteMe
