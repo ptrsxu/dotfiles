@@ -8,6 +8,7 @@ apt-get upgrade --yes
 # for basic settings
 ################################################################################
 timedatectl set-timezone Asia/Shanghai
+apt-get install --yes language-pack-zh-hans language-pack-en
 locale-gen zh_CN.UTF-8
 update-locale LANG=zh_CN.UTF-8 LC_MESSAGES=POSIX
 unlink /bin/sh
@@ -87,7 +88,7 @@ apt-get install --yes liblapacke-dev
 # ATTENTION: ubuntu 16.04 uses python3, which may cause vim configuration
 # compatibility error, use vim-nox-py2 instead if vim-gnome is not working.
 # apt-get install --yes vim-gnome ctags cscope global ack-grep
-apt-get install --yes vim-nox-py2
+apt-get install --yes vim-nox
 apt-get install --yes ctags
 apt-get install --yes cscope
 apt-get install --yes global
