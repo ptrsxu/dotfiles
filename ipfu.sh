@@ -255,3 +255,7 @@ apt-get update && apt-get install --yes bazel
 # you may need to monitor your system by sending some email.
 # this is the easiest way.
 apt-get install --yes mailutils
+
+# for remote desktop
+apt-get install remmina remmina-plugin-*
+
