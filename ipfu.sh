@@ -33,6 +33,7 @@ apt-get install --yes ca-certificates gnupg lsof git    # CA & tools
 apt-get install --yes apt-transport-https autojump      # minimal tools
 apt-get isntall --yes curl wget htop nethogs telnet     # minimal tools
 apt-get install --yes zip unzip p7zip-rar p7zip-full    # minimal tools
+apt-get install --yes net-tools
 #
 # echo "source /usr/share/autojump/autojump.bash" >> ~/.profile
 # hostnamectl set-hostname sub.domain.com
