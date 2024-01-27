@@ -6,6 +6,10 @@
 # - `dpkg -L packagename` list package file details
 # - `apt-cache depends packagename` list package dependencies
 # - `apt-cache rdepends packagename` list package reverse dependencies
+#
+# Notice: this script is not for Dockerfile as the steps are splitted for
+#         locating potential bugs. A Dockerfile should be more compact.
+#
 ################################################################################
 apt-get update
 apt-get upgrade --yes
@@ -14,20 +18,23 @@ apt-get upgrade --yes
 ################################################################################
 # for basic settings
 ################################################################################
-timedatectl set-timezone Asia/Shanghai
+# timedatectl set-timezone Asia/Shanghai
+timedatectl set-timezone UTC                            # keep using UTC or GMT
 apt-get install --yes language-pack-zh-hans language-pack-en
 locale-gen zh_CN.UTF-8
 update-locale LANG=en_US.UTF-8 LC_MESSAGES=POSIX
 unlink /bin/sh
 ln -s /bin/bash /bin/sh
 
-apt-get install --yes apt-file                          # search for files within deb packages
-apt-get install --yes pkg-config                        # package configuration tool
+apt-get install --yes apt-file pkg-config lsb-release   # search for files within deb packages
+apt-get install --yes dbus-user-session uidmap          # package configuration tool
 apt-get install --yes fontconfig libfontconfig-dev      # dealing with fonts
-apt-get install --yes ca-certificates gnupg lsof git    # common CA certificates
+apt-get install --yes ca-certificates gnupg lsof git    # CA & tools
+apt-get install --yes apt-transport-https autojump      # minimal tools
 apt-get isntall --yes curl wget htop nethogs telnet     # minimal tools
 apt-get install --yes zip unzip p7zip-rar p7zip-full    # minimal tools
-
+#
+# echo "source /usr/share/autojump/autojump.bash" >> ~/.profile
 # hostnamectl set-hostname sub.domain.com
 
 
