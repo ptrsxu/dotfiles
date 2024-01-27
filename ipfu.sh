@@ -27,7 +27,7 @@ unlink /bin/sh
 ln -s /bin/bash /bin/sh
 
 apt-get install --yes apt-file pkg-config lsb-release   # search for files within deb packages
-apt-get install --yes dbus-user-session uidmap          # package configuration tool
+apt-get install --yes dbus-user-session uidmap acl      # package configuration tool
 apt-get install --yes fontconfig libfontconfig-dev      # dealing with fonts
 apt-get install --yes ca-certificates gnupg lsof git    # CA & tools
 apt-get install --yes apt-transport-https autojump      # minimal tools
