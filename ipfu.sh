@@ -244,6 +244,11 @@ git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 curl -L https://raw.githubusercontent.com/dreamsofcode-io/tmux/main/tmux.conf -o ~/.tmux.conf
 # run `tmux` and `tmux source ~/.tmux.conf` and run `<leader> I` to install the plugins
 
+# install starship
+curl -sS https://starship.rs/install.sh | sh
+echo 'eval "$(starship init bash)"' >> ~/.bashrc
+echo 'eval "$(starship init zsh)"' >> ~/.zshrc
+
 # neovim ppa is not officially maintained, install neovim with brew
 brew install neovim
 # install NvChad, refer to <https://nvchad.com/docs/quickstart/install>
