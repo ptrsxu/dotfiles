@@ -181,6 +181,12 @@ apt-get install --yes sqlite3 libsqlite3-dev
 # apt-get install --yes redis-server
 # apt-get install --yes postgresql libpq-dev mysql-client libmysqlclient-dev mysql-server
 
+
+# you may need to monitor your system by sending some email.
+# this is the easiest way.
+apt-get install --yes mailutils
+
+
 # install JetBrains Mono Nerd Fonts
 # check <https://www.jetbrains.com/lp/mono/#how-to-install> 
 # and <https://github.com/JetBrains/JetBrainsMono>
@@ -192,6 +198,31 @@ curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | sudo gpg 
 NODE_MAJOR=20
 echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" | sudo tee /etc/apt/sources.list.d/nodesource.list
 apt-get update && apt-get install --yes nodejs
+
+
+# install oracle jdk 21
+apt-get purge openjdk*
+wget https://download.oracle.com/java/21/latest/jdk-21_linux-x64_bin.deb \
+    && dpkg -i jdk-21_linux-x64_bin.deb \
+    && rm jdk-21_linux-x64_bin.deb
+
+
+################################################################################
+# switch to a non-root user from here.
+################################################################################
+# install oh-my-bash
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/ohmybash/oh-my-bash/master/tools/install.sh)"
+# install oh-my-zsh
+# change the theme to dst in ~/.zshrc: ZSH_THEME="dst"
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+
+
+# use homebrew
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+(echo; echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"') >> ~/.bashrc
+# for zsh
+# (echo; echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"') >> ~/.zshrc
+
 
 # for rust
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
@@ -215,45 +246,26 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 # # For compiling to WebAssembly through Rust's native backend: rustup target add wasm32-unknown-unknown
 # cargo install diesel_cli --no-default-features --features "postgres sqlite mysql"
 
-# install oracle jdk 21
-apt-get purge openjdk*
-wget https://download.oracle.com/java/21/latest/jdk-21_linux-x64_bin.deb \
-    && dpkg -i jdk-21_linux-x64_bin.deb \
-    && rm jdk-21_linux-x64_bin.deb
-
-# you may need to monitor your system by sending some email.
-# this is the easiest way.
-apt-get install --yes mailutils
-
-# install oh-my-bash
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/ohmybash/oh-my-bash/master/tools/install.sh)"
-
-# install oh-my-zsh
-# change the theme to dst in ~/.zshrc: ZSH_THEME="dst"
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-
-# use homebrew
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-(echo; echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"') >> /home/xp/.bashrc
-
-# for zsh
-# (echo; echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"') >> /home/xp/.zshrc
 
 # for bazel
 brew install bazelisk
+
 
 # for node version management(not the system level node)
 brew install nvm
 nvm install --lts
 
+
 # install bb
 brew install borkdude/brew/babashka
 
-# isntall and setup tmux, refer to <https://github.com/tmux-plugins/tpm>
+
+# install and setup tmux, refer to <https://github.com/tmux-plugins/tpm>
 brew install tmux
 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 curl -L https://raw.githubusercontent.com/dreamsofcode-io/tmux/main/tmux.conf -o ~/.tmux.conf
 # run `tmux` and `tmux source ~/.tmux.conf` and run `<leader> I` to install the plugins
+
 
 # install starship
 curl -sS https://starship.rs/install.sh | sh
@@ -261,9 +273,42 @@ echo 'eval "$(starship init bash)"' >> ~/.bashrc
 # for zsh
 # echo 'eval "$(starship init zsh)"' >> ~/.zshrc
 
+
 # neovim ppa is not officially maintained, install neovim with brew
 brew install neovim
 # install NvChad, refer to <https://nvchad.com/docs/quickstart/install>
 # rm -rf ~/.local/share/{lunarvim,nvim} ~/.config/nvim
 git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1 && nvim # press y
 # go to nvim and use MasonInstall to install language supports(rust-analyzer, codelldb...).
+
+
+# install conda
+# Install our public GPG key to trusted store and check if fingerprint is correct.
+curl https://repo.anaconda.com/pkgs/misc/gpgkeys/anaconda.asc | gpg --dearmor > conda.gpg
+sudo install -o root -g root -m 644 conda.gpg /usr/share/keyrings/conda-archive-keyring.gpg
+gpg --keyring /usr/share/keyrings/conda-archive-keyring.gpg --no-default-keyring --fingerprint 34161F5BF5EB1D4BFBBB8F0A8AEB4F8B29D82806
+# Add our Debian repo
+sudo tee -a /etc/apt/sources.list.d/conda.list > /dev/null << EOF
+deb [arch=amd64 signed-by=/usr/share/keyrings/conda-archive-keyring.gpg] https://repo.anaconda.com/pkgs/misc/debrepo/conda stable main
+EOF
+# or
+# echo "deb [arch=amd64 signed-by=/usr/share/keyrings/conda-archive-keyring.gpg] https://repo.anaconda.com/pkgs/misc/debrepo/conda stable main" | sudo tee -a /etc/apt/sources.list.d/conda.list
+sudo apt-get update
+sudo apt-get install --yes conda
+sudo tee -a /opt/conda/.condarc > /dev/null << EOF
+channels:
+  - defaults
+pkg_dirs:
+  - /data1/labs/conda/pkgs
+envs_dirs:
+  - /data1/labs/conda/envs
+EOF
+sudo useradd -d /data1/labs/conda -s /usr/sbin/nologin conda
+sudo chown -R conda:conda /data1/labs/conda
+sudo chown -R conda:conda /opt/conda
+sudo chmod -R g+w /opt/conda
+sudo usermod -aG conda ${USER}                      # needs to re-login
+source /opt/conda/etc/profile.d/conda.sh
+echo "source /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc
+# fro zsh
+# echo "source /opt/conda/etc/profile.d/conda.sh" >> ~/.zshrc
