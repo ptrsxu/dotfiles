@@ -225,8 +225,19 @@ wget https://download.oracle.com/java/21/latest/jdk-21_linux-x64_bin.deb \
 # this is the easiest way.
 apt-get install --yes mailutils
 
+# install oh-my-bash
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/ohmybash/oh-my-bash/master/tools/install.sh)"
+
+# install oh-my-zsh
+# change the theme to dst in ~/.zshrc: ZSH_THEME="dst"
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+
 # use homebrew
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+(echo; echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"') >> /home/xp/.bashrc
+
+# for zsh
+# (echo; echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"') >> /home/xp/.zshrc
 
 # for bazel
 brew install bazelisk
@@ -247,11 +258,12 @@ curl -L https://raw.githubusercontent.com/dreamsofcode-io/tmux/main/tmux.conf -o
 # install starship
 curl -sS https://starship.rs/install.sh | sh
 echo 'eval "$(starship init bash)"' >> ~/.bashrc
-echo 'eval "$(starship init zsh)"' >> ~/.zshrc
+# for zsh
+# echo 'eval "$(starship init zsh)"' >> ~/.zshrc
 
 # neovim ppa is not officially maintained, install neovim with brew
 brew install neovim
 # install NvChad, refer to <https://nvchad.com/docs/quickstart/install>
 # rm -rf ~/.local/share/{lunarvim,nvim} ~/.config/nvim
 git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1 && nvim # press y
-# go to nvim and use MasonInstall to install language supports.
+# go to nvim and use MasonInstall to install language supports(rust-analyzer, codelldb...).
