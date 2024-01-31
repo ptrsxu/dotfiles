@@ -308,6 +308,7 @@ EOF
 sudo useradd -d /data1/labs/conda -s /usr/sbin/nologin conda
 sudo chown -R conda:conda /data1/labs/conda
 sudo chown -R conda:conda /opt/conda
+sudo chmod -R g+w /data1/labs/conda
 sudo chmod -R g+w /opt/conda
 sudo usermod -aG conda ${USER}                      # needs to re-login
 source /opt/conda/etc/profile.d/conda.sh
