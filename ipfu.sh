@@ -131,7 +131,7 @@ apt-get install --yes libglfw3-dev
 # for basic language support
 ################################################################################
 # for python3 and setup python to python3
-apt-get install python3 python3-pip python3-dev python3-venv
+apt-get install --yes python3 python3-pip python3-dev python3-venv
 # 3.10 default for ubuntu 22.04
 update-alternatives --install /usr/bin/python python /usr/bin/python3 10
 
