@@ -162,7 +162,6 @@ apt-get install --yes libglu1-mesa-dev
 
 # for web
 # apt-get install --yes nginx
-apt-get install --yes w3m
 
 # for better shell ops
 apt-get install --yes zsh zsh-dev
