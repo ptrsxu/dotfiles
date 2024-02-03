@@ -228,6 +228,7 @@ eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
 # for rust
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+source "$HOME/.cargo/env"
 # curl -sSf https://static.rust-lang.org/rustup.sh | sh
 # this may need some interaction with the terminal: 
 #     /usr/local/lib/rustlib/uninstall.sh
