@@ -215,7 +215,7 @@ wget https://download.oracle.com/java/21/latest/jdk-21_linux-x64_bin.deb \
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/ohmybash/oh-my-bash/master/tools/install.sh)"
 # install oh-my-zsh
 # change the theme to dst in ~/.zshrc: ZSH_THEME="dst"
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+# sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
 
 # use homebrew
