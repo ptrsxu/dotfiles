@@ -311,9 +311,9 @@ sudo tee -a /opt/conda/.condarc > /dev/null << EOF
 channels:
   - defaults
 pkg_dirs:
-  - /data/disk1/labs/conda/pkgs
+  - /data/disk1/conda/pkgs
 envs_dirs:
-  - /data/disk1/labs/conda/envs
+  - /data/disk1/conda/envs
 EOF
 sudo useradd -d /data/disk1/labs/conda -s /usr/sbin/nologin conda
 sudo mkdir -p /data/disk1/${USER}
