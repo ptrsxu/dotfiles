@@ -316,6 +316,7 @@ envs_dirs:
   - /data/disk1/labs/conda/envs
 EOF
 sudo useradd -d /data/disk1/labs/conda -s /usr/sbin/nologin conda
+sudo mkdir -p /data/disk1/labs/conda
 sudo chown -R conda:conda /data/disk1/labs/conda
 sudo chown -R conda:conda /opt/conda
 sudo chmod -R g+w /data/disk1/labs/conda
