@@ -310,7 +310,7 @@ sudo apt-get install --yes conda
 sudo tee -a /opt/conda/.condarc > /dev/null << EOF
 channels:
   - defaults
-pkg_dirs:
+pkgs_dirs:
   - /data/disk1/conda/pkgs
 envs_dirs:
   - /data/disk1/conda/envs
