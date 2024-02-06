@@ -316,8 +316,6 @@ envs_dirs:
   - /data/disk1/conda/envs
 EOF
 sudo useradd -d /data/disk1/labs/conda -s /usr/sbin/nologin conda
-sudo mkdir -p /data/disk1/${USER}
-sudo chown -R ${USER} /data/disk1/${USER}
 sudo mkdir -p /data/disk1/conda/{envs,pkgs}
 sudo chown -R conda:conda /data/disk1/conda
 sudo chown -R conda:conda /opt/conda
@@ -328,3 +326,6 @@ source /opt/conda/etc/profile.d/conda.sh
 echo "source /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc
 # fro zsh
 # echo "source /opt/conda/etc/profile.d/conda.sh" >> ~/.zshrc
+
+sudo mkdir -p /data/disk1/${USER}
+sudo chown -R ${USER} /data/disk1/${USER}
