@@ -316,10 +316,10 @@ envs_dirs:
   - /data/disk1/labs/conda/envs
 EOF
 sudo useradd -d /data/disk1/labs/conda -s /usr/sbin/nologin conda
-sudo mkdir -p /data/disk1/labs/conda
-sudo chown -R conda:conda /data/disk1/labs/conda
+sudo mkdir -p /data/disk1/{conda,$USER}
+sudo chown -R conda:conda /data/disk1/conda
 sudo chown -R conda:conda /opt/conda
-sudo chmod -R g+w /data/disk1/labs/conda
+sudo chmod -R g+w /data/disk1/conda
 sudo chmod -R g+w /opt/conda
 sudo usermod -aG conda ${USER}                      # needs to re-login
 source /opt/conda/etc/profile.d/conda.sh
