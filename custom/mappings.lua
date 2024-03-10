@@ -22,9 +22,13 @@ M.general = {
 -- more keybinds!
 M.dap = {
   n = {
-    ["<leader>db"] = {
+    ["<leader>dt"] = {
       "<cmd> DapToggleBreakpoint <CR>",
-      "Toggle breakpoint"
+      "Toggle Breakpoint"
+    },
+    ["<leader>dc"] = {
+      "<cmd> DapContinue <CR>",
+      "Continue"
     },
     ["<leader>dus"] = {
       function ()
@@ -32,7 +36,7 @@ M.dap = {
         local sidebar = widgets.sidebar(widgets.scopes);
         sidebar.open();
       end,
-      "Open debugging sidebar"
+      "Open Debugging Sidebar"
     },
   }
 }

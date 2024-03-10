@@ -12,6 +12,18 @@ M.treesitter = {
     "c",
     "markdown",
     "markdown_inline",
+    "astro",
+    "bash",
+    "cmake",
+    "cuda",
+    "go",
+    "rust",
+    "python",
+    "sql",
+    "yaml",
+    "xml",
+    "toml",
+    "json"
   },
   indent = {
     enable = true,
@@ -40,6 +52,10 @@ M.mason = {
 
     -- shell stuff
     "shfmt",
+
+    -- rust stuff
+    "rust-analyzer",
+    "codelldb"
   },
 }
 
