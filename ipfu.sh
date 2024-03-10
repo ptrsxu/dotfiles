@@ -289,16 +289,11 @@ echo 'eval "$(starship init bash)"' >> ~/.bashrc
 # neovim ppa is not officially maintained, install neovim with brew
 brew install neovim
 # install NvChad, refer to <https://nvchad.com/docs/quickstart/install>
-# rm -rf ~/.local/share/{lunarvim,nvim} ~/.config/nvim
+rm -rf ~/.local/share/{lunarvim,nvim} ~/.config/nvim
 git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1
 NVCHAD_EXAMPLE_CONFIG=y nvim --headless "+q"
-# go to nvim and use MasonInstall to install language supports(rust-analyzer, codelldb...).
-# :TSInstall astro bash cmake cuda go rust python sql yaml xml toml json
-# :TSInstallInfo
-# :LspInfo
-# :MasonInstall rust-analyzer codelldb
 #
-# replace `~/.config/nvim/lua/custom` with `custom/`
+# THEN REPLACE `~/.config/nvim/lua/custom` with `custom/`
 
 # install conda
 # Install our public GPG key to trusted store and check if fingerprint is correct.
