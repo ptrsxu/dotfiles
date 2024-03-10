@@ -294,6 +294,9 @@ git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1
 NVCHAD_EXAMPLE_CONFIG=y nvim --headless "+q"
 #
 # THEN REPLACE `~/.config/nvim/lua/custom` with `custom/`
+#
+# check with `:TSModuleInfo`, `:LspInfo`, `:Mason`
+# update with `:NvChadUpdate`, `:TSUpdate`, `:MasonUpdate`, `:checkhealth rustaceanvim` (using rustaceanvim instead of rust-tools)
 
 # install conda
 # Install our public GPG key to trusted store and check if fingerprint is correct.
