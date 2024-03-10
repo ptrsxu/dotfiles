@@ -55,7 +55,14 @@ M.mason = {
 
     -- rust stuff
     "rust-analyzer",
-    "codelldb"
+    "codelldb",
+
+    -- python stuff
+    "pyright",
+    "black",
+    "debugpy",
+    "mypy",
+    "ruff-lsp",
   },
 }
 

@@ -47,6 +47,29 @@ local plugins = {
     end,
   },
 
+  -- for python
+  {
+    "mfussenegger/nvim-dap-python",
+    ft = "python",
+    dependencies = {
+      "mfussenegger/nvim-dap",
+      "rcarriga/nvim-dap-ui",
+    },
+    config = function(_, opts)
+      local path = "~/.local/share/nvim/mason/packages/debugpy/venv/bin/python"
+      require("dap-python").setup(path)
+      require("core.utils").load_mappings("dap_python")
+    end,
+  },
+  {
+    "nvimtools/none-ls.nvim",
+    ft = {"python"},
+    opts = function()
+      return require "custom.configs.null-ls"
+    end,
+  },
+
+  -- for rust
   {
     "mrcjkb/rustaceanvim",
     version = "^4",
@@ -74,24 +97,28 @@ local plugins = {
   },
   {
     "mfussenegger/nvim-dap",
-    dependencies = "rcarriga/nvim-dap-ui",
-    init = function()
+    config = function(_, opts)
       require("core.utils").load_mappings("dap")
     end,
+  },
+  {
+    "rcarriga/nvim-dap-ui",
+    dependencies = "mfussenegger/nvim-dap",
     config = function ()
       local dap, dapui = require("dap"), require("dapui")
+      dapui.setup()
       dap.listeners.before.attach.dapui_config = function()
         dapui.open()
       end
       dap.listeners.before.launch.dapui_config = function()
         dapui.open()
       end
-      dap.listeners.before.event_terminated.dapui_config = function()
-        dapui.close()
-      end
-      dap.listeners.before.event_exited.dapui_config = function()
-        dapui.close()
-      end
+      -- dap.listeners.before.event_terminated.dapui_config = function()
+      --   dapui.close()
+      -- end
+      -- dap.listeners.before.event_exited.dapui_config = function()
+      --   dapui.close()
+      -- end
     end,
   },
   {

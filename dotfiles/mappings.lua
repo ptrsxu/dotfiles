@@ -21,6 +21,7 @@ M.general = {
 
 -- more keybinds!
 M.dap = {
+  plugin = true,
   n = {
     ["<leader>dt"] = {
       "<cmd> DapToggleBreakpoint <CR>",
@@ -28,16 +29,42 @@ M.dap = {
     },
     ["<leader>dc"] = {
       "<cmd> DapContinue <CR>",
-      "Continue"
+      "Dap Continue"
     },
-    ["<leader>dus"] = {
-      function ()
-        local widgets = require('dap.ui.widgets');
-        local sidebar = widgets.sidebar(widgets.scopes);
-        sidebar.open();
+    ["<leader>di"] = {
+      "<cmd> DapStepInto <CR>",
+      "DapStepInto"
+    },
+    ["<leader>do"] = {
+      "<cmd> DapStepOut <CR>",
+      "DapStepOut"
+    },
+    ["<leader>dn"] = {
+      "<cmd> DapStepOver <CR>",
+      "DapStepOver"
+    },
+    ["<leader>dr"] = {
+      "<cmd> RustLsp debuggables <CR>",
+      "Debug Ruuning Rust"
+    },
+    ["<leader>ds"] = {
+      function()
+        require("dapui").toggle()
       end,
       "Open Debugging Sidebar"
     },
+  }
+}
+
+M.dap_python = {
+  plugin = true,
+  n = {
+    ["<leader>dpr"] = {
+      function()
+        require('dap-python').test_method()
+      end,
+      "Debug Running Python"
+    }
   }
 }
 
