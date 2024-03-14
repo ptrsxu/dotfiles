@@ -18,6 +18,13 @@ local plugins = {
     "williamboman/mason.nvim",
     opts = overrides.mason
   },
+  {
+    "williamboman/mason-lspconfig.nvim",
+    config = function (_, opts)
+      require("mason-lspconfig").setup()
+    end
+  },
+
 
   {
     "nvim-treesitter/nvim-treesitter",
@@ -84,6 +91,23 @@ local plugins = {
       return require "custom.configs.null-ls"
     end,
   },
+
+  -- for go
+  {
+    "ray-x/go.nvim",
+    dependencies = {  -- optional packages
+      "ray-x/guihua.lua",
+      "neovim/nvim-lspconfig",
+      "nvim-treesitter/nvim-treesitter",
+    },
+    config = function()
+      require("go").setup()
+    end,
+    event = {"CmdlineEnter"},
+    ft = {"go", 'gomod'},
+    build = ':lua require("go.install").update_all_sync()'
+  },
+
 
   -- for rust
   {
