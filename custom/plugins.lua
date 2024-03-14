@@ -22,6 +22,22 @@ local plugins = {
   {
     "nvim-treesitter/nvim-treesitter",
     opts = overrides.treesitter,
+    dependencies = {
+      "nvim-treesitter/nvim-treesitter-textobjects",
+      {
+        "nvim-treesitter/nvim-treesitter-context",
+        config = function()
+          require "custom.configs.treesitter-context"
+        end,
+      },
+      {
+        "abecodes/tabout.nvim",
+        event = "InsertEnter",
+        config = function()
+          require "custom.configs.tabout"
+        end,
+      },
+    },
   },
 
   {
