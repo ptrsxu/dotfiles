@@ -233,7 +233,6 @@ source "$HOME/.cargo/env"
 # this may need some interaction with the terminal: 
 #     /usr/local/lib/rustlib/uninstall.sh
 #     curl https://sh.rustup.rs -sSf | sh
-# cargo install racer
 # cargo install rustfmt
 # cargo install bindgen
 # cargo install cargo-edit
@@ -290,7 +289,7 @@ echo 'eval "$(starship init bash)"' >> ~/.bashrc
 brew install neovim
 # install NvChad, refer to <https://nvchad.com/docs/quickstart/install>
 rm -rf ~/.local/share/{lunarvim,nvim} ~/.config/nvim
-git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1
+git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1 -b v2.0
 NVCHAD_EXAMPLE_CONFIG=y nvim --headless "+q"
 #
 # THEN REPLACE `~/.config/nvim/lua/custom` with `custom/`
@@ -298,7 +297,17 @@ NVCHAD_EXAMPLE_CONFIG=y nvim --headless "+q"
 # check with `:TSModuleInfo`, `:LspInfo`, `:Mason`
 # update with `:NvChadUpdate`, `:TSUpdate`, `:MasonUpdate`, `:checkhealth rustaceanvim` (using rustaceanvim instead of rust-tools)
 
+# nvim configure can also be installed with v2.5 version, just run:
+# `git clone https://github.com/ptrsxu/nvim ~/.config/nvim`
+# start vim, wait for the installation and run `:MasonInstallAll` 
+
+
 # install conda
+#
+# NOTICE: this is not available on "ARM LINUX"(uname -m: aarch64)
+# run `wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-aarch64.sh`
+# to get the latest aarch64 bin version, and install it manually.
+#
 # Install our public GPG key to trusted store and check if fingerprint is correct.
 curl https://repo.anaconda.com/pkgs/misc/gpgkeys/anaconda.asc | gpg --dearmor > conda.gpg
 sudo install -o root -g root -m 644 conda.gpg /usr/share/keyrings/conda-archive-keyring.gpg
