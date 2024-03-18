@@ -274,7 +274,7 @@ brew install borkdude/brew/babashka
 # install and setup tmux, refer to <https://github.com/tmux-plugins/tpm>
 brew install tmux
 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
-curl -L https://raw.githubusercontent.com/dreamsofcode-io/tmux/main/tmux.conf -o ~/.tmux.conf
+curl -L https://raw.githubusercontent.com/ptrsxu/dotfiles/master/tmux.conf -o ~/.tmux.conf
 # run `tmux` and `tmux source ~/.tmux.conf` and run `<leader> I` to install the plugins
 
 
