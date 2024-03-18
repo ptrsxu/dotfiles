@@ -280,9 +280,13 @@ curl -L https://raw.githubusercontent.com/dreamsofcode-io/tmux/main/tmux.conf -o
 
 # install starship
 curl -sS https://starship.rs/install.sh | sh
+eval "$(starship init bash)"
 echo 'eval "$(starship init bash)"' >> ~/.bashrc
 # for zsh
+eval "$(starship init zsh)"
 # echo 'eval "$(starship init zsh)"' >> ~/.zshrc
+starship preset gruvbox-rainbow -o ~/.config/starship.toml
+
 
 
 # neovim ppa is not officially maintained, install neovim with brew
