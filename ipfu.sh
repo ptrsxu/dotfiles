@@ -302,8 +302,8 @@ NVCHAD_EXAMPLE_CONFIG=y nvim --headless "+q"
 # update with `:NvChadUpdate`, `:TSUpdate`, `:MasonUpdate`, `:checkhealth rustaceanvim` (using rustaceanvim instead of rust-tools)
 
 # nvim configure can also be installed with v2.5 version, just run:
-# `git clone https://github.com/ptrsxu/nvim ~/.config/nvim`
-# start vim, wait for the installation and run `:MasonInstallAll` 
+# `git clone https://github.com/ptrsxu/nvim ~/.config/nvim -b inuse`
+# start nvim, wait for the installation and run `:MasonInstallAll` 
 
 
 # install conda
