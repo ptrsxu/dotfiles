@@ -208,7 +208,7 @@ wget https://download.oracle.com/java/21/latest/jdk-21_linux-x64_bin.deb \
     && rm jdk-21_linux-x64_bin.deb
 
 # lua for some neovim plugins
-apt-get install luarocks luajit libluabind-dev
+apt-get install luarocks luajit libluabind-dev liblua5.1-dev
 
 ################################################################################
 # switch to a non-root user from here.
