@@ -302,6 +302,9 @@ NVCHAD_EXAMPLE_CONFIG=y nvim --headless "+q"
 # check with `:TSModuleInfo`, `:LspInfo`, `:Mason`
 # update with `:NvChadUpdate`, `:TSUpdate`, `:MasonUpdate`, `:checkhealth rustaceanvim` (using rustaceanvim instead of rust-tools)
 
+# rest.nvim relies on luarocks, run below cmd if luarocks is not auto built:
+# :Lazy build luarocks.nvim
+
 # nvim configure can also be installed with v2.5 version, just run:
 # `git clone https://github.com/ptrsxu/nvim ~/.config/nvim -b inuse`
 # start nvim, wait for the installation and run `:MasonInstallAll` 
