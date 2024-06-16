@@ -287,7 +287,8 @@ echo 'eval "$(starship init bash)"' >> ~/.bashrc
 # echo 'eval "$(starship init zsh)"' >> ~/.zshrc
 starship preset gruvbox-rainbow -o ~/.config/starship.toml
 
-brew install lua luarocks
+brew install lua luarocks luajit
+# or apt install liblua5.1-0-dev
 
 # neovim ppa is not officially maintained, install neovim with brew
 brew install neovim
