@@ -207,6 +207,8 @@ wget https://download.oracle.com/java/21/latest/jdk-21_linux-x64_bin.deb \
     && dpkg -i jdk-21_linux-x64_bin.deb \
     && rm jdk-21_linux-x64_bin.deb
 
+# lua for some neovim plugins
+apt-get install luarocks luajit libluabind-dev
 
 ################################################################################
 # switch to a non-root user from here.
@@ -287,7 +289,9 @@ echo 'eval "$(starship init bash)"' >> ~/.bashrc
 # echo 'eval "$(starship init zsh)"' >> ~/.zshrc
 starship preset gruvbox-rainbow -o ~/.config/starship.toml
 
-brew install lua luarocks luajit
+
+
+# brew install lua luarocks luajit
 # or apt install liblua5.1-0-dev
 
 # neovim ppa is not officially maintained, install neovim with brew
