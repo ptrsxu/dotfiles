@@ -306,8 +306,11 @@ NVCHAD_EXAMPLE_CONFIG=y nvim --headless "+q"
 # check with `:TSModuleInfo`, `:LspInfo`, `:Mason`
 # update with `:NvChadUpdate`, `:TSUpdate`, `:MasonUpdate`, `:checkhealth rustaceanvim` (using rustaceanvim instead of rust-tools)
 
+# for rest.nvim plugin
 # rest.nvim relies on luarocks, run below cmd if luarocks is not auto built:
 # :Lazy build luarocks.nvim
+sudo apt-get install libcurl4-openssl-dev
+sudo ln -s /usr/include/x86_64-linux-gnu/curl/ /usr/include/curl
 
 # nvim configure can also be installed with v2.5 version, just run:
 # `git clone https://github.com/ptrsxu/nvim ~/.config/nvim -b inuse`
