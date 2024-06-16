@@ -34,7 +34,7 @@ apt-get install --yes ca-certificates gnupg lsof git    # CA & tools
 apt-get install --yes apt-transport-https autojump      # minimal tools
 apt-get isntall --yes curl wget htop nethogs telnet     # minimal tools
 apt-get install --yes zip unzip p7zip-rar p7zip-full    # minimal tools
-apt-get install --yes hwinfo hardinfo
+apt-get install --yes hwinfo hardinfo jq
 apt-get install --yes net-tools util-linux coreutils    # ifconfig, lscpu, nproc etc.
 #
 # echo "source /usr/share/autojump/autojump.bash" >> ~/.profile
@@ -244,6 +244,10 @@ source "$HOME/.cargo/env"
 # cargo install cargo-web
 # cargo install cargo-tree
 # cargo install cargo-tally
+# cargo install cargo-deny --locked
+# cargo install typos-cli
+# cargo install git-cliff
+# cargo install cargo-nextest --locked
 # cargo install cargo-sls-distribution
 # # For compiling to asmjs through Emscripten: rustup target add asmjs-unknown-emscripten
 # # For compiling to WebAssembly through Emscripten: rustup target add wasm32-unknown-emscripten
