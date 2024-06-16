@@ -258,6 +258,8 @@ source "$HOME/.cargo/env"
 # for bazel
 brew install bazelisk
 
+# for golang
+brew install golang
 
 # for node version management(not the system level node)
 brew install nvm
