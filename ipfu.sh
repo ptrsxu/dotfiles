@@ -231,6 +231,8 @@ eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 # for rust
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 source "$HOME/.cargo/env"
+rustup toolchain add nightly
+rustup default nightly
 # curl -sSf https://static.rust-lang.org/rustup.sh | sh
 # this may need some interaction with the terminal: 
 #     /usr/local/lib/rustlib/uninstall.sh
@@ -320,6 +322,7 @@ NVCHAD_EXAMPLE_CONFIG=y nvim --headless "+q"
 # for rest.nvim plugin
 # rest.nvim relies on luarocks, run below cmd if luarocks is not auto built:
 # :Lazy build luarocks.nvim
+# :RocksInstall lua-curl nvim-nio mimetypes xml2lua
 sudo apt-get install libcurl4-openssl-dev --yes
 sudo ln -s /usr/include/x86_64-linux-gnu/curl/ /usr/include/curl
 
