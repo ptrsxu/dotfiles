@@ -301,7 +301,12 @@ starship preset gruvbox-rainbow -o ~/.config/starship.toml
 # or apt install liblua5.1-0-dev
 
 # neovim ppa is not officially maintained, install neovim with brew
-brew install neovim
+# brew install neovim
+wget https://github.com/neovim/neovim/releases/download/nightly/nvim-linux64.tar.gz
+tar xvzf nvim-linux64.tar.gz
+sudo mv nvim-linux64 /usr/local/
+sudo ln -s /usr/local/nvim-linux64/bin/nvim  /usr/local/bin/nvim
+rm -rf nvim-linux64.tar.gz
 # install NvChad, refer to <https://nvchad.com/docs/quickstart/install>
 rm -rf ~/.local/share/{lunarvim,nvim} ~/.config/nvim
 git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1 -b v2.0
