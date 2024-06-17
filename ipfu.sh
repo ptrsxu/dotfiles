@@ -208,7 +208,7 @@ wget https://download.oracle.com/java/21/latest/jdk-21_linux-x64_bin.deb \
     && rm jdk-21_linux-x64_bin.deb
 
 # lua for some neovim plugins
-apt-get install luarocks luajit libluabind-dev liblua5.1-dev
+apt-get install luarocks luajit libluabind-dev liblua5.1-dev --yes
 
 ################################################################################
 # switch to a non-root user from here.
@@ -320,7 +320,7 @@ NVCHAD_EXAMPLE_CONFIG=y nvim --headless "+q"
 # for rest.nvim plugin
 # rest.nvim relies on luarocks, run below cmd if luarocks is not auto built:
 # :Lazy build luarocks.nvim
-sudo apt-get install libcurl4-openssl-dev
+sudo apt-get install libcurl4-openssl-dev --yes
 sudo ln -s /usr/include/x86_64-linux-gnu/curl/ /usr/include/curl
 
 # nvim configure can also be installed with v2.5 version, just run:
