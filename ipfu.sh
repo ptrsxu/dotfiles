@@ -323,6 +323,9 @@ NVCHAD_EXAMPLE_CONFIG=y nvim --headless "+q"
 # rest.nvim relies on luarocks, run below cmd if luarocks is not auto built:
 # :Lazy build luarocks.nvim
 # :RocksInstall lua-curl nvim-nio mimetypes xml2lua
+#
+# modify `~/.local/share/nvim/lazy/rest.nvim/lua/rest-nvim/utils.lua`
+# regtype="c" to regtype="V" if there is a regtype error.
 sudo apt-get install libcurl4-openssl-dev --yes
 sudo ln -s /usr/include/x86_64-linux-gnu/curl/ /usr/include/curl
 
