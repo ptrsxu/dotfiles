@@ -298,7 +298,6 @@ echo 'eval "$(starship init bash)"' >> ~/.bashrc
 starship preset gruvbox-rainbow -o ~/.config/starship.toml
 
 
-
 # brew install lua luarocks luajit
 # or apt install liblua5.1-0-dev
 
@@ -309,6 +308,13 @@ tar xvzf nvim-linux64.tar.gz
 sudo mv nvim-linux64 /usr/local/
 sudo ln -s /usr/local/nvim-linux64/bin/nvim  /usr/local/bin/nvim
 rm -rf nvim-linux64.tar.gz
+
+# install neovim for linux aarch64(compile from source):
+# run: `sudo apt-get install ninja-build gettext cmake unzip curl build-essential`
+# run: `git clone https://github.com/neovim/neovim --recurse-submodules`
+# run: `make CMAKE_BUILD_TYPE=Release`
+# run: `sudo make install`
+
 # install NvChad, refer to <https://nvchad.com/docs/quickstart/install>
 rm -rf ~/.local/share/{lunarvim,nvim} ~/.config/nvim
 git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1 -b v2.0
@@ -332,6 +338,8 @@ sudo ln -s /usr/include/x86_64-linux-gnu/curl/ /usr/include/curl
 # nvim configure can also be installed with v2.5 version, just run:
 # `git clone https://github.com/ptrsxu/nvim ~/.config/nvim -b inuse`
 # start nvim, wait for the installation and run `:MasonInstallAll` 
+
+
 
 
 # install conda
