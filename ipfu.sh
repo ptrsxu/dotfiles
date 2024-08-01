@@ -32,7 +32,7 @@ apt-get install --yes dbus-user-session uidmap acl      # package configuration 
 apt-get install --yes fontconfig libfontconfig-dev      # dealing with fonts
 apt-get install --yes ca-certificates gnupg2 lsof git   # CA & tools
 apt-get install --yes apt-transport-https autojump      # minimal tools
-apt-get isntall --yes curl wget htop nethogs telnet     # minimal tools
+apt-get install --yes curl wget htop nethogs telnet     # minimal tools
 apt-get install --yes zip unzip p7zip-rar p7zip-full    # minimal tools
 apt-get install --yes hwinfo hardinfo jq debian-archive-keyring
 apt-get install --yes net-tools util-linux coreutils    # ifconfig, lscpu, nproc etc.
