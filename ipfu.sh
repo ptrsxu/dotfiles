@@ -264,6 +264,11 @@ brew install bazelisk
 # for golang
 brew install golang
 
+# in china
+go env -w GO111MODULE=on
+go env -w GOPROXY=https://goproxy.cn,direct
+
+
 # for node version management(not the system level node)
 brew install nvm
 tee -a ~/.profile > /dev/null << EOF
