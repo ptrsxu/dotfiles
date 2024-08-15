@@ -349,25 +349,16 @@ NVCHAD_EXAMPLE_CONFIG=y nvim --headless "+q"
 # start nvim, wait for the installation and run `:MasonInstallAll` 
 #######################
 
-# install conda
-#
-# NOTICE: this is not available on "ARM LINUX"(uname -m: aarch64)
-# run `wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-aarch64.sh`
-# to get the latest aarch64 bin version, and install it manually.
-#
-# Install our public GPG key to trusted store and check if fingerprint is correct.
-curl https://repo.anaconda.com/pkgs/misc/gpgkeys/anaconda.asc | gpg --dearmor > conda.gpg
-sudo install -o root -g root -m 644 conda.gpg /usr/share/keyrings/conda-archive-keyring.gpg
-gpg --keyring /usr/share/keyrings/conda-archive-keyring.gpg --no-default-keyring --fingerprint 34161F5BF5EB1D4BFBBB8F0A8AEB4F8B29D82806
-# Add our Debian repo
-sudo tee -a /etc/apt/sources.list.d/conda.list > /dev/null << EOF
-deb [arch=amd64 signed-by=/usr/share/keyrings/conda-archive-keyring.gpg] https://repo.anaconda.com/pkgs/misc/debrepo/conda stable main
-EOF
-# or
-# echo "deb [arch=amd64 signed-by=/usr/share/keyrings/conda-archive-keyring.gpg] https://repo.anaconda.com/pkgs/misc/debrepo/conda stable main" | sudo tee -a /etc/apt/sources.list.d/conda.list
-sudo apt-get update
-sudo apt-get install --yes conda
-sudo tee -a /opt/conda/.condarc > /dev/null << EOF
+
+# install miniconda3 latest version on linux
+# compatible for both x86_64 arch and aarch64 arch
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-$(arch).sh -O /tmp/miniconda.sh
+sudo bash /tmp/miniconda.sh -b -u -p /opt/miniconda3
+rm -rf /tmp/miniconda.sh
+# install init script for bash user
+/opt/miniconda3/bin/conda init bash
+
+tee -a ~/.condarc > /dev/null << EOF
 channels:
   - defaults
 pkgs_dirs:
@@ -380,12 +371,9 @@ sudo mkdir -p /data/disk1/conda/{envs,pkgs}
 sudo chown -R conda:conda /data/disk1/conda
 sudo chown -R conda:conda /opt/conda
 sudo chmod -R g+w /data/disk1/conda
-sudo chmod -R g+w /opt/conda
+sudo chmod -R g+w /opt/miniconda3
 sudo usermod -aG conda ${USER}                      # needs to re-login
-source /opt/conda/etc/profile.d/conda.sh
-echo "source /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc
-# fro zsh
-# echo "source /opt/conda/etc/profile.d/conda.sh" >> ~/.zshrc
+
 
 sudo mkdir -p /data/disk1/${USER}
 sudo chown -R ${USER} /data/disk1/${USER}
