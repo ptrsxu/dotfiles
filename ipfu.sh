@@ -399,4 +399,7 @@ sudo chown -R ${USER} /data/disk1/${USER}
 # other developing tools
 # xh, for http requests
 curl -sfL https://raw.githubusercontent.com/ducaale/xh/master/install.sh | sh
-
+# kitty terminal
+curl -L https://sw.kovidgoyal.net/kitty/installer.sh | sh /dev/stdin
+# themes for kitty
+kitten themes
