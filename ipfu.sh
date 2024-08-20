@@ -285,6 +285,10 @@ git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 curl -L https://raw.githubusercontent.com/ptrsxu/dotfiles/master/tmux.conf -o ~/.tmux.conf
 # run `tmux` and `tmux source ~/.tmux.conf` and run `<leader> I` to install the plugins
 
+# add configures to `~/.tmux.coonf` for yazi image preview
+# set -g allow-passthrough on
+# set -ga update-environment TERM
+# set -ga update-environment TERM_PROGRAM
 
 # install starship
 curl -sS https://starship.rs/install.sh | sh
