@@ -248,7 +248,22 @@ rustup default nightly
 # cargo generate git@github.com:ptrsxu/template.rs.git
 # pip install pre-commit
 # pre-commit install
-
+cargo install sccache
+tee -a ~/.cargo/config.toml > /dev/null << EOF
+[source.crates-io]
+replace-with = 'rsproxy-sparse'
+[source.rsproxy]
+registry = "https://rsproxy.cn/crates.io-index"
+[source.rsproxy-sparse]
+registry = "sparse+https://rsproxy.cn/index/"
+[registries.rsproxy]
+index = "https://rsproxy.cn/crates.io-index"
+[build]
+target-dir ="/tmp/targets.rs"
+rustc-wrapper = ".cargo/bin/sccache"
+[net]
+git-fetch-with-cli = true
+EOF
 
 # for bazel
 brew install bazelisk
@@ -285,10 +300,17 @@ git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 curl -L https://raw.githubusercontent.com/ptrsxu/dotfiles/master/tmux.conf -o ~/.tmux.conf
 # run `tmux` and `tmux source ~/.tmux.conf` and run `<leader> I` to install the plugins
 
-# add configures to `~/.tmux.coonf` for yazi image preview
-# set -g allow-passthrough on
-# set -ga update-environment TERM
-# set -ga update-environment TERM_PROGRAM
+# add configures to `~/.tmux.conf` for yazi image preview
+tee -a ~/.tmux.conf > /dev/null <<EOF
+set -g allow-passthrough on
+set -ga update-environment TERM
+set -ga update-environment TERM_PROGRAM
+EOF
+
+# for bash
+echo 'export TERM=xterm-256color' >> ~/.bashrc
+# for zsh
+# echo 'export TERM=xterm-256color' >> ~/.zshrc
 
 # install starship
 curl -sS https://starship.rs/install.sh | sh
