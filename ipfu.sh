@@ -92,7 +92,7 @@ apt-get install --yes sysstat       # system performance tools for Linux(iostat/
 apt-get install --yes pstack        # display stack trace of a running process
 apt-get install --yes oprofile      # system-wide profiler for Linux systems
 
-apt-get install --yes w3m           # command line tools for transferring data with URLs
+apt-get install --yes w3m tidy      # command line tools for transferring data with URLs
 apt-get install --yes traceroute    # network diagnostic commands with ICMP packets
 apt-get install --yes ifstat        # InterFace STATistics Monitoring
 apt-get install --yes nmap          # network exploration tool and security / port scanner
