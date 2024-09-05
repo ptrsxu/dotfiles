@@ -415,7 +415,9 @@ echo 'eval "$(fzf --bash)"' >> ~/.bashrc
 
 # atuin
 bash <(curl https://raw.githubusercontent.com/ellie/atuin/main/install.sh)
-source $HOME/.atuin/bin/env 
+source $HOME/.atuin/bin/env
+# eval "$(atuin init zsh)"
+eval "$(atuin init bash)"
 atuin import auto   # use it locally. or refer to
 # <https://github.com/atuinsh/atuin/blob/main/docs/zh-CN/server.md>
 # for multi-device sync
