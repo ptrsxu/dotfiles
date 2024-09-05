@@ -414,7 +414,7 @@ curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh 
 eval "$(zoxide init bash)"
 # eval "$(zoxide init zsh)"
 echo 'eval "$(zoxide init bash)"' >> ~/.bashrc
-# echo 'eval "$(zoxide init zsh)"' >> ~/.bashrc
+# echo 'eval "$(zoxide init zsh)"' >> ~/.zshrc
 # import from autojump if there is any history
 # on linux
 # zoxide import --from=autojump $HOME/.local/share/autojump/autojump.txt
