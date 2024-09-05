@@ -409,6 +409,18 @@ kitten themes
 git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
 ~/.fzf/install --all
 
+# zoxide, z, install this after fzf
+curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
+eval "$(zoxide init bash)"
+# eval "$(zoxide init zsh)"
+echo 'eval "$(zoxide init bash)"' >> ~/.bashrc
+# echo 'eval "$(zoxide init zsh)"' >> ~/.bashrc
+# import from autojump if there is any history
+# on linux
+# zoxide import --from=autojump $HOME/.local/share/autojump/autojump.txt
+# on mac
+# zoxide import --from=autojump $HOME/Library/autojump/autojump.txt
+
 # atuin
 bash <(curl https://raw.githubusercontent.com/ellie/atuin/main/install.sh)
 source $HOME/.atuin/bin/env
