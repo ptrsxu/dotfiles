@@ -412,3 +412,10 @@ echo 'export PATH=~/.fzf/bin:$PATH' >> ~/.bashrc
 # for zsh
 # echo 'eval "$(fzf --zsh)"' >> ~/.zshrc
 echo 'eval "$(fzf --bash)"' >> ~/.bashrc
+
+# atuin
+bash <(curl https://raw.githubusercontent.com/ellie/atuin/main/install.sh)
+source $HOME/.atuin/bin/env 
+atuin import auto   # use it locally. or refer to
+# <https://github.com/atuinsh/atuin/blob/main/docs/zh-CN/server.md>
+# for multi-device sync
