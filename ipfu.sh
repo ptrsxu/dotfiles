@@ -399,7 +399,16 @@ sudo chown -R ${USER} /data/disk1/${USER}
 # other developing tools
 # xh, for http requests
 curl -sfL https://raw.githubusercontent.com/ducaale/xh/master/install.sh | sh
+
 # kitty terminal
 curl -L https://sw.kovidgoyal.net/kitty/installer.sh | sh /dev/stdin
 # themes for kitty
 kitten themes
+
+# fzf, useful tools, supporting things like `kill -9 <tab><tab>`
+git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+~/.fzf/install --all
+echo 'export PATH=~/.fzf/bin:$PATH' >> ~/.bashrc
+# for zsh
+# echo 'eval "$(fzf --zsh)"' >> ~/.zshrc
+echo 'eval "$(fzf --bash)"' >> ~/.bashrc
