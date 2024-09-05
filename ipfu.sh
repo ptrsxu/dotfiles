@@ -405,13 +405,9 @@ curl -L https://sw.kovidgoyal.net/kitty/installer.sh | sh /dev/stdin
 # themes for kitty
 kitten themes
 
-# fzf, useful tools, supporting things like `kill -9 <tab><tab>`
+# fzf, useful tools, supporting things like `kill -9 **<tab><tab>`
 git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
 ~/.fzf/install --all
-echo 'export PATH=~/.fzf/bin:$PATH' >> ~/.bashrc
-# for zsh
-# echo 'eval "$(fzf --zsh)"' >> ~/.zshrc
-echo 'eval "$(fzf --bash)"' >> ~/.bashrc
 
 # atuin
 bash <(curl https://raw.githubusercontent.com/ellie/atuin/main/install.sh)
