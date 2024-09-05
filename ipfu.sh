@@ -188,6 +188,8 @@ apt-get install --yes sqlite3 libsqlite3-dev
 # this is the easiest way.
 apt-get install --yes mailutils
 
+# for bash
+curl https://raw.githubusercontent.com/rcaloras/bash-preexec/master/bash-preexec.sh -o ~/.bash-preexec.sh
 
 # install JetBrains Mono Nerd Fonts
 # check <https://www.jetbrains.com/lp/mono/#how-to-install> 
