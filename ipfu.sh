@@ -240,7 +240,7 @@ rustup default nightly
 # this may need some interaction with the terminal: 
 #     /usr/local/lib/rustlib/uninstall.sh
 #     curl https://sh.rustup.rs -sSf | sh
-# cargo install cargo-generate rustfmt bindgen cargo-edit cargo-graph cargo-count cargo-outdated cargo-web cargo-tree cargo-tally cargo-watch typos-cli git-cliff cargo-sls-distribution
+# cargo install cargo-generate ripgrep rustfmt bindgen cargo-edit cargo-graph cargo-count cargo-outdated cargo-web cargo-tree cargo-tally cargo-watch typos-cli git-cliff cargo-sls-distribution
 # cargo install cargo-deny cargo-nextest --locked
 # # For compiling to asmjs through Emscripten: rustup target add asmjs-unknown-emscripten
 # # For compiling to WebAssembly through Emscripten: rustup target add wasm32-unknown-emscripten
