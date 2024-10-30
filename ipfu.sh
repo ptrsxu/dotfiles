@@ -327,7 +327,17 @@ echo 'eval "$(starship init bash)"' >> ~/.bashrc
 # echo 'eval "$(starship init zsh)"' >> ~/.zshrc
 starship preset gruvbox-rainbow -o ~/.config/starship.toml
 
-# modify ~/.config/starship.toml, ADD @hostname
+# modify ~/.config/starship.toml,
+# 
+# CHANGE username.format to remove the space after "$user" in format
+#
+# [username]
+# show_always = true
+# style_user = "bg:color_orange fg:color_fg0"
+# style_root = "bg:color_orange fg:color_fg0"
+# format = '[ $user]($style)'
+# 
+# ADD @hostname
 # 
 # #ORIGIN# $username\
 # [@](bg:color_orange fg:color_fg0)\
@@ -339,9 +349,10 @@ starship preset gruvbox-rainbow -o ~/.config/starship.toml
 # [hostname]
 # ssh_only = false
 # style = "bg:color_orange fg:color_fg0"
-# format = '[$ssh_symbol$hostname]($style)'
+# ssh_symbol = '🌐'
+# format = '[$hostname$ssh_symbol]($style)'
 #
-# hostname configure
+# for hostname configure
 
 #######################
 # install neovim on mac
