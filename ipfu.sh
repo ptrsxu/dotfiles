@@ -327,6 +327,22 @@ echo 'eval "$(starship init bash)"' >> ~/.bashrc
 # echo 'eval "$(starship init zsh)"' >> ~/.zshrc
 starship preset gruvbox-rainbow -o ~/.config/starship.toml
 
+# modify ~/.config/starship.toml, ADD @hostname
+# 
+# #ORIGIN# $username\
+# [@](bg:color_orange fg:color_fg0)\
+# $hostname\
+# #ORIGIN# [](bg:color_yellow fg:color_orange)\
+#
+# AND
+#
+# [hostname]
+# ssh_only = false
+# style = "bg:color_orange fg:color_fg0"
+# format = '[$ssh_symbol$hostname]($style)'
+#
+# hostname configure
+
 #######################
 # install neovim on mac
 # run: `brew install lua luarocks luajit`
