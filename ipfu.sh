@@ -298,7 +298,7 @@ brew install borkdude/brew/babashka
 
 
 # install and setup tmux, refer to <https://github.com/tmux-plugins/tpm>
-snap install tmux --classic
+sudo snap install tmux --classic
 # ANOTHER CHOICE IS
 # brew install tmux
 
@@ -379,6 +379,10 @@ tar xvzf nvim-linux64.tar.gz
 sudo mv nvim-linux64 /usr/local/
 sudo ln -s /usr/local/nvim-linux64/bin/nvim  /usr/local/bin/nvim
 rm -rf nvim-linux64.tar.gz
+
+# OR JUST INSTALL WITH
+# sudo snap install nvim --classic
+
 
 # install NvChad, refer to <https://nvchad.com/docs/quickstart/install>
 rm -rf ~/.local/share/{lunarvim,nvim} ~/.config/nvim
