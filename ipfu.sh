@@ -306,16 +306,6 @@ git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 curl -L https://raw.githubusercontent.com/ptrsxu/dotfiles/master/tmux.conf -o ~/.tmux.conf
 # run `tmux` and `tmux source ~/.tmux.conf` and run `<leader> I` to install the plugins
 
-# 1. refer to <https://github.com/tmux-plugins/tmux-resurrect> for tmux session save and restore plugin
-# 2. add configures to `~/.tmux.conf` for yazi image preview
-# remember to run `<leader> I`
-tee -a ~/.tmux.conf > /dev/null <<EOF
-set -g @plugin 'tmux-plugins/tmux-resurrect'
-set -g allow-passthrough on
-set -ga update-environment TERM
-set -ga update-environment TERM_PROGRAM
-EOF
-
 # for bash
 echo 'export TERM=xterm-256color' >> ~/.bashrc
 # for zsh
