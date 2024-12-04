@@ -427,6 +427,10 @@ sudo mkdir -p /data/disk1/${USER}
 sudo chown -R ${USER} /data/disk1/${USER}
 
 # other developing tools
+
+# uv, for python
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
 # xh, for http requests
 curl -sfL https://raw.githubusercontent.com/ducaale/xh/master/install.sh | sh
 
