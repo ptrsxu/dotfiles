@@ -271,6 +271,12 @@ rustc-wrapper = ".cargo/bin/sccache"
 git-fetch-with-cli = true
 EOF
 
+# select the best source. refer to <https://github.com/wtklbm/crm> and
+# <https://bytedance.larkoffice.com/docx/Fa6vdnOgQoTDLcxGjwAcU0qdnCf> for details
+cargo install crm
+crm best sparse-download
+
+
 # for bazel
 brew install bazelisk
 
