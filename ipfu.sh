@@ -295,19 +295,28 @@ export NVM_DIR="$HOME/.nvm"
 
 nvm install --lts
 
-
 # install bb
 brew install borkdude/brew/babashka
 
+# install zellij (only on linux, download the binary for mac manually)
+wget https://github.com/zellij-org/zellij/releases/latest/download/zellij-$(arch)-unknown-linux-musl.tar.gz
+tar xvzf zellij-$(arch)-unknown-linux-musl.tar.gz
+chmod +x zellij
+sudo mv zellij /usr/local/bin
 
-# install and setup tmux, refer to <https://github.com/tmux-plugins/tpm>
-sudo snap install tmux --classic
-# ANOTHER CHOICE IS
-# brew install tmux
+tee -a ~/.config/zellij/config.kdl >/dev/null <<EOF
+theme "catppuccin-frappe"
+EOF
 
-git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
-curl -L https://raw.githubusercontent.com/ptrsxu/dotfiles/master/tmux.conf -o ~/.tmux.conf
+######<<< NOTICE: USE ZELLIJ INSTEAD OF TMUX >>>
+######<<< # install and setup tmux, refer to <https://github.com/tmux-plugins/tpm>
+######<<< sudo snap install tmux --classic
+######<<< # ANOTHER CHOICE IS
+######<<< # brew install tmux
+######<<< git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+######<<< curl -L https://raw.githubusercontent.com/ptrsxu/dotfiles/master/tmux.conf -o ~/.tmux.conf
 # run `tmux` and `tmux source ~/.tmux.conf` and run `<leader> I` to install the plugins
+######<<< NOTICE: USE ZELLIJ INSTEAD OF TMUX >>>
 
 # for bash
 echo 'export TERM=xterm-256color' >> ~/.bashrc
@@ -350,99 +359,134 @@ starship preset gruvbox-rainbow -o ~/.config/starship.toml
 #
 # for hostname configure
 
-#######################
-# install neovim on mac
-# run: `brew install lua luarocks luajit`
-# run: `brew install neovim`
+# install helix editor (for linux only. download the benary for mac manually)
+HELIX_LATEST_RELEASE=$(curl -s https://api.github.com/repos/helix-editor/helix/releases/latest | jq -r '.tag_name')
+curl -LsSf https://github.com/helix-editor/helix/releases/download/${HELIX_LATEST_RELEASE}/helix-${HELIX_LATEST_RELEASE}-$(arch)-linux.tar.xz | tar -xJv
+sudo mv helix-${HELIX_LATEST_RELEASE}-$(arch)-linux/hx /usr/local/bin
+mv helix-${HELIX_LATEST_RELEASE}-$(arch)-linux ~/.local/helix
 
-#install neovim on Linux aarch64(arm64), compiling from source
-# run: `sudo apt-get install --yes libcurl4-openssl-dev`
-# run: `sudo ln -s /usr/include/aarch64-linux-gnu/curl /usr/include/curl`
-# run: `sudo apt-get install --yes liblua5.1-0-dev`
-# run: `sudo apt-get install ninja-build gettext cmake unzip curl build-essential`
-# run: `git clone https://github.com/neovim/neovim --recurse-submodules`
-# run: `make CMAKE_BUILD_TYPE=Release`
-# run: `sudo make install`
+tee -a ~/.config/helix/config.toml >/dev/null <<EOF
+theme = "catppuccin_macchiato"
 
-# install neovim on Linux x86_64(amd64)
-sudo apt-get install libcurl4-openssl-dev --yes
-sudo ln -s /usr/include/x86_64-linux-gnu/curl/ /usr/include/curl
-wget https://github.com/neovim/neovim/releases/download/nightly/nvim-linux64.tar.gz
-tar xvzf nvim-linux64.tar.gz
-sudo mv nvim-linux64 /usr/local/
-sudo ln -s /usr/local/nvim-linux64/bin/nvim  /usr/local/bin/nvim
-rm -rf nvim-linux64.tar.gz
+[editor]
+true-color = true
+mouse = false
 
-# OR JUST INSTALL WITH
-# sudo snap install nvim --classic
+[editor.cursor-shape]
+insert = "bar"
+normal = "block"
+select = "underline"
 
+[editor.file-picker]
+hidden = false
 
-# install NvChad, refer to <https://nvchad.com/docs/quickstart/install>
-rm -rf ~/.local/share/{lunarvim,nvim} ~/.config/nvim
-git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1 -b v2.0
-NVCHAD_EXAMPLE_CONFIG=y nvim --headless "+q"
-#
-# THEN REPLACE `~/.config/nvim/lua/custom` with `custom/`
-#
-# check with `:TSModuleInfo`, `:LspInfo`, `:Mason`
-# update with `:NvChadUpdate`, `:TSUpdate`, `:MasonUpdate`, `:checkhealth rustaceanvim` (using rustaceanvim instead of rust-tools)
+[editor.lsp]
+display-inlay-hints = true
 
-# for rest.nvim plugin
-# rest.nvim relies on luarocks, run below cmd if luarocks is not auto built:
-# :Lazy build luarocks.nvim
-# :RocksInstall lua-curl nvim-nio mimetypes xml2lua
-#
-# modify `~/.local/share/nvim/lazy/rest.nvim/lua/rest-nvim/utils.lua`
-# regtype="c" to regtype="V" if there is a regtype error.
-
-# nvim configure can also be installed with v2.5 version, just run:
-# `git clone https://github.com/ptrsxu/nvim ~/.config/nvim -b inuse`
-# start nvim, wait for the installation and run `:MasonInstallAll` 
-#######################
-
-
-# install miniconda3 latest version on linux
-# compatible for both x86_64 arch and aarch64 arch
-wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-$(arch).sh -O /tmp/miniconda.sh
-sudo bash /tmp/miniconda.sh -b -u -p /opt/miniconda3
-rm -rf /tmp/miniconda.sh
-# install init script for bash user
-/opt/miniconda3/bin/conda init bash
-
-tee -a ~/.condarc > /dev/null << EOF
-channels:
-  - defaults
-pkgs_dirs:
-  - /data/disk1/conda/pkgs
-envs_dirs:
-  - /data/disk1/conda/envs
+[editor.soft-wrap]
+enable = true
+max-wrap = 3
 EOF
-sudo useradd -d /data/disk1/labs/conda -s /usr/sbin/nologin conda
-sudo mkdir -p /data/disk1/conda/{envs,pkgs}
-sudo chown -R conda:conda /data/disk1/conda
-sudo chown -R conda:conda /opt/conda
-sudo chmod -R g+w /data/disk1/conda
-sudo chmod -R g+w /opt/miniconda3
-sudo usermod -aG conda ${USER}                      # needs to re-login
 
-sudo mkdir -p /data/disk1/${USER}
-sudo chown -R ${USER} /data/disk1/${USER}
+# for mac:
+# xattr -d com.apple.quarantine ~/.config/helix/runtime/grammars/*
 
-# other developing tools
+######<<< NOTICE: USE HELIX INSTEAD OF NEOVIM >>>
+######<<< #######################
+######<<< # install neovim on mac
+######<<< # run: `brew install lua luarocks luajit`
+######<<< # run: `brew install neovim`
+######<<< # install neovim on Linux aarch64(arm64), compiling from source
+######<<< # run: `sudo apt-get install --yes libcurl4-openssl-dev`
+######<<< # run: `sudo ln -s /usr/include/aarch64-linux-gnu/curl /usr/include/curl`
+######<<< # run: `sudo apt-get install --yes liblua5.1-0-dev`
+######<<< # run: `sudo apt-get install ninja-build gettext cmake unzip curl build-essential`
+######<<< # run: `git clone https://github.com/neovim/neovim --recurse-submodules`
+######<<< # run: `make CMAKE_BUILD_TYPE=Release`
+######<<< # run: `sudo make install`
+######<<< 
+######<<< # install neovim on Linux x86_64(amd64)
+######<<< sudo apt-get install libcurl4-openssl-dev --yes
+######<<< sudo ln -s /usr/include/x86_64-linux-gnu/curl/ /usr/include/curl
+######<<< wget https://github.com/neovim/neovim/releases/download/nightly/nvim-linux64.tar.gz
+######<<< tar xvzf nvim-linux64.tar.gz
+######<<< sudo mv nvim-linux64 /usr/local/
+######<<< sudo ln -s /usr/local/nvim-linux64/bin/nvim  /usr/local/bin/nvim
+######<<< rm -rf nvim-linux64.tar.gz
+######<<< # OR JUST INSTALL WITH
+######<<< # sudo snap install nvim --classic
 
-# install uv
+######<<< # install NvChad, refer to <https://nvchad.com/docs/quickstart/install>
+######<<< rm -rf ~/.local/share/{lunarvim,nvim} ~/.config/nvim
+######<<< git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1 -b v2.0
+######<<< NVCHAD_EXAMPLE_CONFIG=y nvim --headless "+q"
+######<<< #
+######<<< # THEN REPLACE `~/.config/nvim/lua/custom` with `custom/`
+######<<< #
+######<<< # check with `:TSModuleInfo`, `:LspInfo`, `:Mason`
+######<<< # update with `:NvChadUpdate`, `:TSUpdate`, `:MasonUpdate`, `:checkhealth rustaceanvim` (using rustaceanvim instead of rust-tools)
+
+######<<< # for rest.nvim plugin
+######<<< # rest.nvim relies on luarocks, run below cmd if luarocks is not auto built:
+######<<< # :Lazy build luarocks.nvim
+######<<< # :RocksInstall lua-curl nvim-nio mimetypes xml2lua
+######<<< #
+######<<< # modify `~/.local/share/nvim/lazy/rest.nvim/lua/rest-nvim/utils.lua`
+######<<< # regtype="c" to regtype="V" if there is a regtype error.
+
+######<<< # nvim configure can also be installed with v2.5 version, just run:
+######<<< # `git clone https://github.com/ptrsxu/nvim ~/.config/nvim -b inuse`
+######<<< # start nvim, wait for the installation and run `:MasonInstallAll` 
+######<<< #######################
+######<<< NOTICE: USE HELIX INSTEAD OF NEOVIM >>>
+
+# install uv & ruff
 # NOTICE THAT THIS WOULD `mkdir -p ~/.local/bin`
 curl -LsSf https://astral.sh/uv/install.sh | sh -s
+curl -LsSf https://astral.sh/ruff/install.sh | sh
 
-# install zellij (only on linux, download the binary for mac manually)
-wget https://github.com/zellij-org/zellij/releases/latest/download/zellij-$(arch)-unknown-linux-musl.tar.gz
-tar xvzf zellij-$(arch)-unknown-linux-musl.tar.gz
-chmod +x zellij
-sudo mv zellij /usr/local/bin
+tee -a ~/.config/uv/uv.toml > /dev/null <<EOF
+python-install-mirror = "https://ghproxy.cn/https://github.com/indygreg/python-build-standalone/releases/download"
 
-tee -a ~/.config/zellij/config.kdl >/dev/null <<EOF
-theme "catppuccin-frappe"
+[[index]]
+url = "https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple/"
+default = true
 EOF
+
+cat ~/.config/uv/uv.toml
+
+uv python install 3.13
+uv python pin --global 3.13
+uv python list
+
+######<<< NOTICE: USE UV INSTEAD OF CONDA / MINICONDA >>>
+######<<< # install miniconda3 latest version on linux
+######<<< # compatible for both x86_64 arch and aarch64 arch
+######<<< wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-$(arch).sh -O /tmp/miniconda.sh
+######<<< sudo bash /tmp/miniconda.sh -b -u -p /opt/miniconda3
+######<<< rm -rf /tmp/miniconda.sh
+######<<< # install init script for bash user
+######<<< /opt/miniconda3/bin/conda init bash
+
+######<<< tee -a ~/.condarc > /dev/null << EOF
+######<<< channels:
+######<<<   - defaults
+######<<< pkgs_dirs:
+######<<<   - /data/disk1/conda/pkgs
+######<<< envs_dirs:
+######<<<   - /data/disk1/conda/envs
+######<<< EOF
+######<<< sudo useradd -d /data/disk1/labs/conda -s /usr/sbin/nologin conda
+######<<< sudo mkdir -p /data/disk1/conda/{envs,pkgs}
+######<<< sudo chown -R conda:conda /data/disk1/conda
+######<<< sudo chown -R conda:conda /opt/conda
+######<<< sudo chmod -R g+w /data/disk1/conda
+######<<< sudo chmod -R g+w /opt/miniconda3
+######<<< sudo usermod -aG conda ${USER}                      # needs to re-login
+######<<< sudo mkdir -p /data/disk1/${USER}
+######<<< sudo chown -R ${USER} /data/disk1/${USER}
+######<<< NOTICE: USE UV INSTEAD OF CONDA / MINICONDA >>>
+
 
 # xh, for http requests
 curl -sfL https://raw.githubusercontent.com/ducaale/xh/master/install.sh | sh
@@ -477,35 +521,4 @@ atuin import auto   # use it locally. or refer to
 # <https://github.com/atuinsh/atuin/blob/main/docs/zh-CN/server.md>
 # for multi-device sync
 
-# install helix editor (for linux only. download the benary for mac manually)
-HELIX_LATEST_RELEASE=$(curl -s https://api.github.com/repos/helix-editor/helix/releases/latest | jq -r '.tag_name')
-curl -LsSf https://github.com/helix-editor/helix/releases/download/${HELIX_LATEST_RELEASE}/helix-${HELIX_LATEST_RELEASE}-$(arch)-linux.tar.xz | tar -xJv
-sudo mv helix-${HELIX_LATEST_RELEASE}-$(arch)-linux/hx /usr/local/bin
-mv helix-${HELIX_LATEST_RELEASE}-$(arch)-linux ~/.local/helix
-
-tee -a ~/.config/helix/config.toml >/dev/null <<EOF
-theme = "catppuccin_macchiato"
-
-[editor]
-true-color = true
-mouse = false
-
-[editor.cursor-shape]
-insert = "bar"
-normal = "block"
-select = "underline"
-
-[editor.file-picker]
-hidden = false
-
-[editor.lsp]
-display-inlay-hints = true
-
-[editor.soft-wrap]
-enable = true
-max-wrap = 3
-EOF
-
-# for mac:
-# xattr -d com.apple.quarantine ~/.config/helix/runtime/grammars/*
 
