@@ -232,8 +232,12 @@ eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
 
 # for rust
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-source "$HOME/.cargo/env"
+# install rust
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+
+# install sccache
+source "$HOME/.cargo/env" && cargo install sccache
+# install nightly
 rustup toolchain add nightly
 rustup default nightly
 # curl -sSf https://static.rust-lang.org/rustup.sh | sh
@@ -251,7 +255,6 @@ rustup default nightly
 # cargo generate git@github.com:ptrsxu/template.rs.git
 # pip install pre-commit
 # pre-commit install
-cargo install sccache
 tee -a ~/.cargo/config.toml > /dev/null << EOF
 [source.crates-io]
 replace-with = 'rsproxy-sparse'
@@ -422,14 +425,24 @@ sudo chmod -R g+w /data/disk1/conda
 sudo chmod -R g+w /opt/miniconda3
 sudo usermod -aG conda ${USER}                      # needs to re-login
 
-
 sudo mkdir -p /data/disk1/${USER}
 sudo chown -R ${USER} /data/disk1/${USER}
 
 # other developing tools
 
-# uv, for python
-curl -LsSf https://astral.sh/uv/install.sh | sh
+# install uv
+# NOTICE THAT THIS WOULD `mkdir -p ~/.local/bin`
+curl -LsSf https://astral.sh/uv/install.sh | sh -s
+
+# install zellij (only on linux, download the binary for mac manually)
+wget https://github.com/zellij-org/zellij/releases/latest/download/zellij-$(arch)-unknown-linux-musl.tar.gz
+tar xvzf zellij-$(arch)-unknown-linux-musl.tar.gz
+chmod +x zellij
+sudo mv zellij /usr/local/bin
+
+tee -a ~/.config/zellij/config.kdl >/dev/null <<EOF
+theme "catppuccin-frappe"
+EOF
 
 # xh, for http requests
 curl -sfL https://raw.githubusercontent.com/ducaale/xh/master/install.sh | sh
@@ -463,3 +476,36 @@ eval "$(atuin init bash)"
 atuin import auto   # use it locally. or refer to
 # <https://github.com/atuinsh/atuin/blob/main/docs/zh-CN/server.md>
 # for multi-device sync
+
+# install helix editor (for linux only. download the benary for mac manually)
+HELIX_LATEST_RELEASE=$(curl -s https://api.github.com/repos/helix-editor/helix/releases/latest | jq -r '.tag_name')
+curl -LsSf https://github.com/helix-editor/helix/releases/download/${HELIX_LATEST_RELEASE}/helix-${HELIX_LATEST_RELEASE}-$(arch)-linux.tar.xz | tar -xJv
+sudo mv helix-${HELIX_LATEST_RELEASE}-$(arch)-linux/hx /usr/local/bin
+mv helix-${HELIX_LATEST_RELEASE}-$(arch)-linux ~/.local/helix
+
+tee -a ~/.config/helix/config.toml >/dev/null <<EOF
+theme = "catppuccin_macchiato"
+
+[editor]
+true-color = true
+mouse = false
+
+[editor.cursor-shape]
+insert = "bar"
+normal = "block"
+select = "underline"
+
+[editor.file-picker]
+hidden = false
+
+[editor.lsp]
+display-inlay-hints = true
+
+[editor.soft-wrap]
+enable = true
+max-wrap = 3
+EOF
+
+# for mac:
+# xattr -d com.apple.quarantine ~/.config/helix/runtime/grammars/*
+
