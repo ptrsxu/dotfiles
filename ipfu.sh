@@ -369,7 +369,7 @@ starship preset gruvbox-rainbow -o ~/.config/starship.toml
 HELIX_LATEST_RELEASE=$(curl -s https://api.github.com/repos/helix-editor/helix/releases/latest | jq -r '.tag_name')
 curl -LsSf https://github.com/helix-editor/helix/releases/download/${HELIX_LATEST_RELEASE}/helix-${HELIX_LATEST_RELEASE}-$(arch)-linux.tar.xz | tar -xJv
 sudo mv helix-${HELIX_LATEST_RELEASE}-$(arch)-linux/hx /usr/local/bin
-mv helix-${HELIX_LATEST_RELEASE}-$(arch)-linux ~/.local/helix
+mv helix-${HELIX_LATEST_RELEASE}-$(arch)-linux ~/.config/helix
 
 tee -a ~/.config/helix/config.toml >/dev/null <<EOF
 theme = "catppuccin_macchiato"
