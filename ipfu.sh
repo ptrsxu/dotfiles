@@ -14,6 +14,7 @@
 apt-get update
 apt-get upgrade --yes
 
+hostnamectl set-hostname some.example.com
 
 ################################################################################
 # for basic settings
