@@ -25,6 +25,7 @@ apt-get install --yes language-pack-zh-hans language-pack-en
 locale-gen zh_CN.UTF-8
 locale-gen en_US.UTF-8
 update-locale LANG=en_US.UTF-8 LC_MESSAGES=POSIX
+swapoff -a                                              # and comment the fs in /etc/fstab
 unlink /bin/sh
 ln -s /bin/bash /bin/sh
 
