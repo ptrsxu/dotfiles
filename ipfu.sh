@@ -38,6 +38,7 @@ apt-get install --yes curl wget htop nethogs telnet     # minimal tools
 apt-get install --yes zip unzip p7zip-rar p7zip-full    # minimal tools
 apt-get install --yes hwinfo hardinfo jq debian-archive-keyring
 apt-get install --yes net-tools util-linux coreutils    # ifconfig, lscpu, nproc etc.
+apt-get install --yes mbuffer zstd                      # for large file transfering.
 apt-get install --yes bash-completion
 #
 # echo "source /usr/share/autojump/autojump.bash" >> ~/.profile
